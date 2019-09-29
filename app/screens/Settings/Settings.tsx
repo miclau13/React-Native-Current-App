@@ -1,16 +1,21 @@
+import * as SecureStore from 'expo-secure-store';
 import React from 'react';
-import { Button, Platform, Text, View } from 'react-native';
-import { NavigationScreenProps } from "react-navigation";
+import { Button, Text, View } from 'react-native';
+import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import styles from './styles';
 
-export interface SettingsProps extends NavigationScreenProps {
+type Params = {};
 
-};
+type ScreenProps = {};
 
-const Settings: React.SFC<SettingsProps> = (props) => {
+const Settings: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation: { navigate } } = props;
-  const handleButtonOnPress = () => navigate("LoginScreen");
+  const signOutAsync = async () => {
+    await SecureStore.deleteItemAsync("idToken", {});
+    navigate("LoginScreen");
+  }
+  const handleButtonOnPress = () => signOutAsync();
   return (
     <View style={styles.container}>
       <Text>This is the Settings.</Text>

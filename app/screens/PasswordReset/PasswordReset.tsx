@@ -1,13 +1,14 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import styles from './styles';
 
-export interface PasswordResetProps {
+type Params = {};
 
-};
+type ScreenProps = {};
 
-const PasswordReset: React.SFC<PasswordResetProps> = (props) => {
+const PasswordReset: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   return (
     <View style={styles.container}>
       <Text>This is the PasswordReset.</Text>

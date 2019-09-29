@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { GeolocationError, GeolocationReturnType, Text, View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import styles from './styles';
 
-export interface CurrentLocationProps {
+type Params = {};
 
-};
+type ScreenProps = {};
 
-const CurrentLocation: React.SFC<CurrentLocationProps> = (props) => {
+
+const CurrentLocation: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const [currentLongitude, setCurrentLongitude] = useState<GeolocationReturnType['coords']['longitude']>();
   const [currentLatitude, setCurrentLatitude] = useState<GeolocationReturnType['coords']['latitude']>();
   const [loading, setLoading] = useState(true);
   const longitudeDelta = 0.01;
   const latitudeDelta = 0.01;
   const geo_success: (position: GeolocationReturnType) => void = (position) => {
-    console.log({position});
     setCurrentLongitude(position.coords.longitude);
     setCurrentLatitude(position.coords.latitude);
     setLoading(false);
@@ -26,6 +27,7 @@ const CurrentLocation: React.SFC<CurrentLocationProps> = (props) => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(geo_success, geo_error);
+    return () => {}
   })
   return (
     <View style={styles.container}>

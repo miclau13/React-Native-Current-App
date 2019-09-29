@@ -1,12 +1,14 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { NavigationContainerProps } from "react-navigation";
+import { NavigationBottomTabScreenComponent } from "react-navigation-tabs";
+
 import styles from './styles';
 
-export interface RegisterProps extends NavigationContainerProps {
-};
+type Params = {};
 
-const Register: React.SFC<RegisterProps> = (props) => {
+type ScreenProps = {};
+
+const Register: NavigationBottomTabScreenComponent<Params, ScreenProps> = (props) => {
   return (
     <View style={styles.container}>
       <Text>This is the Register.</Text>
