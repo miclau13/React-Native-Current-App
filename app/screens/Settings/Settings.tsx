@@ -12,7 +12,9 @@ type ScreenProps = {};
 const Settings: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation: { navigate } } = props;
   const signOutAsync = async () => {
+    await SecureStore.deleteItemAsync("accessToken", {});
     await SecureStore.deleteItemAsync("idToken", {});
+    await SecureStore.deleteItemAsync("refreshToken", {});
     navigate("LoginScreen");
   }
   const handleButtonOnPress = () => signOutAsync();
