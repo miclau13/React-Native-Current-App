@@ -17,6 +17,7 @@ import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
+import BathroomRemodelScreen from "../screens/BathroomRemodel";
 
 const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
@@ -35,7 +36,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 // };
 
 const HomeStack = createStackNavigator(
-  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen },
+  { BathroomRemodelScreen, DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen },
   { initialRouteName: 'HomeScreen' }
 );
 
