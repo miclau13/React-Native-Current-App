@@ -12,22 +12,18 @@ type Params = {};
 type ScreenProps = {};
 
 export interface BathroomRemodelFormValues {
-  zipCode: number;
+  zipCode: string;
 }
 
 const BathroomRemodel: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const initialValues = React.useMemo(() => {
     return ({
-      zipCode: null,
+      zipCode: "",
     })
   }, []);
   const validationSchema = React.useMemo(() => yup.object().shape({
-    zipCode: yup
-      .number()
-      .max(5)
-      .required(),
+    zipCode: yup.string().required('Required').max(5),
   }), []);
-
   const onSubmit = React.useCallback(values => console.log(values), [])
 
   console.log("hi BathroomRemodel")
@@ -36,9 +32,9 @@ const BathroomRemodel: NavigationStackScreenComponent<Params, ScreenProps> = (pr
       <BathroomRemodelFormik
         initialValues={initialValues}
         onSubmit={onSubmit}
-        // validationSchema={validationSchema}
+        validationSchema={validationSchema}
       >
-        <ZipCode navigation={props.navigation}/>
+        <ZipCode />
       </BathroomRemodelFormik>
     </View>
   )

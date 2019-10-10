@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    width: "80%"
+    width: "80%",
   },
   // disabled: {
   //   backgroundColor: primaryBlue,
@@ -17,13 +17,21 @@ const styles = StyleSheet.create({
     backgroundColor: primaryBlue
   },
   nextButtonContainer: {
-    marginTop: 16,
-    // bottom: 0,
+    // marginTop: "auto",
+    // marginBottom: 100
   },
   nextButtonTitle: {
     color: "white"
   },
-
+  viewBox1: {
+    flex: 1,
+  },
+  viewBox2: {
+    flex: 10,
+  },
+  viewBox3: {
+    flex: 5,
+  },
 });
 
 export default styles;
