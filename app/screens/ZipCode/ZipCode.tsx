@@ -1,7 +1,8 @@
-import { useFormikContext } from 'formik';
+import { useFormikContext, useField } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Button, Headline, HelperText, TextInput, TextInputProps } from 'react-native-paper';
+import { TextInput as RNPTextInput, Button, Headline } from 'react-native-paper';
+import { TextInput, HelperText, TextInputProps, useFieldToTextInputProps } from '../../components/Formik/TextInput';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import styles from './styles';
@@ -16,35 +17,17 @@ interface ZipCodeProps  {
 
 }
 
+const validate = (value: string) => {
+  if (value.length === 5 && !zipCodeList.includes(value)) return 'Invalid Zip Code';
+};
+
+const ZipCodeInput = (props: TextInputProps) => {
+  return <TextInput validate={validate} {...props} />;
+};
+
 const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
-  const { handleChange, errors, setErrors, setFieldError, submitForm, values } = form;
-
-  const validateZipCode = (value) => {
-    console.log("validateZipCode  vlaue",value);
-    if (!zipCodeList.includes(value)) {
-      console.log("not included")
-      return false;
-    } 
-    return true;
-  };
-
-  const handleOnChangeText: (value: string) => TextInputProps['onChangeText'] = (value: string ) => (input) => {
-    handleChange(value)(input);
-    if (input.length >= 5) {
-      console.log("length >5")
-      // const validZipCode = validateZipCode(input.toString());
-      const validZipCode = validateZipCode(form.values.zipCode);
-      if(!validZipCode) {
-        console.log("hihi")
-        setFieldError("zipCode", 'Invalid Zip Code');
-      }
-    }
-  }
-
-  console.log("hi ZipCode")
-  console.log("errors", JSON.stringify(errors))
-  console.log({values})
+  const {  errors, submitForm, values } = form;
 
   return (
     <KeyboardAvoidingView
@@ -54,28 +37,23 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
       <View style={styles.viewBox1}/>
       <Headline>What's your project's Zip Code?</Headline>
       <View style={styles.viewBox1}/>
-      <TextInput
+      <ZipCodeInput
         autoFocus
         error={errors && !!errors.zipCode} 
         keyboardType="number-pad"
         label="Zip Code"
+        name="zipCode"
         maxLength={5}
         mode="outlined"
-        onChangeText={handleOnChangeText("zipCode")}
         textContentType="postalCode"
+        validate={validate}
       />
-      <HelperText
-        type="error"
-        // visible={touched.zipCode}
-      >
-        {errors && errors.zipCode}
-      </HelperText>
+      <HelperText name="zipCode" />
       <View style={styles.viewBox2}/>
       <Button 
         color={styles.nextButton.backgroundColor}
         mode="contained" 
         onPress={submitForm}
-        style={styles.nextButtonContainer}
       >
         Next
       </Button>

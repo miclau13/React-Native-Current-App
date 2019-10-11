@@ -1,13 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { primaryBlue, screenWidth } from '../../styles';
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    width: "80%",
+    width: screenWidth,
   },
   // disabled: {
   //   backgroundColor: primaryBlue,
@@ -15,10 +13,6 @@ const styles = StyleSheet.create({
   // },
   nextButton: {
     backgroundColor: primaryBlue
-  },
-  nextButtonContainer: {
-    // marginTop: "auto",
-    // marginBottom: 100
   },
   nextButtonTitle: {
     color: "white"
