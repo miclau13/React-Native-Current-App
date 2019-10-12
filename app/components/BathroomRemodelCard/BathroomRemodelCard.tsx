@@ -5,20 +5,18 @@ import AwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles';
 import BathroomRemodelPic from '../../../assets/bathroom_remodel.jpeg';
 
-export interface BathroomRemodelCardProps extends CardProps {
-  onButtonPress: ButtonProps['onPress'];
+export interface BathroomRemodelCardProps extends Omit<CardProps, "children"> {
 };
 
 const BathroomRemodelCard: React.ComponentType<BathroomRemodelCardProps> = (props) => {
-  const { onButtonPress } = props;
   return (
-    <Card>
+    <Card {...props}>
       <Card.Title 
         title="Bathroom Remodel" 
         left={(props) => <Avatar.Icon {...props} icon={props => <AwesomeIcon name="bath" {...props} />} />} 
       />
       <Card.Cover source={BathroomRemodelPic} />
-      <Card.Actions>
+      {/* <Card.Actions>
         <Button 
           icon={props => <AwesomeIcon name="tools" {...props} />} 
           mode="contained" 
@@ -26,7 +24,7 @@ const BathroomRemodelCard: React.ComponentType<BathroomRemodelCardProps> = (prop
           style={styles.button}
         >
         </Button>
-      </Card.Actions>
+      </Card.Actions> */}
     </Card>
   )
 };
