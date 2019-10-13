@@ -1,49 +1,45 @@
-import { useFormikContext, useField } from 'formik';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Button, ButtonProps, Headline } from 'react-native-paper';
+import { ButtonProps, Headline } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import styles from './styles';
-import zipCodeList from './zipCodeList.json';
 import { BathroomRemodelFormValues } from '../BathroomRemodel';
-import { TextInput, HelperText, TextInputProps } from '../../components/Formik/TextInput';
+import { TextInput, TextInputProps } from '../../components/Formik/TextInput';
 
 type Params = {};
 
 type ScreenProps = {};
 
-interface ZipCodeProps  {
+interface MaintainFloorProps  {
 
 }
 
 const validate = (value: string) => {
-  if (!zipCodeList.includes(value)) return 'Invalid Zip Code';
+  // if (value.length === 5 && !zipCodeList.includes(value)) return 'Invalid Zip Code';
 };
 
 const ZipCodeInput = (props: TextInputProps) => {
   return <TextInput validate={validate} {...props} />;
 };
 
-const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
-  console.log({props})
+const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
-  console.log({form})
   const { errors } = form;
 
   const nextButtonOnPress: ButtonProps['onPress'] = (event) => {
     console.log({errors})
-  };
-  console.log("hi Zip Code")
+  }
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.viewBox1}/>
-      <Headline>What's your project's Zip Code?</Headline>
+      <Headline>Do you plan to maintain the existing floor plan?</Headline>
       <View style={styles.viewBox1}/>
-      <ZipCodeInput
+      {/* <ZipCodeInput
         autoFocus
         error={errors && !!errors.zipCode} 
         keyboardType="number-pad"
@@ -53,19 +49,8 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
         mode="outlined"
         textContentType="postalCode"
         validate={validate}
-      />
-      <HelperText name="zipCode" />
-      <View style={styles.viewBox2}/>
-      <Button 
-        color={styles.nextButton.backgroundColor}
-        mode="contained" 
-        onPress={nextButtonOnPress}
-        // disabled={errors && !!errors.zipCode}
-      >
-        Next
-      </Button>
-      <View style={styles.viewBox3}/>
+      /> */}
     </KeyboardAvoidingView>
   );
 }
-export default React.memo(ZipCode);
+export default React.memo(MaintainFloor);

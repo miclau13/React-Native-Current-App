@@ -9,6 +9,7 @@ import { createBottomTabNavigator, NavigationBottomTabOptions } from 'react-navi
 
 import BurgerMenu from "../components/BurgerMenu";
 import AuthLoadingScreen from '../screens/AuthLoading';
+import BathroomRemodelScreen from "../screens/BathroomRemodel";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
@@ -17,7 +18,8 @@ import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
-import BathroomRemodelScreen from "../screens/BathroomRemodel";
+import ZipCodeQuestionScreen, { strings as zipCodeQuestionStrings } from "../screens/ZipCode";
+import MaintainFloorQuestionScreen, { strings as maintainFloorQuestionStrings } from "../screens/MaintainFloor";
 
 const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
@@ -35,6 +37,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 //   );
 // };
 
+// HomeStack Start
 const HomeStack = createStackNavigator(
   { BathroomRemodelScreen, DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen },
   { initialRouteName: 'HomeScreen' }
@@ -65,7 +68,9 @@ HomeStack.navigationOptions = (props: NavigationContainerProps<NavigationState>)
     )as NavigationBottomTabOptions['tabBarIcon'],
   };
 };
+// HomeStack End
 
+// SettingsStack Start
 const SettingsStack = createStackNavigator({ SettingsScreen });
 
 SettingsStack.navigationOptions = {
@@ -74,12 +79,14 @@ SettingsStack.navigationOptions = {
   drawerLabel: settingsStrings.settingsTitle,
   drawerIcon: ({ tintColor }) => <Icon name="md-cog" type="ionicon" color={tintColor} />
 };
+// SettingsStack End
 
 const MainNavigator = Platform.select({
   ios: createBottomTabNavigator({ HomeStack, SettingsStack }),
   android: createDrawerNavigator({ HomeStack, SettingsStack }, { contentComponent: BurgerMenu })
 });
 
+// Login Stack Start
 const LoginStack = createStackNavigator(
   { LoginScreen, PasswordResetScreen }, 
   { initialRouteName: 'LoginScreen' }
@@ -91,7 +98,6 @@ LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>
   if (navigation.state.index > 0) {
     tabBarVisible = false;
   }
-
   return {
     tabBarVisible,
     tabBarLabel: loginStrings.loginTitle,
@@ -101,6 +107,14 @@ LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>
     },
   };
 };
+// Login Stack End
+
+// RemodelQuestionsStack Start
+const RemodelQuestionsStack = createStackNavigator(
+  { ZipCodeQuestionScreen, MaintainFloorQuestionScreen }, 
+  { initialRouteName: 'ZipCodeQuestionScreen' }
+);
+// RemodelQuestionsStack End
 
 RegisterScreen.navigationOptions = {
   tabBarLabel: registerStrings.registerTitle,
@@ -110,15 +124,14 @@ RegisterScreen.navigationOptions = {
   }
 };
 
-
 const AuthTabs = createBottomTabNavigator({ LoginStack, RegisterScreen });
 
 const RootSwitch = createSwitchNavigator(
   { 
     AuthTabs, 
     MainNavigator,
+    RemodelQuestionsStack,
     AuthLoading: AuthLoadingScreen, 
- 
   }, 
   {
     initialRouteName: 'AuthLoading',
