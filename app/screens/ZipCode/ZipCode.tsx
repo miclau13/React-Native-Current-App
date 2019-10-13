@@ -8,8 +8,9 @@ import styles from './styles';
 import zipCodeList from './zipCodeList.json';
 import { BathroomRemodelFormValues } from '../BathroomRemodel';
 import MaintainFloor from '../MaintainFloor';
-import TextInput, { TextInputProps } from '../../components/Formik/TextInput';
-import HelperText  from '../../components/Formik/HelperText';
+
+import HelperText from '../../components/Formik/HelperText';
+import ZipCodeInput from '../../components/ZipCodeInput';
 
 interface ZipCodeProps {
   navigation: NavigationStackScreenProps['navigation'];
@@ -19,19 +20,15 @@ const validate = (value: string) => {
   if (!zipCodeList.includes(value)) return 'Invalid Zip Code';
 };
 
-const ZipCodeInput = (props: TextInputProps) => {
-  return <TextInput validate={validate} {...props} />;
-};
-
 const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
-  console.log("hi Zip Code")
-  const { navigation: { navigate } } = props;
+  const { navigation } = props;
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { errors } = form;
 
-  const nextButtonOnPress: ButtonProps['onPress'] = (event) => {
-    navigate("BathroomRemodelScreen", { questionScreen: MaintainFloor });
-  };
+  const nextButtonOnPress = React.useCallback<ButtonProps['onPress']>(() => {
+    navigation.push("BathroomRemodelScreen", { questionScreen: MaintainFloor });
+  }, [navigation.push]);
+
   return (
     <KeyboardAvoidingView
       style={styles.container}

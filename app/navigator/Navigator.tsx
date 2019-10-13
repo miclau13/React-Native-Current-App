@@ -18,6 +18,7 @@ import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
+import EnhanceBathroomQuestionScreen, { strings as enhanceBathroomScreenQuestionStrings } from "../screens/EnhanceBathroom";
 import ZipCodeQuestionScreen, { strings as zipCodeQuestionStrings } from "../screens/ZipCode";
 import MaintainFloorQuestionScreen, { strings as maintainFloorQuestionStrings } from "../screens/MaintainFloor";
 
@@ -111,8 +112,8 @@ LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>
 
 // RemodelQuestionsStack Start
 const RemodelQuestionsStack = createStackNavigator(
-  { ZipCodeQuestionScreen, MaintainFloorQuestionScreen }, 
-  { initialRouteName: 'ZipCodeQuestionScreen' }
+  { BathroomRemodelScreen, ZipCodeQuestionScreen, MaintainFloorQuestionScreen, EnhanceBathroomQuestionScreen }, 
+  { initialRouteName: 'BathroomRemodelScreen' }
 );
 // RemodelQuestionsStack End
 

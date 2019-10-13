@@ -7,12 +7,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: screenWidth,
   },
-  // disabled: {
-  //   backgroundColor: primaryBlue,
-  //   opacity: 0.3
-  // },
   nextButton: {
-    backgroundColor: primaryBlue
+    backgroundColor: primaryBlue,
   },
   nextButtonTitle: {
     color: "white"

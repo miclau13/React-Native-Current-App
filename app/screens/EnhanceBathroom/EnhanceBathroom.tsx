@@ -1,31 +1,30 @@
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Headline, Button, ButtonProps, Text } from 'react-native-paper';
+import { Headline, Button, ButtonProps, RadioButtonGroupProps, Text } from 'react-native-paper';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
 import { BathroomRemodelFormValues } from '../BathroomRemodel';
-import EnhanceBathroom from '../EnhanceBathroom';
 
-interface MaintainFloorProps  {
+interface EnhanceBathroomProps  {
   navigation: NavigationStackScreenProps['navigation'];
 }
 
-const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
+const EnhanceBathroom: React.ComponentType<EnhanceBathroomProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { setFieldValue, values } = form;
   const { navigation } = props;
 
   const handleOnPress: (value: string) => ButtonProps['onPress'] = (value) => () => {
-    setFieldValue("maintainFloor", value);
+    setFieldValue("enhanceBathroom", value);
     switch(value) {
-      case "yes":
-        navigation.push("BathroomRemodelScreen", { questionScreen: EnhanceBathroom });
-        break;
-      case "no":
-        navigation.push("BathroomRemodelScreen", { questionScreen: EnhanceBathroom });
-        break;
+      // case "yes":
+      //   navigation.push("BathroomRemodelScreen", { questionScreen: EnhanceBathroom });
+      //   break;
+      // case "no":
+      //   navigation.push("BathroomRemodelScreen", { questionScreen: EnhanceBathroom });
+      //   break;
       default:
         navigation.navigate("HomeScreen");
     }
@@ -40,25 +39,34 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
       <Headline>Do you plan to maintain the existing floor plan?</Headline>
       <View style={styles.viewBox1}/>
       <Button
-        icon={values.maintainFloor === "yes" ? "check-circle" : "radio-button-unchecked"}
+        icon={values.enhanceBathroom === "add" ? "check-circle" : "radio-button-unchecked"}
         mode="outlined"
-        onPress={handleOnPress("yes")}
+        onPress={handleOnPress("add")}
         contentStyle={styles.buttonContainer}
       >
-        <Text>Yes</Text>
+        <Text>Add a completely new bathroom</Text>
       </Button>
       <View style={styles.viewBox1}/>
       <Button
-        icon={values.maintainFloor === "no" ? "check-circle" :"radio-button-unchecked"}
+        icon={values.enhanceBathroom === "expand" ? "check-circle" : "radio-button-unchecked"}
         mode="outlined"
-        onPress={handleOnPress("no")}
+        onPress={handleOnPress("expand")}
         contentStyle={styles.buttonContainer}
       >
-        <Text>No</Text>
+        <Text>Expand half bath to full bath</Text>
+      </Button>
+      <View style={styles.viewBox1}/>
+      <Button
+        icon={values.enhanceBathroom === "alter" ? "check-circle" : "radio-button-unchecked"}
+        mode="outlined"
+        onPress={handleOnPress("alter")}
+        contentStyle={styles.buttonContainer}
+      >
+        <Text>Another type of expansion/alteration</Text>
       </Button>
       <View style={styles.viewBox2}/>
       <View style={styles.viewBox3}/>
     </KeyboardAvoidingView>
   );
 }
-export default React.memo(MaintainFloor);
+export default React.memo(EnhanceBathroom);

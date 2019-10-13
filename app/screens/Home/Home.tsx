@@ -10,7 +10,6 @@ import { strings as BathroomRemodelStrings } from "../BathroomRemodel";
 import BathroomRemodelCard from '../../components/BathroomRemodelCard';
 import KitchenRemodelCard from '../../components/KitchenRemodelCard';
 import ZipCode from '../ZipCode';
-import MaintainFloor from '../MaintainFloor';
 
 type Params = {
   name?: string;
@@ -21,12 +20,13 @@ type ScreenProps = {};
 
 const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const { navigate } = navigation;
-  const name = navigation.getParam('name', 'Guess');
-  const profilePictureUri = navigation.getParam('profilePictureUri', '')
-  const handleBathroomRemodelButtonOnPress: CardProps['onPress'] = () => navigate("BathroomRemodelScreen", { questionScreen: ZipCode });
-  const handleOptionsButtonOnPress = () => navigate("OptionsScreen");
-  const handleCurrentLocationButtonOnPress = () => navigate("CurrentLocationScreen");
+  // const name = navigation.getParam('name', 'Guess');
+  // const profilePictureUri = navigation.getParam('profilePictureUri', '')
+  const handleBathroomRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
+    () => navigation.push("BathroomRemodelScreen", { questionScreen: ZipCode })
+  , [navigation.push]);
+  // const handleOptionsButtonOnPress = () => navigate("OptionsScreen");
+  // const handleCurrentLocationButtonOnPress = () => navigate("CurrentLocationScreen");
   return (
     <View style={styles.container}>
       {/* <Text>This is the Home.</Text>
