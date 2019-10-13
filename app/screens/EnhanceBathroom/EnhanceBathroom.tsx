@@ -36,7 +36,7 @@ const EnhanceBathroom: React.ComponentType<EnhanceBathroomProps> = (props) => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.viewBox1}/>
-      <Headline>Do you plan to maintain the existing floor plan?</Headline>
+      <Headline>What would you like to enhance?</Headline>
       <View style={styles.viewBox1}/>
       <Button
         icon={values.enhanceBathroom === "add" ? "check-circle" : "radio-button-unchecked"}
