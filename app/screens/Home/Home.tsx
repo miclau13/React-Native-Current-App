@@ -9,6 +9,8 @@ import { strings as optionStrings } from "../Options";
 import { strings as BathroomRemodelStrings } from "../BathroomRemodel";
 import BathroomRemodelCard from '../../components/BathroomRemodelCard';
 import KitchenRemodelCard from '../../components/KitchenRemodelCard';
+import ZipCode from '../ZipCode';
+import MaintainFloor from '../MaintainFloor';
 
 type Params = {
   name?: string;
@@ -22,7 +24,7 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigate } = navigation;
   const name = navigation.getParam('name', 'Guess');
   const profilePictureUri = navigation.getParam('profilePictureUri', '')
-  const handleBathroomRemodelButtonOnPress: CardProps['onPress'] = () => navigate("BathroomRemodelScreen");
+  const handleBathroomRemodelButtonOnPress: CardProps['onPress'] = () => navigate("BathroomRemodelScreen", { questionScreen: ZipCode });
   const handleOptionsButtonOnPress = () => navigate("OptionsScreen");
   const handleCurrentLocationButtonOnPress = () => navigate("CurrentLocationScreen");
   return (

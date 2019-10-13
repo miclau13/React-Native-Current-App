@@ -1,20 +1,18 @@
-import { useFormikContext, useField } from 'formik';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { Button, ButtonProps, Headline } from 'react-native-paper';
-import { NavigationStackScreenComponent } from "react-navigation-stack";
+import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
 import zipCodeList from './zipCodeList.json';
 import { BathroomRemodelFormValues } from '../BathroomRemodel';
-import { TextInput, HelperText, TextInputProps } from '../../components/Formik/TextInput';
+import MaintainFloor from '../MaintainFloor';
+import TextInput, { TextInputProps } from '../../components/Formik/TextInput';
+import HelperText  from '../../components/Formik/HelperText';
 
-type Params = {};
-
-type ScreenProps = {};
-
-interface ZipCodeProps  {
-
+interface ZipCodeProps {
+  navigation: NavigationStackScreenProps['navigation'];
 }
 
 const validate = (value: string) => {
@@ -26,15 +24,14 @@ const ZipCodeInput = (props: TextInputProps) => {
 };
 
 const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
-  console.log({props})
+  console.log("hi Zip Code")
+  const { navigation: { navigate } } = props;
   const form = useFormikContext<BathroomRemodelFormValues>();
-  console.log({form})
   const { errors } = form;
 
   const nextButtonOnPress: ButtonProps['onPress'] = (event) => {
-    console.log({errors})
+    navigate("BathroomRemodelScreen", { questionScreen: MaintainFloor });
   };
-  console.log("hi Zip Code")
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -60,7 +57,6 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
         color={styles.nextButton.backgroundColor}
         mode="contained" 
         onPress={nextButtonOnPress}
-        // disabled={errors && !!errors.zipCode}
       >
         Next
       </Button>

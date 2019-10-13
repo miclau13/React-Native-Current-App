@@ -1,21 +1,20 @@
 import { StyleSheet } from 'react-native';
-import { primaryBlue, screenWidth } from '../../styles';
+import { screenWidth } from '../../styles';
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    justifyContent: "flex-start",
+    height: 32,
+  },
   container: {
     flex: 1,
     justifyContent: "flex-start",
     width: screenWidth,
   },
-  // disabled: {
-  //   backgroundColor: primaryBlue,
-  //   opacity: 0.3
-  // },
-  nextButton: {
-    backgroundColor: primaryBlue
-  },
-  nextButtonTitle: {
-    color: "white"
+  radioButtonContainer: {
+    alignItems: "center",
+    display: 'flex',
+    flexDirection: "row",
   },
   viewBox1: {
     flex: 1,
