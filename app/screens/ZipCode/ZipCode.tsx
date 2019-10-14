@@ -23,25 +23,33 @@ const validate = (value: string) => {
 };
 
 const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
+  console.log("hi Zipcode");
   const { choice, navigation } = props;
   const form = useFormikContext<BathroomRemodelFormValues>();
-  const { errors, submitForm } = form;
+  const { errors, setFieldValue, submitForm, values } = form;
   // console.log({errors})
   const handleOnPress: ButtonProps['onPress'] = () => {
-    console.log("errors", errors)
+    // console.log("errors", errors)
+    // console.log("Zipcode on press values ", values)
     if(!!errors.zipCode) {
       return;
     }
     submitForm();
-    switch (choice){
-      case "BathroomRemodel": 
-        navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
-        break;
-      case "KitchenRemodel": 
-        navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
-        break;
-    }
+    // setFieldValue("zipCode", values.zipCode);
+    // switch (choice){
+    //   case "BathroomRemodel": 
+    //     navigation.push("BathroomRemodelFormScreen", { nextQuestionScreen: "maintainFloor" });
+    //     break;
+    //   case "KitchenRemodel": 
+    //     navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
+    //     break;
+    // }
   };
+
+  React.useEffect( () => {
+    console.log("ZipCode Mount");
+    return () => {console.log("ZipCode UnMount")}
+  }, []);
 
   return (
     <KeyboardAvoidingView

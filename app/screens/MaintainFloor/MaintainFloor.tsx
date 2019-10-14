@@ -14,6 +14,7 @@ interface MaintainFloorProps  {
 }
 
 const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
+  console.log("hi MaintainFloor");
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { setFieldValue, values } = form;
   const { navigation } = props;
@@ -32,7 +33,7 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
     }
   }
 
-  console.log("maintain floor",form.values)
+  // console.log("maintain floor",form.values)
 
   return (
     <KeyboardAvoidingView

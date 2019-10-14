@@ -5,6 +5,8 @@ import * as yup from 'yup';
 
 import styles from './styles';
 import BathroomRemodelFormik from '../../components/BathroomRemodelFormik';
+import MaintainFloor from '../MaintainFloor';
+import ZipCode from '../ZipCode';
 
 interface QuestionScreenProps {
   choice: string;
@@ -12,9 +14,11 @@ interface QuestionScreenProps {
 };
 
 type Params = {
-  questionScreen: React.ComponentType<QuestionScreenProps>;
+  // questionScreen: React.ComponentType<QuestionScreenProps>;
   // TODO change to ENUM
   choice: string;
+  // TODO change to ENUM
+  nextQuestionScreen: string;
 };
 
 type ScreenProps = {};
@@ -93,22 +97,50 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
     //   floorOrWallOrCeilingRepairs: yup.number().positive('Floor/Wall/Ceiling Repairs answer is Required'),
     // }),
   }), []);
-  const onSubmit = React.useCallback(values => console.log(values), [])
+  const onSubmit = React.useCallback(values => {
+    navigation.navigate("BathroomRemodelFormScreen", { nextQuestionScreen: "maintainFloor" });
+  }, [])
 
   const { navigation } = props;
-  const questionScreen = navigation.getParam("questionScreen", null);
-  const choice = navigation.getParam("choice", "null");
+  const choice = navigation.getParam("choice", "");
+  const nextQuestionScreen = navigation.getParam("nextQuestionScreen", "zipCode");
+
+  React.useEffect( () => {
+    console.log("BathroomRemodelForm Mount");
+    return () => {console.log("BathroomRemodelForm UnMount")}
+  }, []);
+
+  // console.log("BathroomRemodelForm navigation",navigation)
   
   return (
-    <View style={styles.container}>
-      <BathroomRemodelFormik
-        initialValues={initialValues}
-        onSubmit={onSubmit}
-        validationSchema={validationSchema}
-      >
-        {questionScreen && React.createElement(questionScreen, { choice, navigation }) }
-      </BathroomRemodelFormik>
-    </View>
+    <BathroomRemodelFormik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}
+    >
+      {/* {questionScreen && React.createElement(questionScreen, { choice, navigation }) } */}
+      {/* {nextQuestionScreen === "zipCode" ? 
+        <ZipCode choice={choice} navigation={navigation} />
+        : null
+      }
+      {nextQuestionScreen === "maintainFloor" ? 
+        <MaintainFloor navigation={navigation} />
+        : null
+      } */}
+      <View style={styles.container}>
+        {nextQuestionScreen === "zipCode" ? 
+          <ZipCode choice={choice} navigation={navigation} />
+          : null
+        }
+        {nextQuestionScreen === "maintainFloor" ? 
+          <MaintainFloor navigation={navigation} />
+          : null
+        }
+      </View>
+      
+      {/* <MaintainFloor navigation={navigation} /> */}
+      
+    </BathroomRemodelFormik>
   )
 };
 

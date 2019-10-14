@@ -2,9 +2,9 @@
 import React from "react";
 import { Platform } from 'react-native';
 import { Icon } from "react-native-elements";
-import { createSwitchNavigator, NavigationScreenProp, NavigationState, NavigationContainerProps } from 'react-navigation'; 
+import { createSwitchNavigator, NavigationState, NavigationContainerProps } from 'react-navigation'; 
 import { createDrawerNavigator } from 'react-navigation-drawer';
-import { createStackNavigator, NavigationStackProp, NavigationStackOptions, StackViewTransitionConfigs, NavigationStackConfig } from 'react-navigation-stack';
+import { createStackNavigator, HeaderBackButton } from 'react-navigation-stack';
 import { createBottomTabNavigator, NavigationBottomTabOptions } from 'react-navigation-tabs';
 
 import BurgerMenu from "../components/BurgerMenu";
@@ -114,9 +114,23 @@ LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>
 
 // BathroomRemodelQuestionsStack Start
 const BathroomRemodelQuestionsStack = createStackNavigator(
-  { BathroomRemodelFormScreen, ZipCodeQuestionScreen, BathroomRemodelQuestionScreen }, 
-  { initialRouteName: 'BathroomRemodelFormScreen' }
+  { BathroomRemodelFormScreen, ZipCodeQuestionScreen, MaintainFloorQuestionScreen, BathroomRemodelQuestionScreen }, 
+  { initialRouteName: 'BathroomRemodelFormScreen' },
 );
+
+BathroomRemodelQuestionsStack.navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
+  const { navigation } = props;
+  // console.log(navigation.getParam("nextQuestionScreen"))
+  // console.log("BathroomRemodelQuestionsStack options", navigation);
+  return { 
+    headerLeft: (props) => {
+      console.log({props});
+      return (
+        <HeaderBackButton backTitleVisible={true} title='test' onPress={()=>navigation.goBack(null)} {...props}/>
+      )
+    }
+  }
+};
 // BathroomRemodelQuestionsStack End
 
 // FlooringQuestionsStack Start

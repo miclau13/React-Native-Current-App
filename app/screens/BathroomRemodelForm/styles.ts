@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    justifyContent: "space-evenly",
+    justifyContent: "flex-start",
   }
 });
 
