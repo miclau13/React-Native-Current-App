@@ -6,13 +6,15 @@ import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
 import zipCodeList from './zipCodeList.json';
-import { BathroomRemodelFormValues } from '../BathroomRemodel';
+import BathroomRemodel from '../BathroomRemodel';
+import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
 import MaintainFloor from '../MaintainFloor';
 
 import HelperText from '../../components/Formik/HelperText';
 import ZipCodeInput from '../../components/ZipCodeInput';
 
 interface ZipCodeProps {
+  choice?: string;
   navigation: NavigationStackScreenProps['navigation'];
 }
 
@@ -21,13 +23,25 @@ const validate = (value: string) => {
 };
 
 const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
-  const { navigation } = props;
+  const { choice, navigation } = props;
   const form = useFormikContext<BathroomRemodelFormValues>();
-  const { errors } = form;
-
-  const nextButtonOnPress = React.useCallback<ButtonProps['onPress']>(() => {
-    navigation.push("BathroomRemodelScreen", { questionScreen: MaintainFloor });
-  }, [navigation.push]);
+  const { errors, submitForm } = form;
+  // console.log({errors})
+  const handleOnPress: ButtonProps['onPress'] = () => {
+    console.log("errors", errors)
+    if(!!errors.zipCode) {
+      return;
+    }
+    submitForm();
+    switch (choice){
+      case "BathroomRemodel": 
+        navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
+        break;
+      case "KitchenRemodel": 
+        navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
+        break;
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -51,9 +65,9 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
       <HelperText name="zipCode" />
       <View style={styles.viewBox2}/>
       <Button 
-        color={styles.nextButton.backgroundColor}
         mode="contained" 
-        onPress={nextButtonOnPress}
+        onPress={handleOnPress}
+        style={styles.nextButton}
       >
         Next
       </Button>

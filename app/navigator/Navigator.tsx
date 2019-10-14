@@ -9,7 +9,9 @@ import { createBottomTabNavigator, NavigationBottomTabOptions } from 'react-navi
 
 import BurgerMenu from "../components/BurgerMenu";
 import AuthLoadingScreen from '../screens/AuthLoading';
-import BathroomRemodelScreen from "../screens/BathroomRemodel";
+import BathroomRemodelFormScreen from "../screens/BathroomRemodelForm";
+import BathroomFloorRemodelQuestionScreen from '../screens/BathroomFloorRemodel';
+import BathroomRemodelQuestionScreen from '../screens/BathroomRemodel';
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
@@ -40,7 +42,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { BathroomRemodelScreen, DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen },
+  { BathroomRemodelFormScreen, DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen },
   { initialRouteName: 'HomeScreen' }
 );
 
@@ -110,12 +112,19 @@ LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>
 };
 // Login Stack End
 
-// RemodelQuestionsStack Start
-const RemodelQuestionsStack = createStackNavigator(
-  { BathroomRemodelScreen, ZipCodeQuestionScreen, MaintainFloorQuestionScreen, EnhanceBathroomQuestionScreen }, 
-  { initialRouteName: 'BathroomRemodelScreen' }
+// BathroomRemodelQuestionsStack Start
+const BathroomRemodelQuestionsStack = createStackNavigator(
+  { BathroomRemodelFormScreen, ZipCodeQuestionScreen, BathroomRemodelQuestionScreen }, 
+  { initialRouteName: 'BathroomRemodelFormScreen' }
 );
-// RemodelQuestionsStack End
+// BathroomRemodelQuestionsStack End
+
+// FlooringQuestionsStack Start
+const FlooringQuestionsStack = createStackNavigator(
+  { BathroomRemodelFormScreen, ZipCodeQuestionScreen, MaintainFloorQuestionScreen, BathroomFloorRemodelQuestionScreen, EnhanceBathroomQuestionScreen }, 
+  { initialRouteName: 'BathroomRemodelFormScreen' }
+);
+// BathroomRemodelQuestionsStack End
 
 RegisterScreen.navigationOptions = {
   tabBarLabel: registerStrings.registerTitle,
@@ -131,7 +140,8 @@ const RootSwitch = createSwitchNavigator(
   { 
     AuthTabs, 
     MainNavigator,
-    RemodelQuestionsStack,
+    BathroomRemodelQuestionsStack,
+    FlooringQuestionsStack,
     AuthLoading: AuthLoadingScreen, 
   }, 
   {

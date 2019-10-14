@@ -8,7 +8,9 @@ const styles = StyleSheet.create({
     width: screenWidth,
   },
   nextButton: {
-    backgroundColor: primaryBlue,
+    alignSelf: "center",
+    borderRadius: 20,
+    width: "75%",
   },
   nextButtonTitle: {
     color: "white"

@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: screenWidth,
   },
+  title: {
+    textAlign: "center",
+  },
   viewBox1: {
     flex: 1,
   },

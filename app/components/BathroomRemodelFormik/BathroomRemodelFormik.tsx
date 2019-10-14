@@ -1,7 +1,7 @@
 import { Formik, FormikConfig } from 'formik';
 import React from 'react';
 
-import { BathroomRemodelFormValues } from "../../screens/BathroomRemodel";
+import { BathroomRemodelFormValues } from "../../screens/BathroomRemodelForm";
 
 export interface BathroomRemodelFormikProps extends FormikConfig<BathroomRemodelFormValues> {};
 

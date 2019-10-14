@@ -1,11 +1,11 @@
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Headline, Button, ButtonProps, RadioButtonGroupProps, Text } from 'react-native-paper';
+import { Headline, Button, ButtonProps, Text } from 'react-native-paper';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
-import { BathroomRemodelFormValues } from '../BathroomRemodel';
+import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
 interface EnhanceBathroomProps  {
   navigation: NavigationStackScreenProps['navigation'];
