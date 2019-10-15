@@ -2,38 +2,32 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { Headline, Button, ButtonProps, Text, Title } from 'react-native-paper';
-import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
-import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
-import EnhanceBathroom from '../EnhanceBathroom';
-import BathroomFloorRemodel from '../BathroomFloorRemodel';
+import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
 interface MaintainFloorProps  {
-  navigation: NavigationStackScreenProps['navigation'];
+  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
 }
 
 const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
-  console.log("hi MaintainFloor");
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { setFieldValue, values } = form;
-  const { navigation } = props;
+  const { handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonProps['onPress'] = (value) => () => {
     setFieldValue("maintainFloor", value);
     switch(value) {
       case "yes":
-        navigation.push("BathroomRemodelFormScreen", { questionScreen: BathroomFloorRemodel });
+        handleStepNavigation("bathroomFloorRemodel");
         break;
       case "no":
-        navigation.push("BathroomRemodelFormScreen", { questionScreen: EnhanceBathroom });
+        handleStepNavigation("enhanceBathroom");
         break;
       default:
-        navigation.navigate("HomeScreen");
+        // navigation.navigate("HomeScreen");
     }
   }
-
-  // console.log("maintain floor",form.values)
 
   return (
     <KeyboardAvoidingView

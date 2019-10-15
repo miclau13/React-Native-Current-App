@@ -24,6 +24,8 @@ import EnhanceBathroomQuestionScreen, { strings as enhanceBathroomScreenQuestion
 import ZipCodeQuestionScreen, { strings as zipCodeQuestionStrings } from "../screens/ZipCode";
 import MaintainFloorQuestionScreen, { strings as maintainFloorQuestionStrings } from "../screens/MaintainFloor";
 
+import { getPreviousStep } from "../screens/BathroomRemodelForm";
+
 const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // const dynamicModalTransition: NavigationStackConfig['transitionConfig'] = (transitionProps, prevTransitionProps) => {
@@ -42,7 +44,33 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { BathroomRemodelFormScreen, DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen },
+  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen, 
+    BathroomRemodelFormScreen: {
+      screen: BathroomRemodelFormScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        const step = navigation.getParam("step");
+        const previousStep = navigation.getParam("previousStep");
+        return { 
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                backTitleVisible={false} 
+                onPress={() => {
+                  if(step === "zipCode") {
+                    navigation.goBack(navigation.state.key)
+                  } else {
+                    navigation.navigate("BathroomRemodelFormScreen", { step: previousStep, previousStep: getPreviousStep(previousStep) });
+                  }
+                }} 
+              />
+            )
+          }
+        }
+      }
+    },
+},
   { initialRouteName: 'HomeScreen' }
 );
 
@@ -117,20 +145,6 @@ const BathroomRemodelQuestionsStack = createStackNavigator(
   { BathroomRemodelFormScreen, ZipCodeQuestionScreen, MaintainFloorQuestionScreen, BathroomRemodelQuestionScreen }, 
   { initialRouteName: 'BathroomRemodelFormScreen' },
 );
-
-BathroomRemodelQuestionsStack.navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
-  const { navigation } = props;
-  // console.log(navigation.getParam("nextQuestionScreen"))
-  // console.log("BathroomRemodelQuestionsStack options", navigation);
-  return { 
-    headerLeft: (props) => {
-      console.log({props});
-      return (
-        <HeaderBackButton backTitleVisible={true} title='test' onPress={()=>navigation.goBack(null)} {...props}/>
-      )
-    }
-  }
-};
 // BathroomRemodelQuestionsStack End
 
 // FlooringQuestionsStack Start

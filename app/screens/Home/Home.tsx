@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import { CardProps } from 'react-native-paper';
-import { NavigationActions } from 'react-navigation';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import styles from './styles';
@@ -26,8 +25,8 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   // const name = navigation.getParam('name', 'Guess');
   // const profilePictureUri = navigation.getParam('profilePictureUri', '')
   const handleBathroomRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
-    () => navigation.navigate("BathroomRemodelQuestionsStack", { choice: "BathroomRemodel", nextQuestionScreen: "zipCode" }, NavigationActions.navigate({ routeName: "BathroomRemodelFormScreen"}) )
-  , [navigation.navigate]);
+    () => navigation.push("BathroomRemodelFormScreen", { remodelType: "BathroomRemodel", step: "zipCode", previousStep: "home" })
+  , [navigation.push]);
   const handleKitchenRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
     () => navigation.push("BathroomRemodelFormScreen", { questionScreen: ZipCode, choice: "KitchenRemodel" })
   , [navigation.push]);

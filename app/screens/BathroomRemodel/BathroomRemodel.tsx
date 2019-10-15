@@ -3,20 +3,18 @@ import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { ButtonGroup, ButtonGroupProps } from 'react-native-elements';
 import { Button, Headline, Title } from 'react-native-paper';
-import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
-import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
 interface BathroomRemodelProps  {
-  navigation: NavigationStackScreenProps['navigation'];
+  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
 }
 
 const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
-  console.log("BathroomRemodel")
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { setFieldValue, values } = form;
-  const { navigation } = props;
+  const { handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonGroupProps['onPress'] = (value) => (index) => {
     setFieldValue("bathroomRemodel", { ...values.bathroomRemodel, [value]: index });

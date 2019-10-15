@@ -2,26 +2,33 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { ButtonGroup, ButtonGroupProps } from 'react-native-elements';
-import { Button, Headline, Title } from 'react-native-paper';
-import { NavigationStackScreenProps } from "react-navigation-stack";
+import { Button, ButtonProps, Headline, Title } from 'react-native-paper';
 
 import styles from './styles';
-import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
 interface BathroomFloorRemodelProps  {
-  navigation: NavigationStackScreenProps['navigation'];
+  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
 }
 
 const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
-  const { setFieldValue, values } = form;
-  const { navigation } = props;
+  const { errors, setFieldValue, values } = form;
+  const { handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonGroupProps['onPress'] = (value) => (index) => {
     setFieldValue("bathroomFloorRemodel", { ...values.bathroomFloorRemodel, [value]: index });
   };
+  
+  const handleButtonOnPress: ButtonProps['onPress'] = () => {
+    if(!!errors.bathroomFloorRemodel) {
+      return;
+    };
+    handleStepNavigation("bathroomRemodel");
+  }
 
   const buttons = ['Replace', 'Keep', 'Don’t Have'];
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -63,7 +70,7 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
       <View style={styles.viewBox2}/>
       <Button
         mode="contained" 
-        onPress={()=>{}}
+        onPress={handleButtonOnPress}
         style={styles.buttonContainer}
       >
         Next

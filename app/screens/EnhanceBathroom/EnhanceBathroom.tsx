@@ -2,32 +2,22 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { Headline, Button, ButtonProps, Text } from 'react-native-paper';
-import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
-import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
 interface EnhanceBathroomProps  {
-  navigation: NavigationStackScreenProps['navigation'];
+  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
 }
 
 const EnhanceBathroom: React.ComponentType<EnhanceBathroomProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { setFieldValue, values } = form;
-  const { navigation } = props;
+  const { handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonProps['onPress'] = (value) => () => {
     setFieldValue("enhanceBathroom", value);
-    switch(value) {
-      // case "yes":
-      //   navigation.push("BathroomRemodelScreen", { questionScreen: EnhanceBathroom });
-      //   break;
-      // case "no":
-      //   navigation.push("BathroomRemodelScreen", { questionScreen: EnhanceBathroom });
-      //   break;
-      default:
-        navigation.navigate("HomeScreen");
-    }
+    handleStepNavigation("bathroomRemodel");
   }
 
   return (

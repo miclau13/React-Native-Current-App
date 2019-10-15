@@ -6,16 +6,15 @@ import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
 import zipCodeList from './zipCodeList.json';
-import BathroomRemodel from '../BathroomRemodel';
-import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 import MaintainFloor from '../MaintainFloor';
 
 import HelperText from '../../components/Formik/HelperText';
 import ZipCodeInput from '../../components/ZipCodeInput';
 
 interface ZipCodeProps {
-  choice?: string;
-  navigation: NavigationStackScreenProps['navigation'];
+  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
+  remodelType?: string;
 }
 
 const validate = (value: string) => {
@@ -23,27 +22,22 @@ const validate = (value: string) => {
 };
 
 const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
-  console.log("hi Zipcode");
-  const { choice, navigation } = props;
+  const { handleStepNavigation, remodelType } = props;
   const form = useFormikContext<BathroomRemodelFormValues>();
-  const { errors, setFieldValue, submitForm, values } = form;
-  // console.log({errors})
+  const { errors, setFieldValue, values } = form;
   const handleOnPress: ButtonProps['onPress'] = () => {
-    // console.log("errors", errors)
-    // console.log("Zipcode on press values ", values)
     if(!!errors.zipCode) {
       return;
     }
-    submitForm();
-    // setFieldValue("zipCode", values.zipCode);
-    // switch (choice){
-    //   case "BathroomRemodel": 
-    //     navigation.push("BathroomRemodelFormScreen", { nextQuestionScreen: "maintainFloor" });
-    //     break;
-    //   case "KitchenRemodel": 
-    //     navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
-    //     break;
-    // }
+    setFieldValue("zipCode", values.zipCode);
+    switch (remodelType) {
+      case "BathroomRemodel": 
+        handleStepNavigation("maintainFloor");
+        break;
+      case "KitchenRemodel": 
+        // navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
+        break;
+    }
   };
 
   React.useEffect( () => {

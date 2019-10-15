@@ -1,24 +1,23 @@
 import React from 'react';
 import { View } from "react-native";
-import { NavigationStackScreenComponent, NavigationStackScreenProps } from "react-navigation-stack";
+import { NavigationStackScreenComponent } from "react-navigation-stack";
 import * as yup from 'yup';
 
 import styles from './styles';
-import BathroomRemodelFormik from '../../components/BathroomRemodelFormik';
+import BathroomFloorRemodel from '../BathroomFloorRemodel';
+import BathroomRemodel from '../BathroomRemodel';
+import EnhanceBathroom from '../EnhanceBathroom';
 import MaintainFloor from '../MaintainFloor';
 import ZipCode from '../ZipCode';
+import BathroomRemodelFormik from '../../components/BathroomRemodelFormik';
 
-interface QuestionScreenProps {
-  choice: string;
-  navigation: NavigationStackScreenProps['navigation'];
-};
+type BathroomRemodelStep = "zipCode" | "maintainFloor" | "enhanceBathroom" | "bathroomFloorRemodel" | "bathroomRemodel";
 
 type Params = {
-  // questionScreen: React.ComponentType<QuestionScreenProps>;
   // TODO change to ENUM
-  choice: string;
-  // TODO change to ENUM
-  nextQuestionScreen: string;
+  remodelType: string;
+  step: BathroomRemodelStep;
+  previousStep?: BathroomRemodelStep;
 };
 
 type ScreenProps = {};
@@ -32,7 +31,7 @@ type BathroomRemodelField = {
   medicineCabinet: number;
   mirror: number;
   fiberGlassShowerDoor: number;
-}
+};
 
 type BathroomFloorRemodelField = {
   bathroomFloor: number,
@@ -40,7 +39,19 @@ type BathroomFloorRemodelField = {
   bathroomWall: number,
   bathroomCeiling: number,
   floorOrWallOrCeilingRepairs: number,
+};
+
+const bathroomRemodelPreviousStepMap = {
+  "zipCode": "home",
+  "maintainFloor": "zipCode",
+  "enhanceBathroom": "maintainFloor",
+  "bathroomFloorRemodel": "maintainFloor",
+  "bathroomRemodel": "maintainFloor",
 }
+
+export const getPreviousStep = (currentStep: BathroomRemodelStep) => {
+  return bathroomRemodelPreviousStepMap[currentStep];
+};
 
 export interface BathroomRemodelFormValues {
   zipCode: string;
@@ -48,12 +59,16 @@ export interface BathroomRemodelFormValues {
   enhanceBathroom: string;
   bathroomRemodel: BathroomRemodelField;
   bathroomFloorRemodel: BathroomFloorRemodelField;
+};
+
+export interface BathroomRemodelFormProps {
+  handleStepNavigation: (step: BathroomRemodelStep) => void;
 }
 
 const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const initialValues = React.useMemo(() => {
     return ({
-      zipCode: "",
+      zipCode: "00501",
       maintainFloor: "",
       enhanceBathroom: "",
       bathroomRemodel: {
@@ -77,69 +92,71 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
   }, []);
   const validationSchema = React.useMemo(() => yup.object().shape({
     zipCode: yup.string().required('Zip Code is Required').max(5),
-    // maintainFloor: yup.string().required('Maintain Floor is Required'),
-    // enhanceBathroom: yup.string().required('Enhance Bathroom is Required'),
-    // bathroomRemodel: yup.object().shape({
-    //   bathtub: yup.number().positive('Bathtub answer is Required'),
-    //   showerStall: yup.number().positive('Shower Stall answer is Required'),
-    //   toilet: yup.number().positive('Toilet answer is Required'),
-    //   sink: yup.number().positive('Sink answer is Required'),
-    //   vanity: yup.number().positive('Vanity answer is Required'),
-    //   medicineCabinet: yup.number().positive('Medicine Cabinet answer is Required'),
-    //   mirror: yup.number().positive('Mirror answer is Required'),
-    //   fiberGlassShowerDoor: yup.number().positive('Fiber Glass Shower Door answer is Required'),
-    // }),
-    // bathroomFloorRemodel: yup.object().shape({
-    //   bathroomFloor: yup.number().positive('Bathroom Floor answer is Required'),
-    //   bathOrShowerWall: yup.number().positive('Bath/Shower Wall answer is Required'),
-    //   bathroomWall: yup.number().positive('Bathroom Wall answer is Required'),
-    //   bathroomCeiling: yup.number().positive('Bathroom Ceiling answer is Required'),
-    //   floorOrWallOrCeilingRepairs: yup.number().positive('Floor/Wall/Ceiling Repairs answer is Required'),
-    // }),
+    maintainFloor: yup.string().required('Maintain Floor is Required'),
+    enhanceBathroom: yup.string().required('Enhance Bathroom is Required'),
+    bathroomRemodel: yup.object().shape({
+      bathtub: yup.number().positive('Bathtub answer is Required'),
+      showerStall: yup.number().positive('Shower Stall answer is Required'),
+      toilet: yup.number().positive('Toilet answer is Required'),
+      sink: yup.number().positive('Sink answer is Required'),
+      vanity: yup.number().positive('Vanity answer is Required'),
+      medicineCabinet: yup.number().positive('Medicine Cabinet answer is Required'),
+      mirror: yup.number().positive('Mirror answer is Required'),
+      fiberGlassShowerDoor: yup.number().positive('Fiber Glass Shower Door answer is Required'),
+    }),
+    bathroomFloorRemodel: yup.object().shape({
+      bathroomFloor: yup.number().positive('Bathroom Floor answer is Required'),
+      bathOrShowerWall: yup.number().positive('Bath/Shower Wall answer is Required'),
+      bathroomWall: yup.number().positive('Bathroom Wall answer is Required'),
+      bathroomCeiling: yup.number().positive('Bathroom Ceiling answer is Required'),
+      floorOrWallOrCeilingRepairs: yup.number().positive('Floor/Wall/Ceiling Repairs answer is Required'),
+    }),
   }), []);
   const onSubmit = React.useCallback(values => {
-    navigation.navigate("BathroomRemodelFormScreen", { nextQuestionScreen: "maintainFloor" });
+    navigation.navigate("BathroomRemodelFormScreen", { step: "maintainFloor", previousStep: "zipCode" });
   }, [])
 
   const { navigation } = props;
-  const choice = navigation.getParam("choice", "");
-  const nextQuestionScreen = navigation.getParam("nextQuestionScreen", "zipCode");
+  const remodelType = navigation.getParam("remodelType", "");
+  const step = navigation.getParam("step", "zipCode");
 
-  React.useEffect( () => {
+  const handleStepNavigation = React.useCallback<BathroomRemodelFormProps['handleStepNavigation']>((step) => {
+    navigation.navigate("BathroomRemodelFormScreen", { step, previousStep: getPreviousStep(step) });
+  }, [step])
+
+  React.useEffect(() => {
     console.log("BathroomRemodelForm Mount");
     return () => {console.log("BathroomRemodelForm UnMount")}
   }, []);
 
-  // console.log("BathroomRemodelForm navigation",navigation)
-  
   return (
     <BathroomRemodelFormik
       initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {/* {questionScreen && React.createElement(questionScreen, { choice, navigation }) } */}
-      {/* {nextQuestionScreen === "zipCode" ? 
-        <ZipCode choice={choice} navigation={navigation} />
-        : null
-      }
-      {nextQuestionScreen === "maintainFloor" ? 
-        <MaintainFloor navigation={navigation} />
-        : null
-      } */}
       <View style={styles.container}>
-        {nextQuestionScreen === "zipCode" ? 
-          <ZipCode choice={choice} navigation={navigation} />
+        {step === "zipCode" ? 
+          <ZipCode remodelType={remodelType} handleStepNavigation={handleStepNavigation} />
           : null
         }
-        {nextQuestionScreen === "maintainFloor" ? 
-          <MaintainFloor navigation={navigation} />
+        {step === "maintainFloor" ? 
+          <MaintainFloor handleStepNavigation={handleStepNavigation} />
+          : null
+        }
+        {step === "enhanceBathroom" ? 
+          <EnhanceBathroom handleStepNavigation={handleStepNavigation} />
+          : null
+        }
+        {step === "bathroomFloorRemodel" ? 
+          <BathroomFloorRemodel handleStepNavigation={handleStepNavigation} />
+          : null
+        }
+        {step === "bathroomRemodel" ? 
+          <BathroomRemodel handleStepNavigation={handleStepNavigation} />
           : null
         }
       </View>
-      
-      {/* <MaintainFloor navigation={navigation} /> */}
-      
     </BathroomRemodelFormik>
   )
 };
