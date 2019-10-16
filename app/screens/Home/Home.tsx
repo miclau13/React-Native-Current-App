@@ -25,10 +25,13 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   // const name = navigation.getParam('name', 'Guess');
   // const profilePictureUri = navigation.getParam('profilePictureUri', '')
   const handleBathroomRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
-    () => navigation.push("BathroomRemodelFormScreen", { remodelType: "BathroomRemodel", step: "zipCode", previousStep: "home" })
+    () => navigation.push("BathroomRemodelFormScreen", { remodelType: "bathroomRemodel", step: "zipCode", previousStep: "home" })
   , [navigation.push]);
   const handleKitchenRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
-    () => navigation.push("BathroomRemodelFormScreen", { questionScreen: ZipCode, choice: "KitchenRemodel" })
+    // () => navigation.push("BathroomRemodelFormScreen", { remodelType: "kitchenRemodel", step: "zipCode", previousStep: "home" })
+    // () => navigation.push("UploadPhotoScreen")
+    () => {}
+    
   , [navigation.push]);
   // const handleOptionsButtonOnPress = () => navigate("OptionsScreen");
   // const handleCurrentLocationButtonOnPress = () => navigate("CurrentLocationScreen");
@@ -50,4 +53,4 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   )
 };
 
-export default Home;
+export default React.memo(Home);

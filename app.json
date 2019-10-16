@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "TS1",
-    "slug": "ReactNativeProjectTS",
+    "name": "Trudeed Remodel",
+    "slug": "TrudeedRemodel",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -11,7 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/favicon96x96.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

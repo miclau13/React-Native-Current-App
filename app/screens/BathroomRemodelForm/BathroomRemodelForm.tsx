@@ -12,6 +12,7 @@ import ZipCode from '../ZipCode';
 import BathroomRemodelFormik from '../../components/BathroomRemodelFormik';
 
 type BathroomRemodelStep = "zipCode" | "maintainFloor" | "enhanceBathroom" | "bathroomFloorRemodel" | "bathroomRemodel";
+type RemodelType = "bathroomRemodel" | "kitchenRemodel";
 
 type Params = {
   // TODO change to ENUM
@@ -68,7 +69,7 @@ export interface BathroomRemodelFormProps {
 const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const initialValues = React.useMemo(() => {
     return ({
-      zipCode: "00501",
+      zipCode: "",
       maintainFloor: "",
       enhanceBathroom: "",
       bathroomRemodel: {
@@ -93,28 +94,30 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
   const validationSchema = React.useMemo(() => yup.object().shape({
     zipCode: yup.string().required('Zip Code is Required').max(5),
     maintainFloor: yup.string().required('Maintain Floor is Required'),
-    enhanceBathroom: yup.string().required('Enhance Bathroom is Required'),
-    bathroomRemodel: yup.object().shape({
-      bathtub: yup.number().positive('Bathtub answer is Required'),
-      showerStall: yup.number().positive('Shower Stall answer is Required'),
-      toilet: yup.number().positive('Toilet answer is Required'),
-      sink: yup.number().positive('Sink answer is Required'),
-      vanity: yup.number().positive('Vanity answer is Required'),
-      medicineCabinet: yup.number().positive('Medicine Cabinet answer is Required'),
-      mirror: yup.number().positive('Mirror answer is Required'),
-      fiberGlassShowerDoor: yup.number().positive('Fiber Glass Shower Door answer is Required'),
-    }),
-    bathroomFloorRemodel: yup.object().shape({
-      bathroomFloor: yup.number().positive('Bathroom Floor answer is Required'),
-      bathOrShowerWall: yup.number().positive('Bath/Shower Wall answer is Required'),
-      bathroomWall: yup.number().positive('Bathroom Wall answer is Required'),
-      bathroomCeiling: yup.number().positive('Bathroom Ceiling answer is Required'),
-      floorOrWallOrCeilingRepairs: yup.number().positive('Floor/Wall/Ceiling Repairs answer is Required'),
-    }),
+    // enhanceBathroom: yup.string().required('Enhance Bathroom is Required'),
+    // bathroomRemodel: yup.object().shape({
+    //   bathtub: yup.number().positive('Bathtub answer is Required'),
+    //   showerStall: yup.number().positive('Shower Stall answer is Required'),
+    //   toilet: yup.number().positive('Toilet answer is Required'),
+    //   sink: yup.number().positive('Sink answer is Required'),
+    //   vanity: yup.number().positive('Vanity answer is Required'),
+    //   medicineCabinet: yup.number().positive('Medicine Cabinet answer is Required'),
+    //   mirror: yup.number().positive('Mirror answer is Required'),
+    //   fiberGlassShowerDoor: yup.number().positive('Fiber Glass Shower Door answer is Required'),
+    // }),
+    // bathroomFloorRemodel: yup.object().shape({
+    //   bathroomFloor: yup.number().positive('Bathroom Floor answer is Required'),
+    //   bathOrShowerWall: yup.number().positive('Bath/Shower Wall answer is Required'),
+    //   bathroomWall: yup.number().positive('Bathroom Wall answer is Required'),
+    //   bathroomCeiling: yup.number().positive('Bathroom Ceiling answer is Required'),
+    //   floorOrWallOrCeilingRepairs: yup.number().positive('Floor/Wall/Ceiling Repairs answer is Required'),
+    // }),
   }), []);
+
   const onSubmit = React.useCallback(values => {
-    navigation.navigate("BathroomRemodelFormScreen", { step: "maintainFloor", previousStep: "zipCode" });
-  }, [])
+    console.log("onsbumit values",values)
+    navigation.navigate("HomeScreen");
+  }, []);
 
   const { navigation } = props;
   const remodelType = navigation.getParam("remodelType", "");

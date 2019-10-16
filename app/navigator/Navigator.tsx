@@ -14,15 +14,16 @@ import BathroomFloorRemodelQuestionScreen from '../screens/BathroomFloorRemodel'
 import BathroomRemodelQuestionScreen from '../screens/BathroomRemodel';
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
+import EnhanceBathroomQuestionScreen, { strings as enhanceBathroomScreenQuestionStrings } from "../screens/EnhanceBathroom";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
+import MaintainFloorQuestionScreen, { strings as maintainFloorQuestionStrings } from "../screens/MaintainFloor";
 import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
-import EnhanceBathroomQuestionScreen, { strings as enhanceBathroomScreenQuestionStrings } from "../screens/EnhanceBathroom";
+import UploadPhotoScreen, { strings as uploadPhotoStrings } from "../screens/UploadPhoto";
 import ZipCodeQuestionScreen, { strings as zipCodeQuestionStrings } from "../screens/ZipCode";
-import MaintainFloorQuestionScreen, { strings as maintainFloorQuestionStrings } from "../screens/MaintainFloor";
 
 import { getPreviousStep } from "../screens/BathroomRemodelForm";
 
@@ -44,7 +45,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen, 
+  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen, UploadPhotoScreen,
     BathroomRemodelFormScreen: {
       screen: BathroomRemodelFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -173,7 +174,7 @@ const RootSwitch = createSwitchNavigator(
     AuthLoading: AuthLoadingScreen, 
   }, 
   {
-    initialRouteName: 'AuthLoading',
+    initialRouteName: 'MainNavigator',
   }
 );
 

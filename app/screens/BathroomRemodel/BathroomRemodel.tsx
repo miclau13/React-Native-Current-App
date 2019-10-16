@@ -2,7 +2,7 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { ButtonGroup, ButtonGroupProps } from 'react-native-elements';
-import { Button, Headline, Title } from 'react-native-paper';
+import { Button, ButtonProps, Headline, Title } from 'react-native-paper';
 
 import styles from './styles';
 import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
@@ -13,12 +13,16 @@ interface BathroomRemodelProps  {
 
 const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
-  const { setFieldValue, values } = form;
+  const { setFieldValue, submitForm, values } = form;
   const { handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonGroupProps['onPress'] = (value) => (index) => {
     setFieldValue("bathroomRemodel", { ...values.bathroomRemodel, [value]: index });
   };
+
+  const handleOnSubmit = React.useCallback<ButtonProps['onPress']>(() => {
+    submitForm();
+  }, [submitForm]);
 
   const buttons = ['Replace', 'Keep', 'Don’t Have'];
   return (
@@ -80,10 +84,10 @@ const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
       <View style={styles.viewBox2}/>
       <Button
         mode="contained" 
-        onPress={()=>{}}
+        onPress={handleOnSubmit}
         style={styles.buttonContainer}
       >
-        Next
+        Submit
       </Button>
       <View style={styles.viewBox3}/>
     </KeyboardAvoidingView>

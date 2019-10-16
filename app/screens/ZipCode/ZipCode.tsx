@@ -31,10 +31,10 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
     }
     setFieldValue("zipCode", values.zipCode);
     switch (remodelType) {
-      case "BathroomRemodel": 
+      case "bathroomRemodel": 
         handleStepNavigation("maintainFloor");
         break;
-      case "KitchenRemodel": 
+      case "kitchenRemodel": 
         // navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
         break;
     }

@@ -21,12 +21,12 @@ const Settings: NavigationStackScreenComponent<Params, ScreenProps> = (props) =>
   return (
     <View style={styles.container}>
       <Text>This is the Settings.</Text>
-      <Button
+      {/* <Button
         title="Logout"
         onPress={handleButtonOnPress}
-      />
+      /> */}
     </View>
   )
 };
 
-export default Settings;
+export default React.memo(Settings);
