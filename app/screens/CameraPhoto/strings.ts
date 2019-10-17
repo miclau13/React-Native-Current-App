@@ -1,5 +1,5 @@
 const strings = {
-  title: "Upload Photo",
+  title: "Camera Photo",
 }
 
 export default strings;

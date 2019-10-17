@@ -12,6 +12,7 @@ import AuthLoadingScreen from '../screens/AuthLoading';
 import BathroomRemodelFormScreen from "../screens/BathroomRemodelForm";
 import BathroomFloorRemodelQuestionScreen from '../screens/BathroomFloorRemodel';
 import BathroomRemodelQuestionScreen from '../screens/BathroomRemodel';
+import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
 import EnhanceBathroomQuestionScreen, { strings as enhanceBathroomScreenQuestionStrings } from "../screens/EnhanceBathroom";
@@ -22,7 +23,7 @@ import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
-import UploadPhotoScreen, { strings as uploadPhotoStrings } from "../screens/UploadPhoto";
+
 import ZipCodeQuestionScreen, { strings as zipCodeQuestionStrings } from "../screens/ZipCode";
 
 import { getPreviousStep } from "../screens/BathroomRemodelForm";
@@ -45,7 +46,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen, UploadPhotoScreen,
+  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen, CameraScreen,
     BathroomRemodelFormScreen: {
       screen: BathroomRemodelFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {

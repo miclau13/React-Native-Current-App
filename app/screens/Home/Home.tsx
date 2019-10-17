@@ -29,8 +29,8 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   , [navigation.push]);
   const handleKitchenRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
     // () => navigation.push("BathroomRemodelFormScreen", { remodelType: "kitchenRemodel", step: "zipCode", previousStep: "home" })
-    // () => navigation.push("UploadPhotoScreen")
-    () => {}
+    () => navigation.push("CameraScreen")
+    // () => {}
     
   , [navigation.push]);
   // const handleOptionsButtonOnPress = () => navigate("OptionsScreen");

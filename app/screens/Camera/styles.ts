@@ -1,29 +1,43 @@
 import { StyleSheet } from 'react-native';
+import isIPhoneX from 'react-native-is-iphonex';
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
+  bottomBar: {
+    alignSelf: 'flex-end',
+    backgroundColor: 'transparent',
     flex: 1,
-    justifyContent: "flex-start",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingBottom: isIPhoneX ? 25 : 20,
   },
-  // camera: {
-  //   flex: 1,
-  //   justifyContent: 'space-between',
-  // },
+  camera: {
+    justifyContent: 'space-between',
+    flex: 1,
+    flexDirection: 'row',
+  },
+  container: {
+    flex: 1,
+  },
+  gallery: {
+    alignSelf: 'center',
+    flex: 1,
+  },
+  takePhoto: {
+    alignSelf: 'center',
+    flex: 1,
+  },
+  viewBox1: {
+    flex: 2.5,
+  },
+  viewBox2: {
+    flex: 1
+  },
   // topBar: {
   //   flex: 0.2,
   //   backgroundColor: 'transparent',
   //   flexDirection: 'row',
   //   justifyContent: 'space-around',
   //   paddingTop: Constants.statusBarHeight / 2,
-  // },
-  // bottomBar: {
-  //   paddingBottom: isIPhoneX ? 25 : 5,
-  //   backgroundColor: 'transparent',
-  //   alignSelf: 'flex-end',
-  //   justifyContent: 'space-between',
-  //   flex: 0.12,
-  //   flexDirection: 'row',
   // },
   // noPermissions: {
   //   flex: 1,
