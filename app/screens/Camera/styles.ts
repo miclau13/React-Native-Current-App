@@ -22,14 +22,21 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flex: 1,
   },
+  deviceGallery: {
+    alignSelf: 'center',
+    flex: 1,
+  },
   takePhoto: {
     alignSelf: 'center',
     flex: 1,
   },
   viewBox1: {
-    flex: 2.5,
+    flex: 0.5,
   },
   viewBox2: {
+    flex: 1
+  },
+  viewBox3: {
     flex: 1
   },
   // topBar: {

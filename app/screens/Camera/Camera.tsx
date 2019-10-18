@@ -1,41 +1,67 @@
 import { Camera as ExpoCamera } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
+import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Platform, View, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
-import CameraPhotoGallery from '../CameraPhotoGallery';
+import CameraPhotoGallery, { PHOTOS_DIR } from '../CameraPhotoGallery';
+
+type CameraStep = "camera" | "gallery";
 
 type Params = {
+  step: CameraStep;
+  previousStep?: CameraStep;
 };
 
 type ScreenProps = {};
 
 export interface CameraProps {
-  
+  handleStepNavigation: (step: CameraStep) => void;
+  handleReverseCamera: TouchableOpacityProps['onPress'];
+};
+
+const cameraPreviousStepMap = {
+  "camera": "home",
+  "gallery": "camera",
+};
+
+export const getPreviousStep = (currentStep: CameraStep) => {
+  return cameraPreviousStepMap[currentStep];
 };
 
 interface BottomBarProps {
+  handleReverseCamera: CameraProps['handleReverseCamera'];
+  handleStepNavigation: CameraProps['handleStepNavigation'];
   takePicture: TouchableOpacityProps['onPress'];
-  toggleView: TouchableOpacityProps['onPress'];
-}
+  pickImage: TouchableOpacityProps['onPress'];
+};
 
 const BottomBar: React.ComponentType<BottomBarProps> = (props) => {
-  const { takePicture, toggleView } = props;
+  const { handleReverseCamera, handleStepNavigation, takePicture } = props;
+
+  const handlGalleryOnPress = React.useCallback<TouchableOpacityProps['onPress']>(() => {
+    handleStepNavigation("gallery");
+  }, [handleStepNavigation]);
+
   return (
     <View style={styles.bottomBar}>
       <View style={styles.viewBox1} />
+      <TouchableOpacity onPress={handlGalleryOnPress} style={styles.deviceGallery}>
+        <MaterialIcon name="photo-library" size={40} color="white" />
+      </TouchableOpacity>
+      <View style={styles.viewBox2} />
       <TouchableOpacity onPress={takePicture} style={styles.takePhoto}>
         <AwesomeIcon name="dot-circle-o" size={70} color="white" />
       </TouchableOpacity>
-      <View style={styles.viewBox2} />
-      <TouchableOpacity style={styles.gallery} onPress={toggleView}>
-        <View>
-          <AwesomeIcon name="photo" size={40} color="white" />
-        </View>
+      <View style={styles.viewBox3} />
+      <TouchableOpacity onPress={handleReverseCamera} style={styles.gallery}>
+        <Ionicons name="ios-reverse-camera" size={50} color="white" />
       </TouchableOpacity>
     </View>
   )
@@ -43,20 +69,31 @@ const BottomBar: React.ComponentType<BottomBarProps> = (props) => {
 
 const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
+  const { navigation } = props;
+  const step = navigation.getParam("step", "camera");
+
   const [camera, setCamera] = React.useState<ExpoCamera>(null);
   const [hasCameraPermission, setHasCameraPermission] = React.useState(false);
-  const [newPhotos, setNewPhotos] = React.useState(false);
+  const [phonePhotos, setPhonePhotos] = React.useState<string[]>([]);
   const [pictureSize, setPictureSize] = React.useState("");
   const [pictureSizes, setPictureSizes] = React.useState<string[]>([]);
   const [pictureSizeId, setPictureSizeId] = React.useState(0);
   const [ratio, setRatio] = React.useState('16:9');
-  const [showGallery, setShowGallery] = React.useState(false);
   const [type, setType] = React.useState<React.ReactText>(ExpoCamera.Constants.Type.back);
 
   const askPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     setHasCameraPermission(status === 'granted');
   };
+
+  // Clear photos taken in the app when unmount
+  const clearPhotos = React.useCallback(async () => {
+    const photos = await FileSystem.readDirectoryAsync(PHOTOS_DIR);
+    console.log("Camera clearPhotos ", photos)
+    if (photos.length > 0) {
+      await FileSystem.deleteAsync(PHOTOS_DIR);
+    }
+  }, []);
 
   const collectPictureSizes = React.useCallback(async () => {
     if (camera) {
@@ -86,12 +123,23 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     } catch (e) {
       console.log(e)
     }
-  }  
+  };
+
   const handleMountError = React.useCallback(({ message }) => console.error(message), []);
 
+  const handleStepNavigation = React.useCallback<CameraProps['handleStepNavigation']>((step) => {
+    navigation.navigate("CameraScreen", { step, previousStep: getPreviousStep(step) });
+  }, [step]);
+
+  const handleReverseCamera = React.useCallback<TouchableOpacityProps['onPress']>(() => {
+    if (type === ExpoCamera.Constants.Type.back) {
+      setType(ExpoCamera.Constants.Type.front);
+    } else {
+      setType(ExpoCamera.Constants.Type.back);
+    }
+  }, [type]);
+
   const onPictureSaved = async photo => {
-    console.log("onPictureSaved photo", photo)
-    console.log(`${FileSystem.documentDirectory}photos/${Date.now()}.jpg`)
     try {
       await FileSystem.moveAsync({
         from: photo.uri,
@@ -100,31 +148,42 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     } catch (e) {
       console.log({e})
     }
-    setNewPhotos(true);
-  }
+    // handleStepNavigation("gallery");
+  };
 
-  const takePicture = React.useCallback<TouchableOpacityProps['onPress']>(() => {
-    console.log("takePicture")
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      // TODO change quality depening on the file size
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setPhonePhotos([...phonePhotos, result.uri]);
+    };
+  };
+
+  const takePicture = React.useCallback<TouchableOpacityProps['onPress']>(async () => {
     if (camera) {
-      camera.takePictureAsync({ onPictureSaved });
+      await camera.takePictureAsync({ onPictureSaved });
     }
   }, [camera]);
-
-  const toggleView = React.useCallback<TouchableOpacityProps['onPress']>(() => {
-    setNewPhotos(false);
-    setShowGallery(!showGallery);
-  }, [newPhotos, showGallery]);
 
   React.useEffect(() => {
     console.log("Camera Mount");
     askPermission();
     createFileDirectory();
-    return () => {console.log("Camera UnMount")}
+    return () => {
+      clearPhotos();
+      console.log("Camera UnMount");
+    }
   }, []);
 
   return (
     <View style={{ flex: 1 }}>
-      {showGallery ? <CameraPhotoGallery toggleView={toggleView} /> :
+      {step === "camera" ?         
         <ExpoCamera
           onCameraReady={collectPictureSizes}
           onMountError={handleMountError}
@@ -133,11 +192,21 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
           style={styles.camera}
           type={type}
         >
-          <BottomBar 
+          <BottomBar
+            handleReverseCamera={handleReverseCamera}
+            handleStepNavigation={handleStepNavigation}
+            pickImage={pickImage}
             takePicture={takePicture} 
-            toggleView={toggleView}
           />
-        </ExpoCamera>
+        </ExpoCamera> 
+        : null
+      }
+      {step === "gallery" ?  
+        <CameraPhotoGallery 
+          handleStepNavigation={handleStepNavigation}
+          phonePhotos={phonePhotos} 
+        /> 
+        : null
       }
     </View>
   )

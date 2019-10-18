@@ -34,7 +34,7 @@ const CameraPhoto: React.ComponentType<CameraPhotoProps> = (props) => {
       onPress={toggleSelection}
     >
       <Image
-        style={styles.picture}
+        style={selected ? [styles.picture, styles.pictureSelected] : styles.picture}
         source={{ uri }}
       />
       {selected && <MaterialIcons name="check-circle" size={30} color="#4630EB" />}

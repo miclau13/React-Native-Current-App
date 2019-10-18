@@ -29,12 +29,20 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   , [navigation.push]);
   const handleKitchenRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
     // () => navigation.push("BathroomRemodelFormScreen", { remodelType: "kitchenRemodel", step: "zipCode", previousStep: "home" })
-    () => navigation.push("CameraScreen")
+    () => navigation.push("CameraScreen", { step: "camera", previousStep: "home" })
     // () => {}
     
   , [navigation.push]);
   // const handleOptionsButtonOnPress = () => navigate("OptionsScreen");
   // const handleCurrentLocationButtonOnPress = () => navigate("CurrentLocationScreen");
+
+  React.useEffect(() => {
+    console.log("Home Mount");
+    return () => {
+      console.log("Home UnMount");
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* <Text>This is the Home.</Text>

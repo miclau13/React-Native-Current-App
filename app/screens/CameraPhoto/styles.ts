@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native';
 
 import { deviceScreenWidth } from '../../styles/constants';
 
-const pictureHeight = 150;
 const pictureWidth = deviceScreenWidth / 3;
+const pictureHeight = pictureWidth * 3 / 4;
 
 const styles = StyleSheet.create({
   picture: {
@@ -12,21 +12,17 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     top: 0,
-    resizeMode: 'contain',
-    // flex: 1,
-    // resizeMode: 'contain',
-    // alignSelf: 'stretch',
-    // backgroundColor: "green",
-    // width: undefined,
-    // height: undefined,
+    resizeMode: 'cover',
+    // opacity: 0.3
+  },
+  pictureSelected: {
+    opacity: 0.5
   },
   pictureWrapper: {
     alignItems: 'center',
     height: pictureHeight,
     justifyContent: 'center',
-    // margin: 5,
     width: pictureWidth,
-    backgroundColor: "red",
   },
 });
 

@@ -16,6 +16,7 @@
     "expo-camera": "^7.0.0",
     "expo-crypto": "^7.0.0",
     "expo-file-system": "^7.0.0",
+    "expo-image-picker": "^7.0.0",
     "expo-media-library": "^7.0.0",
     "expo-random": "^7.0.0",
     "expo-secure-store": "^7.0.0",

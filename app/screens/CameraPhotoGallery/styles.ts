@@ -6,21 +6,19 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    // paddingTop: 20,
     backgroundColor: 'white',
   },
   navbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: 'center',   
     backgroundColor: '#4630EB',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   pictures: {
+    justifyContent: 'flex-start',
     flex: 1,
-    flexWrap: 'wrap',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 8,
+    flexWrap: 'wrap',
   },
   whiteText: {
     color: 'white',

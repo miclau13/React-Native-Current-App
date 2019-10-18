@@ -15,8 +15,7 @@ type BathroomRemodelStep = "zipCode" | "maintainFloor" | "enhanceBathroom" | "ba
 type RemodelType = "bathroomRemodel" | "kitchenRemodel";
 
 type Params = {
-  // TODO change to ENUM
-  remodelType: string;
+  remodelType: RemodelType;
   step: BathroomRemodelStep;
   previousStep?: BathroomRemodelStep;
 };
@@ -115,17 +114,16 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
   }), []);
 
   const onSubmit = React.useCallback(values => {
-    console.log("onsbumit values",values)
     navigation.navigate("HomeScreen");
   }, []);
 
   const { navigation } = props;
-  const remodelType = navigation.getParam("remodelType", "");
+  const remodelType = navigation.getParam("remodelType", "bathroomRemodel");
   const step = navigation.getParam("step", "zipCode");
 
   const handleStepNavigation = React.useCallback<BathroomRemodelFormProps['handleStepNavigation']>((step) => {
     navigation.navigate("BathroomRemodelFormScreen", { step, previousStep: getPreviousStep(step) });
-  }, [step])
+  }, [step]);
 
   React.useEffect(() => {
     console.log("BathroomRemodelForm Mount");

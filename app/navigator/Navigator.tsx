@@ -2,6 +2,7 @@
 import React from "react";
 import { Platform } from 'react-native';
 import { Icon } from "react-native-elements";
+import { Button } from "react-native-paper";
 import { createSwitchNavigator, NavigationState, NavigationContainerProps } from 'react-navigation'; 
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createStackNavigator, HeaderBackButton } from 'react-navigation-stack';
@@ -26,7 +27,8 @@ import SettingsScreen, { strings as settingsStrings } from "../screens/Settings"
 
 import ZipCodeQuestionScreen, { strings as zipCodeQuestionStrings } from "../screens/ZipCode";
 
-import { getPreviousStep } from "../screens/BathroomRemodelForm";
+import { getPreviousStep as getBathroomRemodelPreviousStep } from "../screens/BathroomRemodelForm";
+import { getPreviousStep as getCameraPreviousStep } from "../screens/Camera";
 
 const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
@@ -46,7 +48,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen, CameraScreen,
+  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen,
     BathroomRemodelFormScreen: {
       screen: BathroomRemodelFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -63,7 +65,7 @@ const HomeStack = createStackNavigator(
                   if(step === "zipCode") {
                     navigation.goBack(navigation.state.key)
                   } else {
-                    navigation.navigate("BathroomRemodelFormScreen", { step: previousStep, previousStep: getPreviousStep(previousStep) });
+                    navigation.navigate("BathroomRemodelFormScreen", { step: previousStep, previousStep: getBathroomRemodelPreviousStep(previousStep) });
                   }
                 }} 
               />
@@ -72,6 +74,36 @@ const HomeStack = createStackNavigator(
         }
       }
     },
+    CameraScreen: {
+      screen: CameraScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        const step = navigation.getParam("step");
+        const previousStep = navigation.getParam("previousStep");
+        return { 
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                backTitleVisible={false} 
+                onPress={() => {
+                  if(step === "camera") {
+                    navigation.goBack(navigation.state.key)
+                  } else {
+                    navigation.navigate("CameraScreen", { step: previousStep, previousStep: getCameraPreviousStep(previousStep) });
+                  }
+                }} 
+              />
+            )
+          },
+          headerRight: (props) => {
+            return (
+              <Button {...props}>{step === "camera" ? "Skip" : "Done"}</Button> 
+            ) 
+          }
+        }
+      }
+    }
 },
   { initialRouteName: 'HomeScreen' }
 );
