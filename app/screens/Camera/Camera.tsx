@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Platform, View, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { Banner, BannerAction, Text } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -73,6 +74,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const step = navigation.getParam("step", "camera");
 
   const [camera, setCamera] = React.useState<ExpoCamera>(null);
+  const [hasBanner, setHasBanner] = React.useState(true);
   const [hasCameraPermission, setHasCameraPermission] = React.useState(false);
   const [phonePhotos, setPhonePhotos] = React.useState<string[]>([]);
   const [pictureSize, setPictureSize] = React.useState("");
@@ -124,6 +126,8 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       console.log(e)
     }
   };
+
+  const handleBannerButtonOnClick = React.useCallback<BannerAction['onPress']>(() => setHasBanner(false), []);
 
   const handleMountError = React.useCallback(({ message }) => console.error(message), []);
 
@@ -183,7 +187,21 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {step === "camera" ?         
+      <Banner 
+        actions={[
+          {
+            color: "white",
+            label: 'Close',
+            onPress: handleBannerButtonOnClick,
+          },
+        ]}
+        image={({size}) => <MaterialIcon name="photo-camera" size={size} color="white" />}
+        style={{ backgroundColor: '#F5B041'}}
+        visible={hasBanner && step === "camera"}
+        >
+        <Text style={{ color: "white" }}>To improve the accuracy of the pricing, please upload more photos.</Text>
+      </Banner>  
+      {step === "camera" ?    
         <ExpoCamera
           onCameraReady={collectPictureSizes}
           onMountError={handleMountError}

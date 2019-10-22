@@ -6,19 +6,27 @@ import { Headline, Button, ButtonProps, Text } from 'react-native-paper';
 import styles from './styles';
 import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
-interface EnhanceBathroomProps  {
+interface EnhanceBathroomProps {
+  backFrom: BathroomRemodelFormProps['backFrom'];
   handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
 }
 
 const EnhanceBathroom: React.ComponentType<EnhanceBathroomProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { setFieldValue, values } = form;
-  const { handleStepNavigation } = props;
+  const { backFrom, handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonProps['onPress'] = (value) => () => {
     setFieldValue("enhanceBathroom", value);
     handleStepNavigation("bathroomRemodel");
-  }
+  };
+
+  React.useEffect(() => {
+    if (!!backFrom) {
+      form.setFieldValue(backFrom, form.initialValues[backFrom]);
+    };
+    return () => {console.log("EnhanceBathroom UnMount")}
+  }, []);
 
   return (
     <KeyboardAvoidingView

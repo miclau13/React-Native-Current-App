@@ -2,17 +2,16 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { Button, ButtonProps, Headline } from 'react-native-paper';
-import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
 import zipCodeList from './zipCodeList.json';
 import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
-import MaintainFloor from '../MaintainFloor';
 
 import HelperText from '../../components/Formik/HelperText';
 import ZipCodeInput from '../../components/ZipCodeInput';
 
 interface ZipCodeProps {
+  backFrom: BathroomRemodelFormProps['backFrom'];
   handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
   remodelType?: string;
 }
@@ -22,7 +21,7 @@ const validate = (value: string) => {
 };
 
 const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
-  const { handleStepNavigation, remodelType } = props;
+  const { backFrom, handleStepNavigation, remodelType } = props;
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { errors, setFieldValue, values } = form;
   const handleOnPress: ButtonProps['onPress'] = () => {
@@ -40,8 +39,10 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
     }
   };
 
-  React.useEffect( () => {
-    console.log("ZipCode Mount");
+  React.useEffect(() => {
+    if (!!backFrom) {
+      form.setFieldValue(backFrom, form.initialValues[backFrom]);
+    };
     return () => {console.log("ZipCode UnMount")}
   }, []);
 
@@ -64,7 +65,7 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
         textContentType="postalCode"
         validate={validate}
       />
-      <HelperText name="zipCode" />
+      <HelperText name="zipCode"/>
       <View style={styles.viewBox2}/>
       <Button 
         mode="contained" 

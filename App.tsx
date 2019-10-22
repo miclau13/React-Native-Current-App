@@ -13,7 +13,7 @@ import AppComponent from './app/App';
         }
       })
     },
-    uri: 'http://localhost:3000/graphql',
+    uri: 'https://dev-agent.trudeed.com/graphql',
   });
 
 const App = () => {

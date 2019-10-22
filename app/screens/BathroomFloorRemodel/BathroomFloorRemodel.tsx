@@ -7,14 +7,15 @@ import { Button, ButtonProps, Headline, Title } from 'react-native-paper';
 import styles from './styles';
 import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
-interface BathroomFloorRemodelProps  {
+interface BathroomFloorRemodelProps {
+  backFrom: BathroomRemodelFormProps['backFrom'];
   handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
 }
 
 const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { errors, setFieldValue, values } = form;
-  const { handleStepNavigation } = props;
+  const { backFrom, handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonGroupProps['onPress'] = (value) => (index) => {
     setFieldValue("bathroomFloorRemodel", { ...values.bathroomFloorRemodel, [value]: index });
@@ -25,9 +26,16 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
       return;
     };
     handleStepNavigation("bathroomRemodel");
-  }
+  };
 
   const buttons = ['Replace', 'Keep', 'Don’t Have'];
+
+  React.useEffect(() => {
+    if (!!backFrom) {
+      form.setFieldValue(backFrom, form.initialValues[backFrom]);
+    };
+    return () => {console.log("BathroomFloorReomdel UnMount")}
+  }, []);
 
   return (
     <KeyboardAvoidingView

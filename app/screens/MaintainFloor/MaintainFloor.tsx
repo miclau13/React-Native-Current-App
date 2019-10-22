@@ -6,14 +6,15 @@ import { Headline, Button, ButtonProps, Text, Title } from 'react-native-paper';
 import styles from './styles';
 import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
-interface MaintainFloorProps  {
+interface MaintainFloorProps {
+  backFrom: BathroomRemodelFormProps['backFrom'];
   handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
 }
 
 const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { setFieldValue, values } = form;
-  const { handleStepNavigation } = props;
+  const { backFrom, handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonProps['onPress'] = (value) => () => {
     setFieldValue("maintainFloor", value);
@@ -27,7 +28,14 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
       default:
         // navigation.navigate("HomeScreen");
     }
-  }
+  };
+
+  React.useEffect(() => {
+    if (!!backFrom) {
+      form.setFieldValue(backFrom, form.initialValues[backFrom]);
+    };
+    return () => {console.log("MaintainFloor UnMount")}
+  }, []);
 
   return (
     <KeyboardAvoidingView

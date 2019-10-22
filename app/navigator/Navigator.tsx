@@ -53,8 +53,9 @@ const HomeStack = createStackNavigator(
       screen: BathroomRemodelFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         const { navigation } = props;
-        const step = navigation.getParam("step");
         const previousStep = navigation.getParam("previousStep");
+        const route = navigation.getParam("route");
+        const step = navigation.getParam("step");
         return { 
           headerLeft: (props) => {
             return (
@@ -65,7 +66,7 @@ const HomeStack = createStackNavigator(
                   if(step === "zipCode") {
                     navigation.goBack(navigation.state.key)
                   } else {
-                    navigation.navigate("BathroomRemodelFormScreen", { step: previousStep, previousStep: getBathroomRemodelPreviousStep(previousStep) });
+                    navigation.navigate("BathroomRemodelFormScreen", { step: previousStep, backFrom: step, previousStep: getBathroomRemodelPreviousStep(previousStep, route) });
                   }
                 }} 
               />
@@ -80,8 +81,9 @@ const HomeStack = createStackNavigator(
         const { navigation } = props;
         const step = navigation.getParam("step");
         const previousStep = navigation.getParam("previousStep");
+        console.log({step})
         return { 
-          headerLeft: (props) => {
+          headerLeft: !step ? null :(props) => {
             return (
               <HeaderBackButton 
                 {...props} 

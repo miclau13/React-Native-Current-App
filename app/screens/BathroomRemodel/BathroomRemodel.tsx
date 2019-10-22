@@ -7,24 +7,29 @@ import { Button, ButtonProps, Headline, Title } from 'react-native-paper';
 import styles from './styles';
 import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
 
-interface BathroomRemodelProps  {
+interface BathroomRemodelProps {
+  backFrom: BathroomRemodelFormProps['backFrom'];
   handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
 }
 
 const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { setFieldValue, submitForm, values } = form;
-  const { handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonGroupProps['onPress'] = (value) => (index) => {
     setFieldValue("bathroomRemodel", { ...values.bathroomRemodel, [value]: index });
   };
 
-  const handleOnSubmit = React.useCallback<ButtonProps['onPress']>(() => {
-    submitForm();
-  }, [submitForm]);
+  const handleOnSubmit: ButtonProps['onPress'] = () => {
+    form.submitForm();
+  };
 
   const buttons = ['Replace', 'Keep', 'Don’t Have'];
+
+  React.useEffect(() => {
+    return () => {console.log("BathroomReomdel UnMount")}
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -85,7 +90,7 @@ const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
         onPress={handleOnSubmit}
         style={styles.buttonContainer}
       >
-        Submit
+        Next
       </Button>
       <View style={styles.viewBox3}/>
       </ScrollView>
