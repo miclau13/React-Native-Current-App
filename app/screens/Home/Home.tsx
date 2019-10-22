@@ -13,6 +13,18 @@ import KitchenRemodelCard from '../../components/KitchenRemodelCard';
 import ZipCode from '../ZipCode';
 import BathroomRemodel from '../BathroomRemodel';
 
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+
+const PROJECT = gql`
+  {
+    project(query: {id: "5179432"}) {
+      id
+      type
+    }
+  }
+`;
+
 type Params = {
   name?: string;
   profilePictureUri?: string;
@@ -42,6 +54,11 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       console.log("Home UnMount");
     }
   }, []);
+
+  const { loading, error, data } = useQuery(PROJECT);
+
+  console.log("Home data", data)
+  // console.log("Home error", error)
 
   return (
     <View style={styles.container}>

@@ -6,7 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTHO_SCOPE, AUTH0_AUDIENCE } from 'react-native-dotenv'
+import config from '../../../config';
 import { Button } from "react-native-elements";
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
@@ -39,9 +39,9 @@ function base64URLEncode(input: Uint8Array | string) {
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const auth0 = {
-    domain: AUTH0_DOMAIN,
-    clientId: AUTH0_CLIENT_ID,
-    scope: AUTHO_SCOPE,
+    domain: config.AUTH0_DOMAIN,
+    clientId: config.AUTH0_CLIENT_ID,
+    scope: config.AUTHO_SCOPE,
   };
 
   const { navigation } = props;

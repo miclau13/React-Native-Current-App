@@ -1,6 +1,6 @@
 import { useFormikContext } from 'formik';
 import React from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { ButtonGroup, ButtonGroupProps } from 'react-native-elements';
 import { Button, ButtonProps, Headline, Title } from 'react-native-paper';
 
@@ -26,10 +26,8 @@ const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
 
   const buttons = ['Replace', 'Keep', 'Don’t Have'];
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    <View style={styles.container}>
+      <ScrollView>
       <View style={styles.viewBox1}/>
       <Headline>I want to replace or keep the followings:</Headline>
       <View style={styles.viewBox1}/>
@@ -90,7 +88,8 @@ const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
         Submit
       </Button>
       <View style={styles.viewBox3}/>
-    </KeyboardAvoidingView>
+      </ScrollView>
+    </View>
   );
 }
 export default React.memo(BathroomRemodel);

@@ -207,7 +207,7 @@ const RootSwitch = createSwitchNavigator(
     AuthLoading: AuthLoadingScreen, 
   }, 
   {
-    initialRouteName: 'MainNavigator',
+    initialRouteName: 'AuthLoading',
   }
 );
 
