@@ -81,19 +81,15 @@ const HomeStack = createStackNavigator(
         const { navigation } = props;
         const step = navigation.getParam("step");
         const previousStep = navigation.getParam("previousStep");
-        console.log({step})
+        const isStepGallery = step === "gallery";
         return { 
-          headerLeft: !step ? null :(props) => {
+          headerLeft: !isStepGallery ? null : (props) => {
             return (
               <HeaderBackButton 
                 {...props} 
                 backTitleVisible={false} 
                 onPress={() => {
-                  if(step === "camera") {
-                    navigation.goBack(navigation.state.key)
-                  } else {
-                    navigation.navigate("CameraScreen", { step: previousStep, previousStep: getCameraPreviousStep(previousStep) });
-                  }
+                  navigation.navigate("CameraScreen", { step: previousStep, previousStep: getCameraPreviousStep(previousStep) });
                 }} 
               />
             )

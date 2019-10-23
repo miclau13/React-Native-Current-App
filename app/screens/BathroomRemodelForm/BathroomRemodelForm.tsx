@@ -11,8 +11,8 @@ import MaintainFloor from '../MaintainFloor';
 import ZipCode from '../ZipCode';
 import BathroomRemodelFormik from '../../components/BathroomRemodelFormik';
 
-type BathroomRemodelStep = "zipCode" | "maintainFloor" | "enhanceBathroom" | "bathroomFloorRemodel" | "bathroomRemodel" | "camera";
-type BathroomRemodelRoute = "bathroomFloorRemodel" |  "enhanceBathroom";
+type BathroomRemodelStep = "zipCode" | "maintainFloor" | "enhanceBathroom" | "bathroomFloorRemodel" | "bathroomRemodel";
+export type BathroomRemodelRoute = "bathroomFloorRemodel" |  "enhanceBathroom";
 type RemodelType = "bathroomRemodel" | "kitchenRemodel";
 
 type Params = {
@@ -89,11 +89,11 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
         fiberGlassShowerDoor: null,
       },
       bathroomFloorRemodel: {
-        bathroomFloor: null,
-        bathOrShowerWall: null,
-        bathroomWall: null,
-        bathroomCeiling: null,
-        floorOrWallOrCeilingRepairs: null,
+        bathroomFloor: -1,
+        bathOrShowerWall: -1,
+        bathroomWall: -1,
+        bathroomCeiling: -1,
+        floorOrWallOrCeilingRepairs: -1,
       },
     })
   }, []);
@@ -102,41 +102,38 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
     maintainFloor: yup.string().required('Maintain Floor is Required'),
     enhanceBathroom: yup.string().required('Enhance Bathroom is Required'),
     bathroomRemodel: yup.object().shape({
-      bathtub: yup.number().positive('Bathtub answer is Required'),
-      showerStall: yup.number().positive('Shower Stall answer is Required'),
-      toilet: yup.number().positive('Toilet answer is Required'),
-      sink: yup.number().positive('Sink answer is Required'),
-      vanity: yup.number().positive('Vanity answer is Required'),
-      medicineCabinet: yup.number().positive('Medicine Cabinet answer is Required'),
-      mirror: yup.number().positive('Mirror answer is Required'),
-      fiberGlassShowerDoor: yup.number().positive('Fiber Glass Shower Door answer is Required'),
+      bathtub: yup.number().required('Bathtub answer is Required'),
+      showerStall: yup.number().required('Shower Stall answer is Required'),
+      toilet: yup.number().required('Toilet answer is Required'),
+      sink: yup.number().required('Sink answer is Required'),
+      vanity: yup.number().required('Vanity answer is Required'),
+      medicineCabinet: yup.number().required('Medicine Cabinet answer is Required'),
+      mirror: yup.number().required('Mirror answer is Required'),
+      fiberGlassShowerDoor: yup.number().required('Fiber Glass Shower Door answer is Required'),
     }),
     bathroomFloorRemodel: yup.object().shape({
-      bathroomFloor: yup.number().positive('Bathroom Floor answer is Required'),
-      bathOrShowerWall: yup.number().positive('Bath/Shower Wall answer is Required'),
-      bathroomWall: yup.number().positive('Bathroom Wall answer is Required'),
-      bathroomCeiling: yup.number().positive('Bathroom Ceiling answer is Required'),
-      floorOrWallOrCeilingRepairs: yup.number().positive('Floor/Wall/Ceiling Repairs answer is Required'),
+      bathroomFloor: yup.number().required('Bathroom Floor answer is Required'),
+      bathOrShowerWall: yup.number().required('Bath/Shower Wall answer is Required'),
+      bathroomWall: yup.number().required('Bathroom Wall answer is Required'),
+      bathroomCeiling: yup.number().required('Bathroom Ceiling answer is Required'),
+      floorOrWallOrCeilingRepairs: yup.number().required('Floor/Wall/Ceiling Repairs answer is Required'),
     }),
   }), []);
 
   const onSubmit = React.useCallback(values => {
     console.log("BathroomRemodelForm onsubmit vaues", values);
-    navigation.navigate("CameraScreen");
+    navigation.navigate("CameraScreen", { formValues: values });
   }, []);
 
   const { navigation } = props;
-  const remodelType = navigation.getParam("remodelType", "bathroomRemodel");
-  const step = navigation.getParam("step", "zipCode");
   const backFrom = navigation.getParam("backFrom", null);
+  const remodelType = navigation.getParam("remodelType", "bathroomRemodel");
+  const route = navigation.getParam("route", null);
+  const step = navigation.getParam("step", "zipCode");
 
   const handleStepNavigation = React.useCallback<BathroomRemodelFormProps['handleStepNavigation']>((nextStep) => {
     const route = step === "bathroomFloorRemodel" || step === "enhanceBathroom" ? step : "";
-    if (nextStep === "camera") {
-      navigation.navigate("CameraScreen");
-    } else {
-      navigation.navigate("BathroomRemodelFormScreen", { route, backFrom: "", step: nextStep, previousStep: step });
-    };
+    navigation.navigate("BathroomRemodelFormScreen", { route, backFrom: "", step: nextStep, previousStep: step });
   }, [step]);
 
   React.useEffect(() => {
@@ -168,7 +165,7 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
           : null
         }
         {step === "bathroomRemodel" ? 
-          <BathroomRemodel backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
+          <BathroomRemodel backFrom={backFrom} handleStepNavigation={handleStepNavigation} route={route} />
           : null
         }
       </View>

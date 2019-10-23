@@ -14,7 +14,7 @@ interface BathroomFloorRemodelProps {
 
 const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
-  const { errors, setFieldValue, values } = form;
+  const { setFieldValue, values } = form;
   const { backFrom, handleStepNavigation } = props;
 
   const handleOnPress: (value: string) => ButtonGroupProps['onPress'] = (value) => (index) => {
@@ -22,7 +22,7 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
   };
   
   const handleButtonOnPress: ButtonProps['onPress'] = () => {
-    if(!!errors.bathroomFloorRemodel) {
+    if(Object.values(values.bathroomFloorRemodel).includes(-1)) {
       return;
     };
     handleStepNavigation("bathroomRemodel");

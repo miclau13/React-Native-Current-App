@@ -1,15 +1,16 @@
 import { useFormikContext } from 'formik';
 import React from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { ButtonGroup, ButtonGroupProps } from 'react-native-elements';
 import { Button, ButtonProps, Headline, Title } from 'react-native-paper';
 
 import styles from './styles';
-import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { BathroomRemodelFormProps, BathroomRemodelFormValues, BathroomRemodelRoute } from '../BathroomRemodelForm';
 
 interface BathroomRemodelProps {
   backFrom: BathroomRemodelFormProps['backFrom'];
   handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
+  route: BathroomRemodelRoute;
 }
 
 const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
@@ -21,7 +22,7 @@ const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
   };
 
   const handleOnSubmit: ButtonProps['onPress'] = () => {
-    form.submitForm();
+    submitForm();
   };
 
   const buttons = ['Replace', 'Keep', 'Don’t Have'];

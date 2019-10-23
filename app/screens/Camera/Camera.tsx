@@ -11,12 +11,14 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import styles from './styles';
+import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
 import CameraPhotoGallery, { PHOTOS_DIR } from '../CameraPhotoGallery';
 
 type CameraStep = "camera" | "gallery";
 
 type Params = {
   step: CameraStep;
+  formValues?: BathroomRemodelFormValues;
   previousStep?: CameraStep;
 };
 
@@ -72,6 +74,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   const { navigation } = props;
   const step = navigation.getParam("step", "camera");
+  const formValues = navigation.getParam("formValues", null);
 
   const [camera, setCamera] = React.useState<ExpoCamera>(null);
   const [hasBanner, setHasBanner] = React.useState(true);

@@ -55,9 +55,9 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     }
   }, []);
 
-  const { loading, error, data } = useQuery(PROJECT);
+  // const { loading, error, data } = useQuery(PROJECT);
 
-  console.log("Home data", data)
+  // console.log("Home data", data)
   // console.log("Home error", error)
 
   return (
