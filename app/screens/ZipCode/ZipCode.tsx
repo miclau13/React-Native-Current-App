@@ -24,6 +24,7 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
   const { backFrom, handleStepNavigation, remodelType } = props;
   const form = useFormikContext<BathroomRemodelFormValues>();
   const { errors, setFieldValue, values } = form;
+  
   const handleOnPress: ButtonProps['onPress'] = () => {
     if(!!errors.zipCode) {
       return;
@@ -34,9 +35,9 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
         handleStepNavigation("maintainFloor");
         break;
       case "kitchenRemodel": 
-        // navigation.push("BathroomRemodelFormScreen", { questionScreen: MaintainFloor });
+        handleStepNavigation("maintainFloor");
         break;
-    }
+    };
   };
 
   React.useEffect(() => {

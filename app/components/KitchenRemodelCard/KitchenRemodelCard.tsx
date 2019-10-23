@@ -3,10 +3,10 @@ import { Avatar, Card, CardProps } from 'react-native-paper';
 
 import KitchenRemodelPic from '../../../assets/kitchen_remodel.jpeg';
 
-export interface BathroomRemodelCardProps extends Omit<CardProps, "children"> {
+export interface KitchenRemodelCardProps extends Omit<CardProps, "children"> {
 };
 
-const BathroomRemodelCard: React.ComponentType<BathroomRemodelCardProps> = (props) => {
+const KitchenRemodelCard: React.ComponentType<KitchenRemodelCardProps> = (props) => {
   return (
     <Card {...props}>
       <Card.Title 
@@ -18,4 +18,4 @@ const BathroomRemodelCard: React.ComponentType<BathroomRemodelCardProps> = (prop
   )
 };
 
-export default React.memo(BathroomRemodelCard);
+export default React.memo(KitchenRemodelCard);

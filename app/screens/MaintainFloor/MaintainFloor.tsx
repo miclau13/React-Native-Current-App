@@ -9,21 +9,32 @@ import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../Bathroom
 interface MaintainFloorProps {
   backFrom: BathroomRemodelFormProps['backFrom'];
   handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
+  remodelType: string;
 }
 
 const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
   const form = useFormikContext<BathroomRemodelFormValues>();
-  const { setFieldValue, values } = form;
-  const { backFrom, handleStepNavigation } = props;
+  const { setFieldValue, submitForm, values } = form;
+  const { backFrom, handleStepNavigation, remodelType } = props;
 
   const handleOnPress: (value: string) => ButtonProps['onPress'] = (value) => () => {
+    console.log("remodelType Miantain floor ", remodelType)
     setFieldValue("maintainFloor", value);
     switch(value) {
       case "yes":
-        handleStepNavigation("bathroomFloorRemodel");
+        if (remodelType === "kitchenRemodel") {
+          submitForm();
+        } else {
+          handleStepNavigation("bathroomFloorRemodel");
+        };
         break;
       case "no":
-        handleStepNavigation("enhanceBathroom");
+        if (remodelType === "kitchenRemodel") {
+          console.log("hi Miantain floor ")
+          submitForm();
+        } else {
+          handleStepNavigation("enhanceBathroom");
+        };
         break;
       default:
         // navigation.navigate("HomeScreen");

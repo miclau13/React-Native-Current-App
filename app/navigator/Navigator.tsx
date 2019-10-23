@@ -18,6 +18,7 @@ import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
 import EnhanceBathroomQuestionScreen, { strings as enhanceBathroomScreenQuestionStrings } from "../screens/EnhanceBathroom";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
+import KitchenRemodelFormScreen from '../screens/KitchenRemodelForm';
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import MaintainFloorQuestionScreen, { strings as maintainFloorQuestionStrings } from "../screens/MaintainFloor";
 import OptionsScreen from "../screens/Options";
@@ -29,6 +30,7 @@ import ZipCodeQuestionScreen, { strings as zipCodeQuestionStrings } from "../scr
 
 import { getPreviousStep as getBathroomRemodelPreviousStep } from "../screens/BathroomRemodelForm";
 import { getPreviousStep as getCameraPreviousStep } from "../screens/Camera";
+import { getPreviousStep as getKitchenRemodelPreviousStep } from "../screens/KitchenRemodelForm";
 
 const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
@@ -101,7 +103,33 @@ const HomeStack = createStackNavigator(
           }
         }
       }
-    }
+    },
+    KitchenRemodelFormScreen: {
+      screen: KitchenRemodelFormScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        const previousStep = navigation.getParam("previousStep");
+        const route = navigation.getParam("route");
+        const step = navigation.getParam("step");
+        return { 
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                backTitleVisible={false} 
+                onPress={() => {
+                  if(step === "zipCode") {
+                    navigation.goBack(navigation.state.key)
+                  } else {
+                    navigation.navigate("KitchenRemodelFormScreen", { step: previousStep, backFrom: step, previousStep: getKitchenRemodelPreviousStep(previousStep, route) });
+                  }
+                }} 
+              />
+            )
+          }
+        }
+      }
+    },
 },
   { initialRouteName: 'HomeScreen' }
 );
