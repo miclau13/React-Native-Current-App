@@ -6,25 +6,22 @@ import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
 
-type Params = {};
+type Params = {
+  redirectTo?: string;
+};
 
 type ScreenProps = {};
 
 const AuthLoading: React.ComponentType<NavigationStackScreenProps<Params, ScreenProps>> = (props) => {
   const { navigation } = props;
+  const redirectTo = navigation.getParam("redirectTo", "HomeScreen");
   const bootstrapAsync = async () => {
-    const idToken = await SecureStore.getItemAsync("idToken", {});
-    if (idToken) {
-      const data = jwtDecode(idToken);
-      navigation.navigate(
-        "HomeScreen",
-        {
-          name: data.name,
-          profilePictureUri: data.picture
-        }
-      );
+    // TODO Change to viewer from backend, check the expiration time
+    const accessToken = await SecureStore.getItemAsync("accessToken", {});
+    if (accessToken) {
+      navigation.navigate(redirectTo);
     } else {
-      navigation.navigate("AuthTabs");
+      navigation.navigate("LoginScreen");
     }
   }
   useEffect(() => {
@@ -39,4 +36,4 @@ const AuthLoading: React.ComponentType<NavigationStackScreenProps<Params, Screen
   )
 };
 
-export default AuthLoading;
+export default React.memo(AuthLoading);

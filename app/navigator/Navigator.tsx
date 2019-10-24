@@ -11,22 +11,17 @@ import { createBottomTabNavigator, NavigationBottomTabOptions } from 'react-navi
 import BurgerMenu from "../components/BurgerMenu";
 import AuthLoadingScreen from '../screens/AuthLoading';
 import BathroomRemodelFormScreen from "../screens/BathroomRemodelForm";
-import BathroomFloorRemodelQuestionScreen from '../screens/BathroomFloorRemodel';
-import BathroomRemodelQuestionScreen from '../screens/BathroomRemodel';
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
-import EnhanceBathroomQuestionScreen, { strings as enhanceBathroomScreenQuestionStrings } from "../screens/EnhanceBathroom";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
 import KitchenRemodelFormScreen from '../screens/KitchenRemodelForm';
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
-import MaintainFloorQuestionScreen, { strings as maintainFloorQuestionStrings } from "../screens/MaintainFloor";
 import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
+import PricingScreen from "../screens/Pricing";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
-
-import ZipCodeQuestionScreen, { strings as zipCodeQuestionStrings } from "../screens/ZipCode";
 
 import { getPreviousStep as getBathroomRemodelPreviousStep } from "../screens/BathroomRemodelForm";
 import { getPreviousStep as getCameraPreviousStep } from "../screens/Camera";
@@ -50,7 +45,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { DetailScreen, HomeScreen, CurrentLocationScreen, OptionsScreen,
+  { AuthLoadingScreen, CurrentLocationScreen, DetailScreen, HomeScreen, OptionsScreen,
     BathroomRemodelFormScreen: {
       screen: BathroomRemodelFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -98,7 +93,14 @@ const HomeStack = createStackNavigator(
           },
           headerRight: (props) => {
             return (
-              <Button {...props}>{step === "camera" ? "Skip" : "Done"}</Button> 
+              <Button 
+                {...props}
+                onPress={() => {
+                  navigation.navigate("AuthLoadingScreen", { "redirectTo": "PricingScreen" })
+                }}
+              >
+                {isStepGallery ? "Done" : "Skip"}
+              </Button> 
             ) 
           }
         }
@@ -130,6 +132,29 @@ const HomeStack = createStackNavigator(
         }
       }
     },
+    LoginScreen: {
+      screen: LoginScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        return { 
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                backTitleVisible={false} 
+              />
+            )
+          }
+        }
+      }
+    },
+    PricingScreen: {
+      screen: PricingScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        return { 
+          headerLeft: null,
+        }
+      }
+    },
 },
   { initialRouteName: 'HomeScreen' }
 );
@@ -137,14 +162,15 @@ const HomeStack = createStackNavigator(
 HomeStack.navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
   const { navigation } = props;
   let tabBarVisible = true;
-  if (navigation.state.index > 0) {
+  const isPricingPage = navigation.state.routes.filter(route => route.routeName === "PricingScreen").length > 0;
+  if (navigation.state.index > 0 && !isPricingPage) {
     tabBarVisible = false;
-  }
+  };
 
   let drawerLockMode = "unlocked";
   if (navigation.state.index > 0) {
     drawerLockMode = "locked-closed";
-  }
+  };
 
   return {
     tabBarVisible,
@@ -200,19 +226,6 @@ LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>
 };
 // Login Stack End
 
-// BathroomRemodelQuestionsStack Start
-const BathroomRemodelQuestionsStack = createStackNavigator(
-  { BathroomRemodelFormScreen, ZipCodeQuestionScreen, MaintainFloorQuestionScreen, BathroomRemodelQuestionScreen }, 
-  { initialRouteName: 'BathroomRemodelFormScreen' },
-);
-// BathroomRemodelQuestionsStack End
-
-// FlooringQuestionsStack Start
-const FlooringQuestionsStack = createStackNavigator(
-  { BathroomRemodelFormScreen, ZipCodeQuestionScreen, MaintainFloorQuestionScreen, BathroomFloorRemodelQuestionScreen, EnhanceBathroomQuestionScreen }, 
-  { initialRouteName: 'BathroomRemodelFormScreen' }
-);
-// BathroomRemodelQuestionsStack End
 
 RegisterScreen.navigationOptions = {
   tabBarLabel: registerStrings.registerTitle,
@@ -228,12 +241,10 @@ const RootSwitch = createSwitchNavigator(
   { 
     AuthTabs, 
     MainNavigator,
-    BathroomRemodelQuestionsStack,
-    FlooringQuestionsStack,
     AuthLoading: AuthLoadingScreen, 
   }, 
   {
-    initialRouteName: 'AuthLoading',
+    initialRouteName: 'MainNavigator',
   }
 );
 

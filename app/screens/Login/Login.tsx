@@ -26,7 +26,7 @@ function toQueryString(params: object) {
       )
       .join('&')
   );
-}
+};
 
 function base64URLEncode(input: Uint8Array | string) {
   const result = typeof input === 'string' ? input : btoa(String.fromCharCode.apply(null, input));
@@ -35,14 +35,15 @@ function base64URLEncode(input: Uint8Array | string) {
                   .replace(/\//g, '_')
                   .replace(/=/g, '')
   return output;
-}
+};
+
+const auth0 = {
+  domain: config.AUTH0_DOMAIN,
+  clientId: config.AUTH0_CLIENT_ID,
+  scope: config.AUTHO_SCOPE,
+};
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
-  const auth0 = {
-    domain: config.AUTH0_DOMAIN,
-    clientId: config.AUTH0_CLIENT_ID,
-    scope: config.AUTHO_SCOPE,
-  };
 
   const { navigation } = props;
 
@@ -81,6 +82,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       const response = await fetch(`https://${auth0.domain}/oauth/token`, options);
       const responseJson = await response.json();
       const { access_token, id_token, refresh_token } = responseJson;
+      console.log("Login responseJson %o", responseJson)
       SecureStore.setItemAsync("accessToken", access_token, {});
       SecureStore.setItemAsync("idToken", id_token, {});
       SecureStore.setItemAsync("refreshToken", refresh_token, {});
@@ -94,15 +96,20 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     return () => {};
   }, []);
 
-  const gotoHome = (data) => {
-    navigation.navigate(
-      "HomeScreen",
-      {
-        name: data.name,
-        profilePictureUri: data.picture
-      }
-    );
-  }
+  // const gotoHome = (data) => {
+  //   navigation.navigate(
+  //     "HomeScreen",
+  //     {
+  //       name: data.name,
+  //       profilePictureUri: data.picture
+  //     }
+  //   );
+  // };
+
+  const gotoPricing = React.useCallback(() => {
+    navigation.setParams({ pricing: true });
+    navigation.navigate("PricingScreen");
+  }, [navigation]);
 
   const login = async () => {
     const redirectUrl = AuthSession.getRedirectUrl();
@@ -123,7 +130,8 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
         await SecureStore.setItemAsync("code", code, {});
         await exchangeCodeForTokens();
         const data = jwtDecode(await SecureStore.getItemAsync("idToken"));
-        gotoHome(data);
+        // gotoHome(data);
+        gotoPricing();
       }
     }
     catch(err) {
@@ -140,4 +148,4 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   )
 };
 
-export default Login;
+export default React.memo(Login);

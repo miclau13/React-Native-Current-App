@@ -25,10 +25,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.trudeed.TrudeedRemodle"
+      "bundleIdentifier": "com.trudeed.TrudeedRemodel"
     },
     "android": {
-      "package": "com.trudeed.TrudeedRemodle"
+      "package": "com.trudeed.TrudeedRemodlel"
     }
   }
 }
