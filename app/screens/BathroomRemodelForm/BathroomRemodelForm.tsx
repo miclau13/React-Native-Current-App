@@ -149,11 +149,11 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
     >
       <View style={styles.container}>
         {step === "zipCode" ? 
-          <ZipCode backFrom={backFrom} remodelType={remodelType} handleStepNavigation={handleStepNavigation} />
+          <ZipCode backFrom={backFrom} handleStepNavigation={handleStepNavigation} remodelType={remodelType} />
           : null
         }
         {step === "maintainFloor" ? 
-          <MaintainFloor backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
+          <MaintainFloor backFrom={backFrom} handleStepNavigation={handleStepNavigation} remodelType={remodelType} />
           : null
         }
         {step === "enhanceBathroom" ? 

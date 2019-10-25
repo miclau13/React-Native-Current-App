@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import { Icon } from "react-native-elements";
 import { Button } from "react-native-paper";
 import { createSwitchNavigator, NavigationState, NavigationContainerProps } from 'react-navigation'; 
-import { createDrawerNavigator } from 'react-navigation-drawer';
+// import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createStackNavigator, HeaderBackButton } from 'react-navigation-stack';
 import { createBottomTabNavigator, NavigationBottomTabOptions } from 'react-navigation-tabs';
 
@@ -78,7 +78,9 @@ const HomeStack = createStackNavigator(
         const { navigation } = props;
         const step = navigation.getParam("step");
         const previousStep = navigation.getParam("previousStep");
+        const selectedPhotos = navigation.getParam("selectedPhotos", []);
         const isStepGallery = step === "gallery";
+        // console.log("navigator camera navigation", navigation.state)
         return { 
           headerLeft: !isStepGallery ? null : (props) => {
             return (
@@ -96,7 +98,8 @@ const HomeStack = createStackNavigator(
               <Button 
                 {...props}
                 onPress={() => {
-                  navigation.navigate("AuthLoadingScreen", { "redirectTo": "PricingScreen" })
+                  // navigation.navigate("AuthLoadingScreen", { selectedPhotos, "redirectTo": "PricingScreen" })
+                  navigation.navigate("HomeScreen")
                 }}
               >
                 {isStepGallery ? "Done" : "Skip"}
@@ -200,7 +203,7 @@ SettingsStack.navigationOptions = {
 
 const MainNavigator = Platform.select({
   ios: createBottomTabNavigator({ HomeStack, SettingsStack }),
-  android: createDrawerNavigator({ HomeStack, SettingsStack }, { contentComponent: BurgerMenu })
+  android: createBottomTabNavigator({ HomeStack, SettingsStack }),
 });
 
 // Login Stack Start

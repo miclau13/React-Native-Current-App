@@ -22,6 +22,8 @@ const BathroomRemodel: React.ComponentType<BathroomRemodelProps> = (props) => {
   };
 
   const handleOnSubmit: ButtonProps['onPress'] = () => {
+    // console.log("BathroomRemodel handleOnSubmit")
+    // console.log("BathroomRemodel values", values)
     submitForm();
   };
 

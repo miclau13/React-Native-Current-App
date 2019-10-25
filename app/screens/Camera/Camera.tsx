@@ -20,6 +20,7 @@ type Params = {
   step: CameraStep;
   formValues?: BathroomRemodelFormValues;
   previousStep?: CameraStep;
+  selectedPhotos?: string[];
 };
 
 type ScreenProps = {};
@@ -84,6 +85,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const [pictureSizes, setPictureSizes] = React.useState<string[]>([]);
   const [pictureSizeId, setPictureSizeId] = React.useState(0);
   const [ratio, setRatio] = React.useState('16:9');
+  const [selectedPhotos, setSelectedPhotos] = React.useState<string[]>([]);
   const [type, setType] = React.useState<React.ReactText>(ExpoCamera.Constants.Type.back);
 
   const askPermission = async () => {
@@ -188,6 +190,10 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     }
   }, []);
 
+  React.useEffect(() => {
+    navigation.setParams({selectedPhotos})
+  },[selectedPhotos])
+
   return (
     <View style={{ flex: 1 }}>
       <Banner 
@@ -225,7 +231,9 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       {step === "gallery" ?  
         <CameraPhotoGallery 
           handleStepNavigation={handleStepNavigation}
-          phonePhotos={phonePhotos} 
+          phonePhotos={phonePhotos}
+          selected={selectedPhotos}
+          setSelected={setSelectedPhotos}
         /> 
         : null
       }

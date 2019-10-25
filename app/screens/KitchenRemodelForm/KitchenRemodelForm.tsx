@@ -52,7 +52,7 @@ const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = 
   }), []);
 
   const onSubmit = React.useCallback(values => {
-    console.log("KitchenRemodelForm onsubmit vaues", values);
+    // console.log("KitchenRemodelForm onsubmit vaues", values);
     navigation.navigate("CameraScreen", { formValues: values });
   }, []);
 

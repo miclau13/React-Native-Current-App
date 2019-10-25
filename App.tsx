@@ -9,11 +9,13 @@ import AppComponent from './app/App';
       const token = await SecureStore.getItemAsync("accessToken", {});
       operation.setContext({
         headers: {
-          authorization: token ? `Bearer ${token}` : ''
+          // authorization: token ? `Bearer ${token}` : ''
+          authorization: token ? `Bearer $` : ''
         }
       })
     },
-    uri: 'https://dev-agent.trudeed.com/graphql',
+    // uri: 'https://dev-agent.trudeed.com/graphql',
+    uri: 'http://localhost:3000/graphql',
   });
 
 const App = () => {

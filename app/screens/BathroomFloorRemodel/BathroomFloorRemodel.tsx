@@ -25,6 +25,7 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
     if(Object.values(values.bathroomFloorRemodel).includes(-1)) {
       return;
     };
+    setFieldValue("enhanceBathroom", "NA");
     handleStepNavigation("bathroomRemodel");
   };
 

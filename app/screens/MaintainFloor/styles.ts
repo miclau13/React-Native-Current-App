@@ -11,6 +11,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: screenWidth,
   },
+  nextButton: {
+    alignSelf: "center",
+    borderRadius: 20,
+    width: "75%",
+  },
   title: {
     textAlign: "center",
   },

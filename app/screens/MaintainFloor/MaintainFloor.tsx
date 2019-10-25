@@ -18,20 +18,20 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
   const { backFrom, handleStepNavigation, remodelType } = props;
 
   const handleOnPress: (value: string) => ButtonProps['onPress'] = (value) => () => {
-    console.log("remodelType Miantain floor ", remodelType)
+    // console.log("remodelType Miantain floor ", remodelType)
     setFieldValue("maintainFloor", value);
     switch(value) {
       case "yes":
         if (remodelType === "kitchenRemodel") {
-          submitForm();
+          // submitForm();
         } else {
           handleStepNavigation("bathroomFloorRemodel");
         };
         break;
       case "no":
         if (remodelType === "kitchenRemodel") {
-          console.log("hi Miantain floor ")
-          submitForm();
+          // console.log("hi Miantain floor ")
+          // submitForm();
         } else {
           handleStepNavigation("enhanceBathroom");
         };
@@ -39,6 +39,10 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
       default:
         // navigation.navigate("HomeScreen");
     }
+  };
+
+  const handleOnSubmit: ButtonProps['onPress'] = () => {
+    submitForm();
   };
 
   React.useEffect(() => {
@@ -74,6 +78,15 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
         <Text>Change</Text>
       </Button>
       <View style={styles.viewBox2}/>
+      {remodelType !== "kitchenRemodel" ? null :
+        <Button 
+          mode="contained" 
+          onPress={handleOnSubmit}
+          style={styles.nextButton}
+        >
+          Submit
+        </Button>
+      }
       <View style={styles.viewBox3}/>
     </KeyboardAvoidingView>
   );

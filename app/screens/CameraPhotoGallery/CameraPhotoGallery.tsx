@@ -15,14 +15,15 @@ export type ToggleSelection = (uri: string, isSelected: boolean) => void;
 export interface CameraPhotoGalleryProps {
   handleStepNavigation: CameraProps['handleStepNavigation'];
   phonePhotos: string[];
+  selected: string[];
+  setSelected(selected: string[]): void;
 };
 
 const CameraPhotoGallery: React.ComponentType<CameraPhotoGalleryProps> = (props) => {
 
-  const { handleStepNavigation, phonePhotos } = props;
+  const { handleStepNavigation, phonePhotos, selected, setSelected } = props;
 
   const [photos, setPhotos] = React.useState<string[]>(phonePhotos);
-  const [selected, setSelected] = React.useState<string[]>([]);
 
   const readPhotos = React.useCallback(async () => {
     const photos = await FileSystem.readDirectoryAsync(PHOTOS_DIR);
