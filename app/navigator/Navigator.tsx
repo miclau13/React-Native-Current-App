@@ -20,6 +20,7 @@ import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import PricingScreen from "../screens/Pricing";
+import PricingRecordsScreen,  { strings as pricingRecordsStrings } from "../screens/PricingRecords";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
 
@@ -45,7 +46,15 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AuthLoadingScreen, CurrentLocationScreen, DetailScreen, HomeScreen, OptionsScreen,
+  { CurrentLocationScreen, DetailScreen, HomeScreen, OptionsScreen,
+    AuthLoadingScreen: {
+      screen: AuthLoadingScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        return { 
+          headerLeft: null,
+        }
+      }
+    },
     BathroomRemodelFormScreen: {
       screen: BathroomRemodelFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -76,6 +85,7 @@ const HomeStack = createStackNavigator(
       screen: CameraScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         const { navigation } = props;
+        const formValues = navigation.getParam("formValues", null);
         const step = navigation.getParam("step");
         const previousStep = navigation.getParam("previousStep");
         const selectedPhotos = navigation.getParam("selectedPhotos", []);
@@ -98,8 +108,8 @@ const HomeStack = createStackNavigator(
               <Button 
                 {...props}
                 onPress={() => {
-                  // navigation.navigate("AuthLoadingScreen", { selectedPhotos, "redirectTo": "PricingScreen" })
-                  navigation.navigate("HomeScreen")
+                  navigation.navigate("AuthLoadingScreen", { formValues, selectedPhotos, "redirectTo": "PricingScreen" })
+                  // navigation.navigate("HomeScreen")
                 }}
               >
                 {isStepGallery ? "Done" : "Skip"}
@@ -139,14 +149,15 @@ const HomeStack = createStackNavigator(
       screen: LoginScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         return { 
-          headerLeft: (props) => {
-            return (
-              <HeaderBackButton 
-                {...props} 
-                backTitleVisible={false} 
-              />
-            )
-          }
+          // headerLeft: (props) => {
+          //   return (
+          //     <HeaderBackButton 
+          //       {...props} 
+          //       backTitleVisible={false} 
+          //     />
+          //   )
+          // }
+          headerLeft: null,
         }
       }
     },
@@ -201,9 +212,20 @@ SettingsStack.navigationOptions = {
 };
 // SettingsStack End
 
+// PricingRecords Stack Start
+const PricingRecordsStack = createStackNavigator({ PricingRecordsScreen });
+
+PricingRecordsStack.navigationOptions = {
+  tabBarLabel: pricingRecordsStrings.pricingRecordsTitle,
+  tabBarIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />,
+  drawerLabel: pricingRecordsStrings.pricingRecordsTitle,
+  drawerIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />
+};
+// PricingRecordsStack End
+
 const MainNavigator = Platform.select({
-  ios: createBottomTabNavigator({ HomeStack, SettingsStack }),
-  android: createBottomTabNavigator({ HomeStack, SettingsStack }),
+  ios: createBottomTabNavigator({ HomeStack, PricingRecordsStack, SettingsStack }),
+  android: createBottomTabNavigator({ HomeStack, PricingRecordsStack, SettingsStack }),
 });
 
 // Login Stack Start
@@ -228,7 +250,6 @@ LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>
   };
 };
 // Login Stack End
-
 
 RegisterScreen.navigationOptions = {
   tabBarLabel: registerStrings.registerTitle,

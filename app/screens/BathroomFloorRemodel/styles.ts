@@ -1,11 +1,14 @@
 import { StyleSheet } from 'react-native';
-import { screenWidth } from '../../styles';
+import { primaryButtonColor, screenWidth } from '../../styles';
 
 const styles = StyleSheet.create({
   buttonContainer: {
     alignSelf: "center",
     borderRadius: 20,
     width: "75%",
+  },
+  buttonSelectedContainer: {
+    backgroundColor: primaryButtonColor,
   },
   container: {
     flex: 1,

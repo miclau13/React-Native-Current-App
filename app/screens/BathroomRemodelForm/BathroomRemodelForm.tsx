@@ -1,3 +1,4 @@
+import { mapValues } from 'lodash';
 import React from 'react';
 import { View } from "react-native";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
@@ -75,25 +76,45 @@ export interface BathroomRemodelFormProps {
 const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const initialValues = React.useMemo(() => {
     return ({
+      // zipCode: "",
+      // maintainFloor: "",
+      // enhanceBathroom: "",
+      // bathroomRemodel: {
+      //   bathtub: null,
+      //   showerStall: null,
+      //   toilet: null,
+      //   sink: null,
+      //   vanity: null,
+      //   medicineCabinet: null,
+      //   mirror: null,
+      //   fiberGlassShowerDoor: null,
+      // },
+      // bathroomFloorRemodel: {
+      //   bathroomFloor: -1,
+      //   bathOrShowerWall: -1,
+      //   bathroomWall: -1,
+      //   bathroomCeiling: -1,
+      //   floorOrWallOrCeilingRepairs: -1,
+      // },
       zipCode: "",
       maintainFloor: "",
       enhanceBathroom: "",
       bathroomRemodel: {
-        bathtub: null,
-        showerStall: null,
-        toilet: null,
-        sink: null,
-        vanity: null,
-        medicineCabinet: null,
-        mirror: null,
-        fiberGlassShowerDoor: null,
+        bathtub: 1,
+        showerStall: 1,
+        toilet: 1,
+        sink: 1,
+        vanity: 1,
+        medicineCabinet: 1,
+        mirror: 1,
+        fiberGlassShowerDoor: 1,
       },
       bathroomFloorRemodel: {
-        bathroomFloor: -1,
-        bathOrShowerWall: -1,
-        bathroomWall: -1,
-        bathroomCeiling: -1,
-        floorOrWallOrCeilingRepairs: -1,
+        bathroomFloor: 1,
+        bathOrShowerWall: 1,
+        bathroomWall: 1,
+        bathroomCeiling: 1,
+        floorOrWallOrCeilingRepairs: 1,
       },
     })
   }, []);
@@ -121,8 +142,24 @@ const BathroomRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> =
   }), []);
 
   const onSubmit = React.useCallback(values => {
-    console.log("BathroomRemodelForm onsubmit vaues", values);
-    navigation.navigate("CameraScreen", { formValues: values });
+    const buttons = ['Replace', 'Keep', 'Don’t Have'];
+    const buttonsForBathroomFloor = ['Replace', 'Repair', 'Keep'];
+    const buttonsForRepairs = ['Replace All', 'Repair All', 'Keep'];
+
+    const mappedBathroomFloorRemodelValues = mapValues(values.bathroomFloorRemodel, function(index) { 
+      return buttons[index] || ""; 
+    });
+
+    const mappedBathroomRemodelValues = mapValues(values.bathroomRemodel, function(index) { 
+      return buttons[index] || ""; 
+    });
+
+    const mappedValues = { ...values, 
+      bathroomFloorRemodel: mappedBathroomFloorRemodelValues,
+      bathroomRemodel: mappedBathroomRemodelValues,
+    }
+    
+    navigation.navigate("CameraScreen", { formValues: mappedValues });
   }, []);
 
   const { navigation } = props;

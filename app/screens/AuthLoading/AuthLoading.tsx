@@ -4,8 +4,6 @@ import jwtDecode from 'jwt-decode';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 
-import * as Azure from '@azure/storage-blob';
-
 import styles from './styles';
 import config from '../../../config';
 
@@ -15,8 +13,12 @@ export const PHOTOS_DIR = FileSystem.documentDirectory + 'photos';
 
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { omit } from 'lodash';
 
 type Params = {
+  authorized?: boolean;
+  formValues?: BathroomRemodelFormValues;
   redirectTo?: string;
   selectedPhotos?: string[];
 };
@@ -39,14 +41,14 @@ const VIEWER = gql`
 
 const AuthLoading: React.ComponentType<NavigationStackScreenProps<Params, ScreenProps>> = (props) => {
   const { navigation } = props;
+  const authorized = navigation.getParam("authorized", false);
+  const formValues = navigation.getParam("formValues", null);
   const redirectTo = navigation.getParam("redirectTo", "HomeScreen");
   const selectedPhotosUriArray = navigation.getParam("selectedPhotos", []);
-  const { loading, error, data } = useQuery(VIEWER);
-  console.log("Auth loading FileSystem.documentDirectory", FileSystem.documentDirectory)
 
   const uploadImagesAsync = async (uriArray: string[]) => {
-    // let apiUrl = 'https://dev-agent.trudeed.com/blobUpload';
-    let apiUrl = 'http://localhost:3000/blobUpload/images';
+    let apiUrl = 'https://dev-agent.trudeed.com/blobUpload/images';
+    // let apiUrl = 'http://192.168.26.184:3000/blobUpload/images';
     let formData = new FormData();
     uriArray.forEach(uri => {
       let uriParts = uri.split('.');
@@ -76,43 +78,58 @@ const AuthLoading: React.ComponentType<NavigationStackScreenProps<Params, Screen
   }
 
   const uploadPhotos = async () => {
-    const photos = await FileSystem.readDirectoryAsync(PHOTOS_DIR)
-    const photosFullUri = photos.map(uri => (`${PHOTOS_DIR}/${uri}`)).filter(uri => {
-      let uriParts = uri.split('.');
-      let fileType = uriParts[uriParts.length - 1];
-      return fileType === "jpeg"
-    });
+    // Instead of all saved phtos, used selected photos
+    // const photos = await FileSystem.readDirectoryAsync(PHOTOS_DIR)
+    // for local device testing
+    // const photosFullUri = photos.map(uri => (`${PHOTOS_DIR}/${uri}`)).filter(uri => {
+    //   let uriParts = uri.split('.');
+    //   let fileType = uriParts[uriParts.length - 1];
+    //   return fileType === "jpeg"
+    // });
+    // const photosFullUri = photos.map(uri => (`${PHOTOS_DIR}/${uri}`)).filter(uri => {
+    //   let uriParts = uri.split('.');
+    //   let fileType = uriParts[uriParts.length - 1];
+    //   return fileType === "jpg";
+    // });
+    // console.log("photos", photos)
     // console.log(photosFullUri)
+    // console.log("Auth loading selectedPhotosUriArray uploadPhotos", selectedPhotosUriArray)
     try {
-      // const uploadResponse = await uploadImagesAsync(photosFullUri);
-      // const uploadResult = await uploadResponse.json();
-      // console.log("AuthLoading uploadPhotos uploadResult", uploadResult)
+      const uploadResponse = await uploadImagesAsync(selectedPhotosUriArray);
+      // console.log("AuthLoading uploadPhotos uploadResponse", uploadResponse)
+      const uploadResult = await uploadResponse.json();
+      // console.log("AuthLoading uploadPhotos uploadResult", uploadResult);
+      return uploadResult;
     } catch(error) {
       console.log("AuthLoading uploadPhotos error", error)
     }
   }
 
   const bootstrapAsync = async () => {
-    // await uploadPhotos();
     // TODO Change to viewer from backend, check the expiration time
-    // const accessToken = await SecureStore.getItemAsync("accessToken", {});
-    // if (accessToken) {
-    //   navigation.navigate(redirectTo);
-    // } else {
-    //   navigation.navigate("LoginScreen");
-    // }
-
-    
-    console.log("AuthLoading uploadPhotos data", data)
-    console.log("AuthLoading uploadPhotos error", error)
-    console.log("AuthLoading uploadPhotos loading", loading)
+    const accessToken = await SecureStore.getItemAsync("accessToken", {});
+    if (accessToken) {
+      // const { loading, error, data } = useQuery(VIEWER);
+      const images = await uploadPhotos();
+      // const images = ["https://innodeedevappdocs.blob.core.windows.net/rehab-images/1803%2F1572788094388.jpg_fdc1b8f1-5400-4189-8540-47b7653e6b71"]
+      // console.log("AuthLoading bootstrapAsync formValues",formValues)
+      // console.log("AuthLoading bootstrapAsync images",images)
+      const createRehabInput = {
+        images,
+        postalCode: formValues.zipCode,
+        package: omit(formValues, ["zipCode"])
+      }
+      navigation.navigate(redirectTo, { createRehabInput });
+    } else {
+      navigation.navigate("LoginScreen");
+    };
   }
   useEffect(() => {
-    data && bootstrapAsync();
-  }, [data]);
+    bootstrapAsync();
+  }, [authorized]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <ActivityIndicator />
       <StatusBar barStyle="default" />
     </View>

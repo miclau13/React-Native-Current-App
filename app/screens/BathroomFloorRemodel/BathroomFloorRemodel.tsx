@@ -22,6 +22,7 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
   };
   
   const handleButtonOnPress: ButtonProps['onPress'] = () => {
+    console.log(values.bathroomFloorRemodel)
     if(Object.values(values.bathroomFloorRemodel).includes(-1)) {
       return;
     };
@@ -30,6 +31,16 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
   };
 
   const buttons = ['Replace', 'Keep', 'Don’t Have'];
+  const buttonsForBathroomFloor = ['Replace', 'Repair', 'Keep'];
+  const buttonsForRepairs = ['Replace All', 'Repair All', 'Keep'];
+
+  const buttonGroupList = [
+    { buttons: buttons, name: "bathroomFloor", title: "Bathroom Floor?"},
+    { buttons: buttons, name: "bathOrShowerWall", title: "Bath/Shower Wall?"},
+    { buttons: buttonsForBathroomFloor, name: "bathroomWall", title: "Bathroom Wall?"},
+    { buttons: buttonsForBathroomFloor, name: "bathroomCeiling", title: "Bathroom Ceiling?"},
+    { buttons: buttonsForRepairs, name: "floorOrWallOrCeilingRepairs", title: "Floor/Wall/Ceiling Repairs?"},
+  ];
 
   React.useEffect(() => {
     if (!!backFrom) {
@@ -44,38 +55,21 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.viewBox1}/>
-      <Headline>I want to retile or repair the followings:</Headline>
+      <Headline>I want to reduce or repair the followings:</Headline>
       <View style={styles.viewBox1}/>
-      <Title style={styles.title}>Bathroom Floor?</Title>
-      <ButtonGroup
-        onPress={handleOnPress("bathroomFloor")}
-        selectedIndex={values.bathroomFloorRemodel.bathroomFloor}
-        buttons={buttons}
-      />
-      <Title style={styles.title}>Bath/Shower Wall?</Title>
-      <ButtonGroup
-        onPress={handleOnPress("bathOrShowerWall")}
-        selectedIndex={values.bathroomFloorRemodel.bathOrShowerWall}
-        buttons={buttons}
-      />
-      <Title style={styles.title}>Bathroom Wall?</Title>
-      <ButtonGroup
-        onPress={handleOnPress("bathroomWall")}
-        selectedIndex={values.bathroomFloorRemodel.bathroomWall}
-        buttons={buttons}
-      />
-      <Title style={styles.title}>Bathroom Ceiling?</Title>
-      <ButtonGroup
-        onPress={handleOnPress("bathroomCeiling")}
-        selectedIndex={values.bathroomFloorRemodel.bathroomCeiling}
-        buttons={buttons}
-      />
-      <Title style={styles.title}>Floor/Wall/Ceiling Repairs?</Title>
-      <ButtonGroup
-        onPress={handleOnPress("floorOrWallOrCeilingRepairs")}
-        selectedIndex={values.bathroomFloorRemodel.floorOrWallOrCeilingRepairs}
-        buttons={buttons}
-      />
+      {buttonGroupList.map(item => {
+          return (
+            <React.Fragment key={item.name}>
+              <Title style={styles.title}>{item.title}</Title>
+              <ButtonGroup
+                buttons={item.buttons}
+                onPress={handleOnPress(item.name)}
+                selectedButtonStyle={styles.buttonSelectedContainer}
+                selectedIndex={values.bathroomFloorRemodel[item.name]}
+              />
+            </React.Fragment>
+          )
+      })}
       <View style={styles.viewBox2}/>
       <Button
         mode="contained" 

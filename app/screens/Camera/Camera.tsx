@@ -157,7 +157,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     } catch (e) {
       console.log({e})
     }
-    // handleStepNavigation("gallery");
+    handleStepNavigation("gallery");
   };
 
   const pickImage = async () => {
@@ -176,7 +176,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   const takePicture = React.useCallback<TouchableOpacityProps['onPress']>(async () => {
     if (camera) {
-      await camera.takePictureAsync({ onPictureSaved });
+      await camera.takePictureAsync({ onPictureSaved, quality: 0.5 });
     }
   }, [camera]);
 

@@ -18,7 +18,6 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
   const { backFrom, handleStepNavigation, remodelType } = props;
 
   const handleOnPress: (value: string) => ButtonProps['onPress'] = (value) => () => {
-    // console.log("remodelType Miantain floor ", remodelType)
     setFieldValue("maintainFloor", value);
     switch(value) {
       case "yes":

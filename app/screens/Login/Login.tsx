@@ -82,7 +82,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       const response = await fetch(`https://${auth0.domain}/oauth/token`, options);
       const responseJson = await response.json();
       const { access_token, id_token, refresh_token } = responseJson;
-      console.log("Login responseJson %o", responseJson)
+      // console.log("Login responseJson %o", responseJson)
       SecureStore.setItemAsync("accessToken", access_token, {});
       SecureStore.setItemAsync("idToken", id_token, {});
       SecureStore.setItemAsync("refreshToken", refresh_token, {});
@@ -96,19 +96,11 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     return () => {};
   }, []);
 
-  // const gotoHome = (data) => {
-  //   navigation.navigate(
-  //     "HomeScreen",
-  //     {
-  //       name: data.name,
-  //       profilePictureUri: data.picture
-  //     }
-  //   );
-  // };
-
-  const gotoPricing = React.useCallback(() => {
-    navigation.setParams({ pricing: true });
-    navigation.navigate("PricingScreen");
+  const gotoAuthLoading = React.useCallback(() => {
+    // navigation.setParams({ authorized: true });
+    navigation.navigate("AuthLoadingScreen", { authorized: true });
+    // navigation.goBack("AuthLoadingScreen")
+    // navigation.pop();
   }, [navigation]);
 
   const login = async () => {
@@ -129,9 +121,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
         const { params: { code } } = result;
         await SecureStore.setItemAsync("code", code, {});
         await exchangeCodeForTokens();
-        const data = jwtDecode(await SecureStore.getItemAsync("idToken"));
-        // gotoHome(data);
-        gotoPricing();
+        gotoAuthLoading();
       }
     }
     catch(err) {
@@ -142,7 +132,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text>This is the Login.</Text>
+      <Text>Please Login to get the estimate price.</Text>
       <Button title={strings.loginTitle} onPress={login} />
     </View>
   )
