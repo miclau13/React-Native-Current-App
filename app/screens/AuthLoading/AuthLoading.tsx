@@ -17,7 +17,6 @@ import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
 import { omit } from 'lodash';
 
 type Params = {
-  authorized?: boolean;
   formValues?: BathroomRemodelFormValues;
   redirectTo?: string;
   selectedPhotos?: string[];
@@ -41,7 +40,7 @@ const VIEWER = gql`
 
 const AuthLoading: React.ComponentType<NavigationStackScreenProps<Params, ScreenProps>> = (props) => {
   const { navigation } = props;
-  const authorized = navigation.getParam("authorized", false);
+
   const formValues = navigation.getParam("formValues", null);
   const redirectTo = navigation.getParam("redirectTo", "HomeScreen");
   const selectedPhotosUriArray = navigation.getParam("selectedPhotos", []);
@@ -106,27 +105,20 @@ const AuthLoading: React.ComponentType<NavigationStackScreenProps<Params, Screen
   }
 
   const bootstrapAsync = async () => {
-    // TODO Change to viewer from backend, check the expiration time
-    const accessToken = await SecureStore.getItemAsync("accessToken", {});
-    if (accessToken) {
-      // const { loading, error, data } = useQuery(VIEWER);
-      const images = await uploadPhotos();
-      // const images = ["https://innodeedevappdocs.blob.core.windows.net/rehab-images/1803%2F1572788094388.jpg_fdc1b8f1-5400-4189-8540-47b7653e6b71"]
-      // console.log("AuthLoading bootstrapAsync formValues",formValues)
-      // console.log("AuthLoading bootstrapAsync images",images)
-      const createRehabInput = {
-        images,
-        postalCode: formValues.zipCode,
-        package: omit(formValues, ["zipCode"])
-      }
-      navigation.navigate(redirectTo, { createRehabInput });
-    } else {
-      navigation.navigate("LoginScreen");
-    };
+    const images = await uploadPhotos();
+    // const images = ["https://innodeedevappdocs.blob.core.windows.net/rehab-images/1803%2F1572788094388.jpg_fdc1b8f1-5400-4189-8540-47b7653e6b71"]
+    // console.log("AuthLoading bootstrapAsync formValues",formValues)
+    // console.log("AuthLoading bootstrapAsync images",images)
+    const createRehabInput = {
+      images,
+      postalCode: formValues.zipCode,
+      package: omit(formValues, ["zipCode"])
+    }
+    navigation.navigate(redirectTo, { createRehabInput });
   }
   useEffect(() => {
     bootstrapAsync();
-  }, [authorized]);
+  }, []);
 
   return (
     <View style={styles.container}>

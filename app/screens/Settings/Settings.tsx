@@ -24,6 +24,7 @@ const Settings: NavigationStackScreenComponent<Params, ScreenProps> = (props) =>
       actions: [NavigationActions.navigate({ routeName: 'SettingsScreen' })],
     });
     navigation.dispatch(resetAction);
+    navigation.navigate("AuthTabs");
     // navigate.("HomeScreen");
     // setIsLogin(false);
   }

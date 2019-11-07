@@ -3,17 +3,20 @@ import { AuthSession } from 'expo';
 import * as Crypto from 'expo-crypto';
 import * as Random from 'expo-random';
 import * as SecureStore from 'expo-secure-store';
-import jwtDecode from 'jwt-decode';
+// import jwtDecode from 'jwt-decode';
 import React from 'react';
 import { Text, View } from 'react-native';
-import config from '../../../config';
 import { Button } from "react-native-elements";
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 import styles from "./styles";
 import strings from "./strings";
+import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import config from '../../../config';
 
-type Params = {};
+type Params = {
+  redirectFrom?: string;
+};
 
 type ScreenProps = {};
 
@@ -44,8 +47,8 @@ const auth0 = {
 };
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
-
   const { navigation } = props;
+  const redirectFrom = navigation.getParam("redirectFrom", null);
 
   const generateCodeVerifier = async () => {
     const randomBytes = await Random.getRandomBytesAsync(32);
@@ -96,11 +99,12 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     return () => {};
   }, []);
 
-  const gotoAuthLoading = React.useCallback(() => {
-    // navigation.setParams({ authorized: true });
-    navigation.navigate("AuthLoadingScreen", { authorized: true });
-    // navigation.goBack("AuthLoadingScreen")
-    // navigation.pop();
+  const completeLogin = React.useCallback(() => {
+    if (redirectFrom) {
+      navigation.navigate(redirectFrom, { authorized: true });
+    } else {
+      navigation.navigate("MainNavigator");
+    }
   }, [navigation]);
 
   const login = async () => {
@@ -117,11 +121,10 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     try {
       const result = await AuthSession.startAsync({ authUrl });
       if (result.type === 'success') {
-
         const { params: { code } } = result;
         await SecureStore.setItemAsync("code", code, {});
         await exchangeCodeForTokens();
-        gotoAuthLoading();
+        completeLogin();
       }
     }
     catch(err) {

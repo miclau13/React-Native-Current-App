@@ -15,12 +15,15 @@ import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
+import InitalLoadingScreen from "../screens/InitialLoading";
 import KitchenRemodelFormScreen from '../screens/KitchenRemodelForm';
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
+import LoginCheckingScreen from "../screens/LoginChecking";
 import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import PricingScreen from "../screens/Pricing";
 import PricingRecordsScreen,  { strings as pricingRecordsStrings } from "../screens/PricingRecords";
+import PricingRecordsDetailScreen from "../screens/PricingRecordsDetail";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
 
@@ -46,7 +49,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { CurrentLocationScreen, DetailScreen, HomeScreen, OptionsScreen,
+  { CurrentLocationScreen, DetailScreen, HomeScreen, InitalLoadingScreen, LoginCheckingScreen, OptionsScreen,
     AuthLoadingScreen: {
       screen: AuthLoadingScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -108,8 +111,7 @@ const HomeStack = createStackNavigator(
               <Button 
                 {...props}
                 onPress={() => {
-                  navigation.navigate("AuthLoadingScreen", { formValues, selectedPhotos, "redirectTo": "PricingScreen" })
-                  // navigation.navigate("HomeScreen")
+                  navigation.navigate("LoginCheckingScreen", { formValues, selectedPhotos })
                 }}
               >
                 {isStepGallery ? "Done" : "Skip"}
@@ -148,24 +150,41 @@ const HomeStack = createStackNavigator(
     LoginScreen: {
       screen: LoginScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
         return { 
-          // headerLeft: (props) => {
-          //   return (
-          //     <HeaderBackButton 
-          //       {...props} 
-          //       backTitleVisible={false} 
-          //     />
-          //   )
-          // }
-          headerLeft: null,
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                backTitleVisible={false} 
+                onPress={() => {
+                  navigation.navigate("CameraScreen");
+                }} 
+              />
+            )
+          }
+          // headerLeft: null,
         }
       }
     },
     PricingScreen: {
       screen: PricingScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
         return { 
           headerLeft: null,
+          headerRight: (props) => {
+            return (
+              <Button 
+                {...props}
+                onPress={() => {
+                  navigation.navigate("MainNavigator")
+                }}
+              >
+                {"Done"}
+              </Button> 
+            ) 
+          }
         }
       }
     },
@@ -176,8 +195,8 @@ const HomeStack = createStackNavigator(
 HomeStack.navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
   const { navigation } = props;
   let tabBarVisible = true;
-  const isPricingPage = navigation.state.routes.filter(route => route.routeName === "PricingScreen").length > 0;
-  if (navigation.state.index > 0 && !isPricingPage) {
+  // const isPricingPage = navigation.state.routes.filter(route => route.routeName === "PricingScreen").length > 0;
+  if (navigation.state.index > 0) {
     tabBarVisible = false;
   };
 
@@ -189,14 +208,14 @@ HomeStack.navigationOptions = (props: NavigationContainerProps<NavigationState>)
   return {
     tabBarVisible,
     drawerLockMode,
-    tabBarLabel: homeStrings.homeTitle,
-    tabBarIcon: ({ tintColor }) => (
-      <Icon name="ios-home" type="ionicon" color={tintColor} />
-    ) as NavigationBottomTabOptions['tabBarIcon'],
     drawerLabel: homeStrings.homeTitle,
     drawerIcon: ({ tintColor }) => (
       <Icon name="md-home" type="ionicon" color={tintColor} />
     )as NavigationBottomTabOptions['tabBarIcon'],
+    tabBarLabel: homeStrings.homeTitle,
+    tabBarIcon: ({ tintColor }) => (
+      <Icon name="ios-home" type="ionicon" color={tintColor} />
+    ) as NavigationBottomTabOptions['tabBarIcon'],
   };
 };
 // HomeStack End
@@ -213,7 +232,7 @@ SettingsStack.navigationOptions = {
 // SettingsStack End
 
 // PricingRecords Stack Start
-const PricingRecordsStack = createStackNavigator({ PricingRecordsScreen });
+const PricingRecordsStack = createStackNavigator({ PricingRecordsScreen, PricingRecordsDetailScreen });
 
 PricingRecordsStack.navigationOptions = {
   tabBarLabel: pricingRecordsStrings.pricingRecordsTitle,
@@ -224,8 +243,13 @@ PricingRecordsStack.navigationOptions = {
 // PricingRecordsStack End
 
 const MainNavigator = Platform.select({
-  ios: createBottomTabNavigator({ HomeStack, PricingRecordsStack, SettingsStack }),
-  android: createBottomTabNavigator({ HomeStack, PricingRecordsStack, SettingsStack }),
+  ios: createBottomTabNavigator({ HomeStack, PricingRecordsStack, SettingsStack }, {
+    resetOnBlur: true,
+  }),
+  android: createBottomTabNavigator({ HomeStack, PricingRecordsStack, SettingsStack }, {
+    lazy: false,
+    resetOnBlur: true,
+  }),
 });
 
 // Login Stack Start
@@ -259,16 +283,20 @@ RegisterScreen.navigationOptions = {
   }
 };
 
-const AuthTabs = createBottomTabNavigator({ LoginStack, RegisterScreen });
+// const AuthTabs = createBottomTabNavigator({ LoginStack, RegisterScreen });
+const AuthTabs = createBottomTabNavigator({ HomeStack, LoginStack });
 
 const RootSwitch = createSwitchNavigator(
   { 
-    AuthTabs, 
+    AuthTabs,
+    InitalLoadingScreen,
+    LoginCheckingScreen,
+    LoginScreen,
     MainNavigator,
-    AuthLoading: AuthLoadingScreen, 
+    AuthLoading: AuthLoadingScreen,
   }, 
   {
-    initialRouteName: 'MainNavigator',
+    initialRouteName: 'InitalLoadingScreen',
   }
 );
 

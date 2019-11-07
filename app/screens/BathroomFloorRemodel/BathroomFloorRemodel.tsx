@@ -55,7 +55,7 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.viewBox1}/>
-      <Headline>I want to reduce or repair the followings:</Headline>
+      <Headline>I want to replace or repair the followings:</Headline>
       <View style={styles.viewBox1}/>
       {buttonGroupList.map(item => {
           return (

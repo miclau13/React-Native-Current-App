@@ -185,7 +185,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     askPermission();
     createFileDirectory();
     return () => {
-      clearPhotos();
+      // clearPhotos();
       console.log("Camera UnMount");
     }
   }, []);

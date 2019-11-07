@@ -13,18 +13,6 @@ import KitchenRemodelCard from '../../components/KitchenRemodelCard';
 import ZipCode from '../ZipCode';
 import BathroomRemodel from '../BathroomRemodel';
 
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
-
-const PROJECT = gql`
-  {
-    project(query: {id: "5179432"}) {
-      id
-      type
-    }
-  }
-`;
-
 type Params = {
   name?: string;
   profilePictureUri?: string;
@@ -34,16 +22,13 @@ type ScreenProps = {};
 
 const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  // const name = navigation.getParam('name', 'Guess');
-  // const profilePictureUri = navigation.getParam('profilePictureUri', '')
+
   const handleBathroomRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
     () => navigation.push("BathroomRemodelFormScreen", { remodelType: "bathroomRemodel", step: "zipCode", previousStep: "home" })
   , [navigation.push]);
   const handleKitchenRemodelButtonOnPress = React.useCallback<CardProps['onPress']>(
     () => navigation.push("KitchenRemodelFormScreen", { remodelType: "kitchenRemodel", step: "zipCode", previousStep: "home" })
   , [navigation.push]);
-  // const handleOptionsButtonOnPress = () => navigate("OptionsScreen");
-  // const handleCurrentLocationButtonOnPress = () => navigate("CurrentLocationScreen");
 
   React.useEffect(() => {
     console.log("Home Mount");
@@ -52,11 +37,6 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     }
   }, []);
 
-  // const { loading, error, data } = useQuery(PROJECT);
-
-  // console.log("Home data", data)
-  // console.log("Home error", error)
-
   return (
     <View style={styles.container}>
       {/* <Text>This is the Home.</Text>
@@ -64,13 +44,6 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       <BathroomRemodelCard onPress={handleBathroomRemodelButtonOnPress} elevation={5} />
       <View style={styles.viewBox1} />
       <KitchenRemodelCard onPress={handleKitchenRemodelButtonOnPress} elevation={5} />
-      {/* <View style={styles.viewBox1} />
-      <FloorRemodelCard onPress={handleKitchenRemodelButtonOnPress} elevation={5} /> */}
-      
-      {/* <BathroomRemodelCard onButtonPress={handleBathroomRemodelButtonOnPress} /> */}
-      {/* <Button title={BathroomRemodelStrings.title} onPress={handleBathroomRemodelButtonOnPress} /> */}
-      {/* <Button title={currentLocationStrings.currentLocationTitle} onPress={handleCurrentLocationButtonOnPress} />
-      <Button title={optionStrings.optionsTitle} onPress={handleOptionsButtonOnPress} /> */}
     </View>
   )
 };

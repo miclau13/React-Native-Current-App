@@ -1,8 +1,12 @@
-import { ApolloProvider } from '@apollo/react-hooks';
+
 import ApolloClient from 'apollo-boost';
 import * as SecureStore from 'expo-secure-store';
 import React from 'react';
+
+import { ApolloProvider } from '@apollo/react-hooks';
+
 import AppComponent from './app/App';
+import { LoggedInProvider } from './app/common/LoggedInContext';
 
   const client = new ApolloClient({
     request: async (operation) => {
@@ -19,9 +23,11 @@ import AppComponent from './app/App';
 
 const App = () => {
   return (
-    <ApolloProvider client={client}>
-      <AppComponent />
-    </ApolloProvider> 
+    <LoggedInProvider>
+      <ApolloProvider client={client}>
+        <AppComponent />
+      </ApolloProvider> 
+    </LoggedInProvider>
   );
 };
 
