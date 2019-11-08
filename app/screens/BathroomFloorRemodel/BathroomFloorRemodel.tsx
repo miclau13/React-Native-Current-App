@@ -35,8 +35,8 @@ const BathroomFloorRemodel: React.ComponentType<BathroomFloorRemodelProps> = (pr
   const buttonsForRepairs = ['Replace All', 'Repair All', 'Keep'];
 
   const buttonGroupList = [
-    { buttons: buttons, name: "bathroomFloor", title: "Bathroom Floor?"},
-    { buttons: buttons, name: "bathOrShowerWall", title: "Bath/Shower Wall?"},
+    { buttons: buttonsForBathroomFloor, name: "bathroomFloor", title: "Bathroom Floor?"},
+    { buttons: buttonsForBathroomFloor, name: "bathOrShowerWall", title: "Bath/Shower Wall?"},
     { buttons: buttonsForBathroomFloor, name: "bathroomWall", title: "Bathroom Wall?"},
     { buttons: buttonsForBathroomFloor, name: "bathroomCeiling", title: "Bathroom Ceiling?"},
     { buttons: buttonsForRepairs, name: "floorOrWallOrCeilingRepairs", title: "Floor/Wall/Ceiling Repairs?"},

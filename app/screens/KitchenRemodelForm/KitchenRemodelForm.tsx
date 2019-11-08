@@ -83,7 +83,7 @@ export interface KitchenRemodelFormProps {
 const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const initialValues = React.useMemo(() => {
     return ({
-      zipCode: "00501",
+      zipCode: "",
       maintainFloor: "",
       kitchenFloorRemodel: {
         kitchenFloor: 1,
