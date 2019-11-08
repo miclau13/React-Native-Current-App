@@ -1,19 +1,20 @@
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Headline, Button, ButtonProps, Text, Title } from 'react-native-paper';
+import { Headline, Button, ButtonProps, Text } from 'react-native-paper';
 
 import styles from './styles';
 import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { KitchenRemodelFormProps, KitchenRemodelFormValues } from '../KitchenRemodelForm';
 
 interface MaintainFloorProps {
-  backFrom: BathroomRemodelFormProps['backFrom'];
-  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
+  backFrom: BathroomRemodelFormProps['backFrom'] | KitchenRemodelFormProps['backFrom'];
+  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'] | KitchenRemodelFormProps['handleStepNavigation'];
   remodelType: string;
 }
 
 const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
-  const form = useFormikContext<BathroomRemodelFormValues>();
+  const form = useFormikContext<BathroomRemodelFormValues & KitchenRemodelFormValues>();
   const { setFieldValue, submitForm, values } = form;
   const { backFrom, handleStepNavigation, remodelType } = props;
 
@@ -22,17 +23,20 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
     switch(value) {
       case "yes":
         if (remodelType === "kitchenRemodel") {
-          // submitForm();
+          let handle = handleStepNavigation as KitchenRemodelFormProps['handleStepNavigation'];
+          handle("kitchenFloorRemodel");
         } else {
-          handleStepNavigation("bathroomFloorRemodel");
+          let handle = handleStepNavigation as BathroomRemodelFormProps['handleStepNavigation'];
+          handle("bathroomFloorRemodel");
         };
         break;
       case "no":
         if (remodelType === "kitchenRemodel") {
-          // console.log("hi Miantain floor ")
-          // submitForm();
+          let handle = handleStepNavigation as KitchenRemodelFormProps['handleStepNavigation'];
+          handle("kitchenEnhance");
         } else {
-          handleStepNavigation("enhanceBathroom");
+          let handle = handleStepNavigation as BathroomRemodelFormProps['handleStepNavigation'];
+          handle("enhanceBathroom");
         };
         break;
       default:
@@ -77,7 +81,7 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
         <Text>Change</Text>
       </Button>
       <View style={styles.viewBox2}/>
-      {remodelType !== "kitchenRemodel" ? null :
+      {/* {remodelType !== "kitchenRemodel" ? null :
         <Button 
           mode="contained" 
           onPress={handleOnSubmit}
@@ -85,7 +89,7 @@ const MaintainFloor: React.ComponentType<MaintainFloorProps> = (props) => {
         >
           Submit
         </Button>
-      }
+      } */}
       <View style={styles.viewBox3}/>
     </KeyboardAvoidingView>
   );

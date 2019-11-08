@@ -6,13 +6,14 @@ import { Button, ButtonProps, Headline } from 'react-native-paper';
 import styles from './styles';
 import zipCodeList from './zipCodeList.json';
 import { BathroomRemodelFormProps, BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { KitchenRemodelFormProps, KitchenRemodelFormValues } from '../KitchenRemodelForm';
 
 import HelperText from '../../components/Formik/HelperText';
 import ZipCodeInput from '../../components/ZipCodeInput';
 
 interface ZipCodeProps {
-  backFrom: BathroomRemodelFormProps['backFrom'];
-  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'];
+  backFrom: BathroomRemodelFormProps['backFrom'] | KitchenRemodelFormProps['backFrom'];
+  handleStepNavigation: BathroomRemodelFormProps['handleStepNavigation'] | KitchenRemodelFormProps['handleStepNavigation'];
   remodelType?: string;
 }
 
@@ -22,7 +23,7 @@ const validate = (value: string) => {
 
 const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
   const { backFrom, handleStepNavigation, remodelType } = props;
-  const form = useFormikContext<BathroomRemodelFormValues>();
+  const form = useFormikContext<BathroomRemodelFormValues & KitchenRemodelFormValues>();
   const { errors, setFieldValue, values } = form;
   
   const handleOnPress: ButtonProps['onPress'] = () => {
