@@ -49,7 +49,7 @@ type KitchenFloorRemodelField = {
   kitchenWall: number;
   kitchenCeiling: number;
   floorOrWallOrCeilingRepairs: number;
-}
+};
 
 const KitchenRemodelPreviousStepMap = {
   "zipCode": "home",
@@ -148,11 +148,16 @@ const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = 
       return buttons[index] || ""; 
     });
 
+    const mappedKitchenAppliancesRemodelValues = mapValues(values.kitchenAppliancesRemodel, function(index) { 
+      return buttons[index] || ""; 
+    });
+
     const mappedValues = { ...values, 
       kitchenFloorRemodel: mappedKitchenFloorRemodelValues,
       kitchenRemodel: mappedKitchenRemodelValues,
+      kitchenAppliancesRemodel: mappedKitchenAppliancesRemodelValues,
     };
-    console.log("KitchenRemodelForm onsubmit mappedValues", mappedValues);
+    // console.log("KitchenRemodelForm onsubmit mappedValues", mappedValues);
     navigation.navigate("CameraScreen", { formValues: mappedValues });
   }, []);
 

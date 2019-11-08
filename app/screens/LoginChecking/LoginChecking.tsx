@@ -1,15 +1,15 @@
-import * as SecureStore from 'expo-secure-store';
 import React, { useEffect} from 'react';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
 import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
+import { KitchenRemodelFormValues } from '../KitchenRemodelForm';
 import LoggedInContext from '../../common/LoggedInContext';
 
 type Params = {
   authorized?: boolean;
-  formValues?: BathroomRemodelFormValues;
+  formValues?: BathroomRemodelFormValues & KitchenRemodelFormValues;
   selectedPhotos?: string[];
 };
 
