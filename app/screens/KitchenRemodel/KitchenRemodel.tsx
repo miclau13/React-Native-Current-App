@@ -26,9 +26,11 @@ const KitchenRemodel: React.ComponentType<KitchenRemodelProps> = (props) => {
       return;
     };
     const replaceAppliances = values.kitchenRemodel.appliances === 0;
-    // const replaceCabinet = values.kitchenRemodel.cabinet === 0;
+    const replaceCabinet = values.kitchenRemodel.cabinet === 0;
     if (replaceAppliances) {
       handleStepNavigation("kitchenAppliancesRemodel");
+    } else if (replaceCabinet) {
+      handleStepNavigation("kitchenCabinetRemodel");
     } else {
       submitForm();
     }

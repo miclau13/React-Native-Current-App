@@ -4,7 +4,7 @@ function useNativeField(propsOrFieldName: string | FieldAttributes<any>) {
   const form = useFormikContext();
   const { handleBlur, handleChange } = form;
   const [field, meta] = useField(propsOrFieldName);
-  const { name, onBlur, onChange, ...inputProps  } = field;
+  const { name, onBlur, onChange, ...inputProps } = field;
   const customField = { 
     ...inputProps,
     name,

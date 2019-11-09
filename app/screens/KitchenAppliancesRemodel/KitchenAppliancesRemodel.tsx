@@ -22,10 +22,15 @@ const KitchenAppliancesRemodel: React.ComponentType<KitchenAppliancesRemodelProp
   };
   
   const handleButtonOnPress: ButtonProps['onPress'] = () => {
+    console.log("KitchenAppeomdel handleButtonOnPress values", values)
     if(Object.values(values.kitchenAppliancesRemodel).includes(-1)) {
       return;
     };
-    submitForm();
+    if (values.kitchenRemodel.cabinet === 0) {
+      handleStepNavigation("kitchenCabinetRemodel");
+    } else {
+      submitForm();
+    }
   };
 
   const buttons = ['YES', 'NO'];

@@ -6,6 +6,7 @@ import * as yup from 'yup';
 
 import styles from './styles';
 import KitchenAppliancesRemodel from '../KitchenAppliancesRemodel';
+import KitchenCabinetRemodel from '../KitchenCabinetRemodel';
 import KitchenEnhance from '../KitchenEnhance';
 import KitchenFloorRemodel from '../KitchenFloorRemodel';
 import KitchenRemodel from '../KitchenRemodel';
@@ -13,8 +14,8 @@ import MaintainFloor from '../MaintainFloor';
 import ZipCode from '../ZipCode';
 import KitchenRemodelFormik from '../../components/KitchenRemodelFormik';
 
-export type KitchenRemodelRoute = "kitchenFloorRemodel" | "kitchenEnhance";
-type KitchenRemodelStep = "zipCode" | "maintainFloor" | "kitchenFloorRemodel" | "kitchenEnhance" | "kitchenRemodel" | "kitchenAppliancesRemodel" ;
+export type KitchenRemodelRoute = "kitchenFloorRemodel" | "kitchenEnhance" | null;
+type KitchenRemodelStep = "zipCode" | "maintainFloor" | "kitchenFloorRemodel" | "kitchenEnhance" | "kitchenRemodel" | "kitchenAppliancesRemodel" | "kitchenCabinetRemodel";
 type RemodelType = "bathroomRemodel" | "kitchenRemodel";
 
 type Params = {
@@ -51,18 +52,28 @@ type KitchenFloorRemodelField = {
   floorOrWallOrCeilingRepairs: number;
 };
 
+type KitchenCabinetRemodelField = {
+  feet: number;
+  inches: number;
+};
+
 const KitchenRemodelPreviousStepMap = {
   "zipCode": "home",
   "maintainFloor": "zipCode",
   "kitchenFloorRemodel": "maintainFloor",
   "kitchenEnhance": "maintainFloor",
   "kitchenAppliancesRemodel": "kitchenRemodel",
+  "kitchenCabinetRemodel": "kitchenRemodel",
 };
 
 export const getPreviousStep = (currentstep: KitchenRemodelStep, route: KitchenRemodelRoute) => {
+  // let route decide the previous step (enhance or maintain floor) if the current step is kitchenRemodel
   if (currentstep === "kitchenRemodel") {
     return route;
-  };
+  // the previous step must be kitchenRemodel if the current step is appliancesor cabinet
+  } else if (currentstep === "kitchenAppliancesRemodel" || currentstep === "kitchenCabinetRemodel") {
+    return "kitchenRemodel";
+  }
   return KitchenRemodelPreviousStepMap[currentstep];
 };
 
@@ -71,6 +82,7 @@ export interface KitchenRemodelFormValues {
   maintainFloor: string;
   kitchenRemodel: KitchenRemodelField;
   kitchenAppliancesRemodel: KitchenAppliancesRemodelField;
+  kitchenCabinetRemodel: KitchenCabinetRemodelField;
   kitchenFloorRemodel: KitchenFloorRemodelField;
   kitchenEnhance: string;
 };
@@ -107,6 +119,10 @@ const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = 
         builtInMicrowave: 1,
         stoveOrOven: 1,
       },
+      kitchenCabinetRemodel: {
+        feet: "0",
+        inches: "0",
+      },
     })
   }, []);
   const validationSchema = React.useMemo(() => yup.object().shape({
@@ -128,16 +144,20 @@ const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = 
       builtInMicrowave: yup.number().required('Built-in Microwave answer is Required'),
       stoveOrOven: yup.number().required('Stove/Oven answer is Required'),
     }),
-    kitchenFloorRemodel:  yup.object().shape({
+    kitchenFloorRemodel: yup.object().shape({
       kitchenFloor: yup.number().required('Kitchen Floor answer is Required'),
       kitchenWall: yup.number().required('Kitchen Wall answer is Required'),
       kitchenCeiling: yup.number().required('Kitchen Ceiling answer is Required'),
       floorOrWallOrCeilingRepairs:  yup.number().required('Floor/Wall/Ceiling Repairs answer is Required'),
-    })
+    }),
+    kitchenCabinetRemodel: yup.object().shape({
+      feet: yup.number().typeError('Must be a number'),
+      inches: yup.number().typeError('Must be a number'),
+    }),
   }), []);
 
   const onSubmit = React.useCallback(values => {
-    // console.log("KitchenRemodelForm onsubmit vaues", values);
+    console.log("KitchenRemodelForm onsubmit vaues", values);
     const buttons = ['1', '2', '3', '4'];
 
     const mappedKitchenFloorRemodelValues = mapValues(values.kitchenFloorRemodel, function(index) { 
@@ -165,9 +185,13 @@ const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = 
   const backFrom = navigation.getParam("backFrom", null);
   const remodelType = navigation.getParam("remodelType", "kitchenRemodel");
   const step = navigation.getParam("step", "zipCode");
+  const routeToKitchenRemodel = navigation.getParam("route", null);
 
   const handleStepNavigation = React.useCallback<KitchenRemodelFormProps['handleStepNavigation']>((nextStep, options = {}) => {
-    const route = step === "kitchenFloorRemodel" || step === "kitchenEnhance" ? step : "";
+    // if next step is appliances or cabinet, step must be kitchenRemodel
+    const route = step === "kitchenFloorRemodel" || step === "kitchenEnhance" ? step : 
+      nextStep === "kitchenAppliancesRemodel" || nextStep === "kitchenCabinetRemodel" ? routeToKitchenRemodel : 
+      "";
     navigation.navigate("KitchenRemodelFormScreen", { route, backFrom: "", step: nextStep, previousStep: step, ...options });
   }, [step]);
 
@@ -205,6 +229,10 @@ const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = 
         }
         {step === "kitchenAppliancesRemodel" ? 
           <KitchenAppliancesRemodel backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
+          : null
+        }
+        {step === "kitchenCabinetRemodel" ? 
+          <KitchenCabinetRemodel backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
           : null
         }
       </View>
