@@ -27,7 +27,7 @@ const ZipCode: React.ComponentType<ZipCodeProps> = (props) => {
   const { errors, setFieldValue, values } = form;
   
   const handleOnPress: ButtonProps['onPress'] = () => {
-    if(!!errors.zipCode) {
+    if(!!errors.zipCode || !values.zipCode) {
       return;
     }
     setFieldValue("zipCode", values.zipCode);

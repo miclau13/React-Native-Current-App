@@ -53,8 +53,8 @@ type KitchenFloorRemodelField = {
 };
 
 type KitchenCabinetRemodelField = {
-  feet: number;
-  inches: number;
+  feet: string;
+  inches: string;
 };
 
 const KitchenRemodelPreviousStepMap = {
@@ -151,8 +151,8 @@ const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = 
       floorOrWallOrCeilingRepairs:  yup.number().required('Floor/Wall/Ceiling Repairs answer is Required'),
     }),
     kitchenCabinetRemodel: yup.object().shape({
-      feet: yup.number().typeError('Must be a number'),
-      inches: yup.number().typeError('Must be a number'),
+      feet: yup.string().required('Must be a number'),
+      inches: yup.string().required('Must be a number'),
     }),
   }), []);
 
@@ -172,10 +172,15 @@ const KitchenRemodelForm: NavigationStackScreenComponent<Params, ScreenProps> = 
       return buttons[index] || ""; 
     });
 
+    const mappedKitchenCabinetRemodelValues = mapValues(values.kitchenCabinetRemodel, function(value) { 
+      return Number(value); 
+    });
+
     const mappedValues = { ...values, 
       kitchenFloorRemodel: mappedKitchenFloorRemodelValues,
       kitchenRemodel: mappedKitchenRemodelValues,
       kitchenAppliancesRemodel: mappedKitchenAppliancesRemodelValues,
+      kitchenCabinetRemodel: mappedKitchenCabinetRemodelValues,
     };
     // console.log("KitchenRemodelForm onsubmit mappedValues", mappedValues);
     navigation.navigate("CameraScreen", { formValues: mappedValues });
