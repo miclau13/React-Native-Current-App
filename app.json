@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Trudeed Remodel",
-    "slug": "TrudeedRemodel",
+    "name": "Fiximize",
+    "slug": "Fiximize",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -11,9 +11,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/favicon96x96.png",
+    "icon": "./assets/faviconIOS.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splashCompany.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -25,10 +25,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.trudeed.TrudeedRemodel"
+      "bundleIdentifier": "com.trudeed.fiximize"
     },
     "android": {
-      "package": "com.trudeed.TrudeedRemodlel"
+      "package": "com.trudeed.fiximze"
     }
   }
 }
