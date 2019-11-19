@@ -6,12 +6,11 @@
     "sdkVersion": "35.0.0",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/faviconIOS.png",
+    "icon": "./assets/favicon3.png",
     "splash": {
       "image": "./assets/splashCompany.png",
       "resizeMode": "contain",
@@ -21,7 +20,7 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/**/*"
     ],
     "ios": {
       "supportsTablet": true,
