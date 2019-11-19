@@ -28,7 +28,7 @@ const LoggedInProvider = <T extends string>({
     return () => {console.log("LoggedInProvider UnMount")}
   }, [value]);
 
-  console.log("LoggedInProvider", value);
+  // console.log("LoggedInProvider", value);
 
   return (
     <Provider value={value}>

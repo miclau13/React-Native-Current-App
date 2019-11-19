@@ -21,12 +21,12 @@ const LoginChecking: React.ComponentType<NavigationStackScreenProps<Params, Scre
   const formValues = navigation.getParam("formValues", null);
   const selectedPhotos = navigation.getParam("selectedPhotos", []);
 
-  console.log("Login Checking formValues", formValues)
+  // console.log("Login Checking formValues", formValues)
 
   const loggedIn = React.useContext(LoggedInContext);
 
-  console.log("Login Checking loggedIn", loggedIn)
-  console.log("Login Checking authorized", authorized)
+  // console.log("Login Checking loggedIn", loggedIn)
+  // console.log("Login Checking authorized", authorized)
 
   const bootstrapAsync = async () => {
     if (authorized || loggedIn) {

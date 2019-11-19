@@ -4,6 +4,7 @@
     "slug": "Fiximize",
     "privacy": "public",
     "sdkVersion": "35.0.0",
+    "scheme": "Fiximize",
     "platforms": [
       "ios",
       "android"
@@ -27,7 +28,7 @@
       "bundleIdentifier": "com.trudeed.fiximize"
     },
     "android": {
-      "package": "com.trudeed.fiximze"
+      "package": "com.trudeed.fiximize"
     }
   }
 }
