@@ -4,7 +4,7 @@
     "slug": "Fiximize",
     "privacy": "public",
     "sdkVersion": "35.0.0",
-    "scheme": "Fiximize",
+    "scheme": "fiximize",
     "platforms": [
       "ios",
       "android"
