@@ -4,11 +4,9 @@ import { Platform } from 'react-native';
 import { Icon } from "react-native-elements";
 import { Button } from "react-native-paper";
 import { createSwitchNavigator, NavigationState, NavigationContainerProps } from 'react-navigation'; 
-// import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createStackNavigator, HeaderBackButton } from 'react-navigation-stack';
 import { createBottomTabNavigator, NavigationBottomTabOptions } from 'react-navigation-tabs';
 
-import BurgerMenu from "../components/BurgerMenu";
 import AuthLoadingScreen from '../screens/AuthLoading';
 import BathroomRemodelFormScreen from "../screens/BathroomRemodelForm";
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
@@ -284,7 +282,7 @@ RegisterScreen.navigationOptions = {
 };
 
 // const AuthTabs = createBottomTabNavigator({ LoginStack, RegisterScreen });
-const AuthTabs = createBottomTabNavigator({ HomeStack, LoginStack });
+const AuthTabs = createBottomTabNavigator({ LoginStack });
 
 const RootSwitch = createSwitchNavigator(
   { 

@@ -2,6 +2,7 @@ import { encode as btoa } from 'base-64'
 import { AuthSession } from 'expo';
 import * as Crypto from 'expo-crypto';
 import * as Random from 'expo-random';
+import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from 'expo-secure-store';
 // import jwtDecode from 'jwt-decode';
 import React from 'react';
@@ -108,29 +109,32 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   }, [navigation]);
 
   const login = async () => {
-    const redirectUrl = AuthSession.getRedirectUrl();
-    const authUrl = `https://${auth0.domain}/authorize?${toQueryString({
-      client_id: auth0.clientId,
-      code_challenge: await SecureStore.getItemAsync("codeChallenge"),
-      code_challenge_method: 'S256',
-      redirect_uri: redirectUrl,
-      response_type: 'code',
-      scope: auth0.scope,
-      nonce: 'nonce',
-    })}`;
-    try {
-      const result = await AuthSession.startAsync({ authUrl });
-      if (result.type === 'success') {
-        const { params: { code } } = result;
-        await SecureStore.setItemAsync("code", code, {});
-        await exchangeCodeForTokens();
-        completeLogin();
-      }
-    }
-    catch(err) {
-      console.log("err: ");
-      console.log(JSON.stringify(err));
-    }
+    // const redirectUrl = AuthSession.getRedirectUrl();
+    // console.log("login redirectUrl",redirectUrl)
+    WebBrowser.openAuthSessionAsync('https://dev-agent.trudeed.com/auth/login', "https://dev-agent.trudeed.com/auth/login");
+    // const authUrl = `https://${auth0.domain}/authorize?${toQueryString({
+    //   client_id: auth0.clientId,
+    //   code_challenge: await SecureStore.getItemAsync("codeChallenge"),
+    //   code_challenge_method: 'S256',
+    //   redirect_uri: "https://dev-agent.trudeed.com/auth/login",
+    //   response_type: 'code',
+    //   scope: auth0.scope,
+    //   nonce: 'nonce',
+    //   returnUrl: "https://dev-agent.trudeed.com/auth/login"
+    // })}`;
+    // try {
+    //   const result = await AuthSession.startAsync({ authUrl });
+    //   if (result.type === 'success') {
+    //     const { params: { code } } = result;
+    //     await SecureStore.setItemAsync("code", code, {});
+    //     await exchangeCodeForTokens();
+    //     completeLogin();
+    //   }
+    // }
+    // catch(err) {
+    //   console.log("err: ");
+    //   console.log(JSON.stringify(err));
+    // }
   }
 
   return (
