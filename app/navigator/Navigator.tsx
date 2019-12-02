@@ -12,6 +12,7 @@ import BathroomRemodelFormScreen from "../screens/BathroomRemodelForm";
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
+import FiximizeQuestionsFormScreen from "../screens/FiximizeQuestions/FiximizeQuestionsForm";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
 import InitalLoadingScreen from "../screens/InitialLoading";
 import KitchenRemodelFormScreen from '../screens/KitchenRemodelForm';
@@ -47,153 +48,13 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { CurrentLocationScreen, DetailScreen, HomeScreen, InitalLoadingScreen, LoginCheckingScreen, OptionsScreen,
-    AuthLoadingScreen: {
-      screen: AuthLoadingScreen,
-      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
-        return { 
-          headerLeft: null,
-        }
-      }
-    },
-    BathroomRemodelFormScreen: {
-      screen: BathroomRemodelFormScreen,
-      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
-        const { navigation } = props;
-        const previousStep = navigation.getParam("previousStep");
-        const route = navigation.getParam("route");
-        const step = navigation.getParam("step");
-        return { 
-          headerLeft: (props) => {
-            return (
-              <HeaderBackButton 
-                {...props} 
-                backTitleVisible={false} 
-                onPress={() => {
-                  if(step === "zipCode") {
-                    navigation.goBack(navigation.state.key)
-                  } else {
-                    navigation.navigate("BathroomRemodelFormScreen", { step: previousStep, backFrom: step, previousStep: getBathroomRemodelPreviousStep(previousStep, route) });
-                  }
-                }} 
-              />
-            )
-          }
-        }
-      }
-    },
-    CameraScreen: {
-      screen: CameraScreen,
-      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
-        const { navigation } = props;
-        const formValues = navigation.getParam("formValues", null);
-        const step = navigation.getParam("step");
-        const previousStep = navigation.getParam("previousStep");
-        const selectedPhotos = navigation.getParam("selectedPhotos", []);
-        const isStepGallery = step === "gallery";
-        // console.log("navigator camera navigation", navigation.state)
-        return { 
-          headerLeft: !isStepGallery ? null : (props) => {
-            return (
-              <HeaderBackButton 
-                {...props} 
-                backTitleVisible={false} 
-                onPress={() => {
-                  navigation.navigate("CameraScreen", { step: previousStep, previousStep: getCameraPreviousStep(previousStep) });
-                }} 
-              />
-            )
-          },
-          headerRight: (props) => {
-            return (
-              <Button 
-                {...props}
-                onPress={() => {
-                  navigation.navigate("LoginCheckingScreen", { formValues, selectedPhotos })
-                }}
-              >
-                {isStepGallery ? "Done" : "Skip"}
-              </Button> 
-            ) 
-          }
-        }
-      }
-    },
-    KitchenRemodelFormScreen: {
-      screen: KitchenRemodelFormScreen,
-      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
-        const { navigation } = props;
-        const previousStep = navigation.getParam("previousStep");
-        const route = navigation.getParam("route");
-        const step = navigation.getParam("step");
-        return { 
-          headerLeft: (props) => {
-            return (
-              <HeaderBackButton 
-                {...props} 
-                backTitleVisible={false} 
-                onPress={() => {
-                  if(step === "zipCode") {
-                    navigation.goBack(navigation.state.key)
-                  } else {
-                    navigation.navigate("KitchenRemodelFormScreen", { step: previousStep, backFrom: step, previousStep: getKitchenRemodelPreviousStep(previousStep, route) });
-                  }
-                }} 
-              />
-            )
-          }
-        }
-      }
-    },
-    LoginScreen: {
-      screen: LoginScreen,
-      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
-        const { navigation } = props;
-        return { 
-          headerLeft: (props) => {
-            return (
-              <HeaderBackButton 
-                {...props} 
-                backTitleVisible={false} 
-                onPress={() => {
-                  navigation.navigate("CameraScreen");
-                }} 
-              />
-            )
-          }
-          // headerLeft: null,
-        }
-      }
-    },
-    PricingScreen: {
-      screen: PricingScreen,
-      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
-        const { navigation } = props;
-        return { 
-          headerLeft: null,
-          headerRight: (props) => {
-            return (
-              <Button 
-                {...props}
-                onPress={() => {
-                  navigation.navigate("MainNavigator")
-                }}
-              >
-                {"Done"}
-              </Button> 
-            ) 
-          }
-        }
-      }
-    },
-},
+  { FiximizeQuestionsFormScreen, HomeScreen },
   { initialRouteName: 'HomeScreen' }
 );
 
 HomeStack.navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
   const { navigation } = props;
   let tabBarVisible = true;
-  // const isPricingPage = navigation.state.routes.filter(route => route.routeName === "PricingScreen").length > 0;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
   };
@@ -241,10 +102,10 @@ PricingRecordsStack.navigationOptions = {
 // PricingRecordsStack End
 
 const MainNavigator = Platform.select({
-  ios: createBottomTabNavigator({ HomeStack, PricingRecordsStack, SettingsStack }, {
+  ios: createBottomTabNavigator({ HomeStack, SettingsStack }, {
     resetOnBlur: true,
   }),
-  android: createBottomTabNavigator({ HomeStack, PricingRecordsStack, SettingsStack }, {
+  android: createBottomTabNavigator({ HomeStack, SettingsStack }, {
     lazy: false,
     resetOnBlur: true,
   }),

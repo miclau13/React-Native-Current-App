@@ -13,7 +13,7 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
   const { navigation } = props;
 
   const loggedIn = React.useContext(LoggedInContext);
-  // const loggedIn = useLoggedIn();
+  console.log("loggedIn",loggedIn)
 
   const bootstrapAsync = async () => {
     if (loggedIn) {

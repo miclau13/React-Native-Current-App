@@ -1,4 +1,4 @@
-import { FieldAttributes, useFormikContext  } from 'formik';
+import { FieldAttributes, useField  } from 'formik';
 import React from 'react';
 import {
   HelperText as RNPHelperText,
@@ -6,8 +6,7 @@ import {
 } from 'react-native-paper';
 
 export function useFieldToHelperTextProps(propsOrFieldName: string | FieldAttributes<any>): RNPHelperTextProps {
-  const form = useFormikContext();
-  const [, meta] = form.getFieldProps(propsOrFieldName);
+  const [, meta] = useField(propsOrFieldName);
   return { type: 'error', children: meta.error };
 }
 
