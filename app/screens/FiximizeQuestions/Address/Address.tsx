@@ -57,11 +57,11 @@ const Address: React.ComponentType<AddressProps> = (props) => {
       <AddressInput
         autoFocus
         error={errors && !!errors.address} 
-        keyboardType="number-pad"
+        keyboardType="default"
         label="Address"
         name="address"
         mode="outlined"
-        textContentType="postalCode"
+        textContentType="fullStreetAddress"
         // validate={validate}
       />
       <HelperText name="address"/>

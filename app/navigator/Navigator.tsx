@@ -1,13 +1,14 @@
 
 import React from "react";
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 import { Icon } from "react-native-elements";
 import { Button } from "react-native-paper";
-import { createSwitchNavigator, NavigationState, NavigationContainerProps } from 'react-navigation'; 
-import { createStackNavigator, HeaderBackButton } from 'react-navigation-stack';
-import { createBottomTabNavigator, NavigationBottomTabOptions } from 'react-navigation-tabs';
+import { createSwitchNavigator, NavigationState, NavigationContainerProps } from "react-navigation"; 
+import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
+import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
 
-import AuthLoadingScreen from '../screens/AuthLoading';
+import AuthLoadingScreen from "../screens/AuthLoading";
+import AutoCompleteAddressScreen  from "../screens/FiximizeQuestions/AutoCompleteAddress";
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
@@ -18,6 +19,7 @@ import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import LoginCheckingScreen from "../screens/LoginChecking";
 import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
+import PropertyInfoScreen from "../screens/PropertyInfo";
 import FullRemodelSummaryScreen from "../screens/FullRemodelSummary";
 import RemodelPackageRecordsScreen,  { strings as pricingRecordsStrings } from "../screens/RemodelPackageRecords";
 import RemodelPackageRecordsDetailScreen from "../screens/RemodelPackageRecordsDetail";
@@ -26,9 +28,9 @@ import SettingsScreen, { strings as settingsStrings } from "../screens/Settings"
 
 import { getPreviousStep as getCameraPreviousStep } from "../screens/Camera";
 
-const IOS_MODAL_ROUTES = ['OptionsScreen'];
+const IOS_MODAL_ROUTES = ["OptionsScreen"];
 
-// const dynamicModalTransition: NavigationStackConfig['transitionConfig'] = (transitionProps, prevTransitionProps) => {
+// const dynamicModalTransition: NavigationStackConfig["transitionConfig"] = (transitionProps, prevTransitionProps) => {
 //   const isModal = IOS_MODAL_ROUTES.some(
 //     screenName =>
 //       screenName === transitionProps.scene.route.routeName ||
@@ -44,8 +46,8 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { FiximizeQuestionsFormScreen, HomeScreen, FullRemodelSummaryScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen},
-  { initialRouteName: 'HomeScreen' }
+  { AutoCompleteAddressScreen, FiximizeQuestionsFormScreen, HomeScreen, FullRemodelSummaryScreen, PropertyInfoScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen},
+  { initialRouteName: "HomeScreen" }
 );
 
 HomeStack.navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
@@ -66,11 +68,11 @@ HomeStack.navigationOptions = (props: NavigationContainerProps<NavigationState>)
     drawerLabel: homeStrings.homeTitle,
     drawerIcon: ({ tintColor }) => (
       <Icon name="md-home" type="ionicon" color={tintColor} />
-    )as NavigationBottomTabOptions['tabBarIcon'],
+    )as NavigationBottomTabOptions["tabBarIcon"],
     tabBarLabel: homeStrings.homeTitle,
     tabBarIcon: ({ tintColor }) => (
       <Icon name="ios-home" type="ionicon" color={tintColor} />
-    ) as NavigationBottomTabOptions['tabBarIcon'],
+    ) as NavigationBottomTabOptions["tabBarIcon"],
   };
 };
 // HomeStack End
@@ -110,7 +112,7 @@ const MainNavigator = Platform.select({
 // Login Stack Start
 const LoginStack = createStackNavigator(
   { LoginScreen, PasswordResetScreen }, 
-  { initialRouteName: 'LoginScreen' }
+  { initialRouteName: "LoginScreen" }
 );
 
 LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
@@ -151,7 +153,7 @@ const RootSwitch = createSwitchNavigator(
     AuthLoading: AuthLoadingScreen,
   }, 
   {
-    initialRouteName: 'InitalLoadingScreen',
+    initialRouteName: "InitalLoadingScreen",
   }
 );
 
