@@ -1,4 +1,4 @@
-export { default } from './Pricing';
-export * from './Pricing';
+export { default } from './FullRemodelSummary';
+export * from './FullRemodelSummary';
 export { default as strings } from './strings';
 export { default as styles} from './styles';

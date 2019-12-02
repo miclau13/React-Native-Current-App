@@ -17,7 +17,8 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
 
   const handleFiximizeQuestionsButtonOnPress = React.useCallback<CardProps['onPress']>(
-    () => navigation.push("FiximizeQuestionsFormScreen", { step: "address", previousStep: "home" })
+    // () => navigation.push("FiximizeQuestionsFormScreen", { step: "address", previousStep: "home" })
+    () => navigation.push("FullRemodelSummaryScreen", { step: "address", previousStep: "home" })
   , [navigation.push]);
 
   React.useEffect(() => {

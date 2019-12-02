@@ -10,7 +10,7 @@ import HalfBathSize from '../HalfBathSize';
 import KitchenCabinetSize from '../KitchenCabinetSize';
 import FiximizeQuestionsFormik from '../../../components/FiximizeQuestions/FiximizeQuestionsFormik';
 
-type FiximizeQuestionsStep = "asIsEstimate" | "address" | "halfBathSize" | "kitchenCabinetUpperSize" | "kitchenCabinetLowerSize" | "kitchenCabinetIslandSize";
+type FiximizeQuestionsStep = "asIsEstimate" | "address" | "halfBathSize" | "kitchenWallCabinetSize" | "kitchenBaseCabinetSize" | "kitchenIslandCabinetSize";
 
 type Params = {
   step: FiximizeQuestionsStep;
@@ -64,7 +64,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
 
   const onSubmit = React.useCallback(values => {
     console.log("FiximizeQuestionsForm onsubmit vaues", values);
-    navigation.navigate("RemodelPackageRecordsScreen");
+    navigation.navigate("PricingScreen");
     // const buttons = ['1', '2', '3', '4'];
 
     // const mappedKitchenFloorRemodelValues = mapValues(values.kitchenFloorRemodel, function(index) { 
@@ -99,17 +99,17 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
 
   const kitchenCabinetSizefields = React.useMemo(() => {
     return [
-      { name: "kitchenCabinetUpperSize", description: "Upper", nextItem: "kitchenCabinetLowerSize"},
-      { name: "kitchenCabinetLowerSize", description: "Lower", nextItem: "kitchenCabinetIslandSize"},
-      { name: "kitchenCabinetIslandSize", description: "Island", nextItem: ""},
+      { name: "kitchenWallCabinetSize", description: "Wall", nextItem: "kitchenBaseCabinetSize"},
+      { name: "kitchenBaseCabinetSize", description: "Base", nextItem: "kitchenIslandCabinetSize"},
+      { name: "kitchenIslandCabinetSize", description: "Island", nextItem: ""},
     ]
   }, []);
 
   const bathroomSizefields = React.useMemo(() => {
     return [
-      { name: "kitchenCabinetUpperSize", description: "1", nextItem: "kitchenCabinetLowerSize"},
-      { name: "kitchenCabinetLowerSize", description: "2", nextItem: "kitchenCabinetIslandSize"},
-      { name: "kitchenCabinetIslandSize", description: "3", nextItem: ""},
+      { name: "kitchenWallCabinetSize", description: "1", nextItem: "kitchenBaseCabinetSize"},
+      { name: "kitchenBaseCabinetSize", description: "2", nextItem: "kitchenIslandCabinetSize"},
+      { name: "kitchenIslandCabinetSize", description: "3", nextItem: ""},
     ]
   }, []);
 
@@ -147,15 +147,15 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
           <HalfBathSize backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
           : null
         }
-        {step === "kitchenCabinetUpperSize" ? 
+        {step === "kitchenWallCabinetSize" ? 
           <KitchenCabinetSize backFrom={backFrom} field={kitchenCabinetSizefields[0]} handleStepNavigation={handleStepNavigation} />
           : null
         }
-        {step === "kitchenCabinetLowerSize" ? 
+        {step === "kitchenBaseCabinetSize" ? 
           <KitchenCabinetSize backFrom={backFrom} field={kitchenCabinetSizefields[1]} handleStepNavigation={handleStepNavigation} />
           : null
         }
-        {step === "kitchenCabinetIslandSize" ? 
+        {step === "kitchenIslandCabinetSize" ? 
           <KitchenCabinetSize backFrom={backFrom} field={kitchenCabinetSizefields[2]} handleStepNavigation={handleStepNavigation} />
           : null
         }

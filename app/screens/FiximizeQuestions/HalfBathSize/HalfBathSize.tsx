@@ -24,7 +24,7 @@ const HalfBathSize: React.ComponentType<HalfBathSizeProps> = (props) => {
     if(errors.halfBathSize) {
       return;
     };
-    handleStepNavigation("kitchenCabinetUpperSize");
+    handleStepNavigation("kitchenWallCabinetSize");
     // submitForm();
   };
 
