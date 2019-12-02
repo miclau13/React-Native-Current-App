@@ -27,8 +27,11 @@ const KitchenCabinetSize: React.ComponentType<KitchenCabinetSizeProps> = (props)
     if(errors[field.name]) {
       return;
     };
-    handleStepNavigation(field.nextItem);
-    // submitForm();
+    if (field.nextItem) {
+      handleStepNavigation(field.nextItem);
+    } else {
+      submitForm();
+    }
   };
 
   React.useEffect(() => {
@@ -62,7 +65,7 @@ const KitchenCabinetSize: React.ComponentType<KitchenCabinetSizeProps> = (props)
         onPress={handleButtonOnPress}
         style={styles.buttonContainer}
       >
-        {"Next"}
+        {field.nextItem ? "Next" : "Submit"}
       </Button>
       <View style={styles.viewBox3}/>
     </KeyboardAvoidingView>

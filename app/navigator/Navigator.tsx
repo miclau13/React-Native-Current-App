@@ -8,27 +8,23 @@ import { createStackNavigator, HeaderBackButton } from 'react-navigation-stack';
 import { createBottomTabNavigator, NavigationBottomTabOptions } from 'react-navigation-tabs';
 
 import AuthLoadingScreen from '../screens/AuthLoading';
-import BathroomRemodelFormScreen from "../screens/BathroomRemodelForm";
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
 import FiximizeQuestionsFormScreen from "../screens/FiximizeQuestions/FiximizeQuestionsForm";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
 import InitalLoadingScreen from "../screens/InitialLoading";
-import KitchenRemodelFormScreen from '../screens/KitchenRemodelForm';
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import LoginCheckingScreen from "../screens/LoginChecking";
 import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import PricingScreen from "../screens/Pricing";
-import PricingRecordsScreen,  { strings as pricingRecordsStrings } from "../screens/PricingRecords";
-import PricingRecordsDetailScreen from "../screens/PricingRecordsDetail";
+import RemodelPackageRecordsScreen,  { strings as pricingRecordsStrings } from "../screens/RemodelPackageRecords";
+import RemodelPackageRecordsDetailScreen from "../screens/RemodelPackageRecordsDetail";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
 
-import { getPreviousStep as getBathroomRemodelPreviousStep } from "../screens/BathroomRemodelForm";
 import { getPreviousStep as getCameraPreviousStep } from "../screens/Camera";
-import { getPreviousStep as getKitchenRemodelPreviousStep } from "../screens/KitchenRemodelForm";
 
 const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
@@ -48,7 +44,7 @@ const IOS_MODAL_ROUTES = ['OptionsScreen'];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { FiximizeQuestionsFormScreen, HomeScreen },
+  { FiximizeQuestionsFormScreen, HomeScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen},
   { initialRouteName: 'HomeScreen' }
 );
 
@@ -90,16 +86,16 @@ SettingsStack.navigationOptions = {
 };
 // SettingsStack End
 
-// PricingRecords Stack Start
-const PricingRecordsStack = createStackNavigator({ PricingRecordsScreen, PricingRecordsDetailScreen });
+// RemodelPackageRecords Stack Start
+const RemodelPackageRecordsStack = createStackNavigator({ RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen });
 
-PricingRecordsStack.navigationOptions = {
+RemodelPackageRecordsStack.navigationOptions = {
   tabBarLabel: pricingRecordsStrings.pricingRecordsTitle,
   tabBarIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />,
   drawerLabel: pricingRecordsStrings.pricingRecordsTitle,
   drawerIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />
 };
-// PricingRecordsStack End
+// RemodelPackageRecordsStack End
 
 const MainNavigator = Platform.select({
   ios: createBottomTabNavigator({ HomeStack, SettingsStack }, {

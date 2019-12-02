@@ -8,7 +8,6 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useQuery } from '@apollo/react-hooks';
 
 import styles from './styles';
-import LoggedInContext from '../../common/LoggedInContext';
 
 type Params = {
 };
@@ -44,7 +43,7 @@ const MY_REHAB_REQUESTS = gql`
   }
 `;
 
-const PricingRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
+const RemodelPackageRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const { data, error, loading, refetch } = useQuery(MY_REHAB_REQUESTS);
 
@@ -56,22 +55,22 @@ const PricingRecords: NavigationStackScreenComponent<Params, ScreenProps> = (pro
       try {
         refetch();
       } catch (e) {
-        console.log("PricingRecords e", e)
+        console.log("RemodelPackageRecords e", e)
       }
     }
   };
 
   const handleItemOnPress = index => (event) => {
-    navigation.push("PricingRecordsDetailScreen", { detail: data.myRehabRequests[index]} );
+    navigation.push("RemodelPackageRecordsDetailScreen", { detail: data.myRehabRequests[index]} );
   }
 
   React.useEffect(() => {
-    console.log("PricingRecords Mount");
+    console.log("RemodelPackageRecords Mount");
     bootstrapAsync();
-    return () => {console.log("PricingRecords UnMount")}
+    return () => {console.log("RemodelPackageRecords UnMount")}
   }, []);
 
-  // console.log("PricingRecords erorr", error)
+  // console.log("RemodelPackageRecords erorr", error)
 
   return (
     <View style={styles.container}>
@@ -101,4 +100,4 @@ const PricingRecords: NavigationStackScreenComponent<Params, ScreenProps> = (pro
   )
 };
 
-export default React.memo(PricingRecords);
+export default React.memo(RemodelPackageRecords);

@@ -64,6 +64,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
 
   const onSubmit = React.useCallback(values => {
     console.log("FiximizeQuestionsForm onsubmit vaues", values);
+    navigation.navigate("RemodelPackageRecordsScreen");
     // const buttons = ['1', '2', '3', '4'];
 
     // const mappedKitchenFloorRemodelValues = mapValues(values.kitchenFloorRemodel, function(index) { 
