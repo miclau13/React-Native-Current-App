@@ -4,6 +4,7 @@ import { ActivityIndicator, ScrollView, StatusBar, View } from 'react-native';
 import { Card, ListItem, Text } from 'react-native-elements'
 import { Button } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
+import NumberFormat from 'react-number-format';
 
 import { useMutation } from '@apollo/react-hooks';
 
@@ -94,9 +95,16 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         <ScrollView>
           <Card title="Full Remodel">
             <>
-              <Text h3 style={styles.costContainer}>
-                {`$${totalCost}`}
-              </Text>
+              {/* <Text h3 style={styles.costContainer}> */}
+                {/* {`$${totalCost}`} */}
+                <NumberFormat 
+                  displayType={'text'} 
+                  prefix={'$'}
+                  renderText={value => <Text h3 style={{marginBottom: 8, textAlign: 'center',}}>{value}</Text>}
+                  thousandSeparator={true} 
+                  value={totalCost}
+                />
+              {/* </Text> */}
                 {
                   data.map((item, i) => (
                     <ListItem
@@ -107,7 +115,13 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
                       }}
                       key={i}
                       title={item.category}
-                      rightTitle={`$${item.value}`}
+                      rightTitle={<NumberFormat 
+                        displayType={'text'} 
+                        prefix={'$'}
+                        renderText={value => <Text>{value}</Text>}
+                        thousandSeparator={true} 
+                        value={item.value}
+                      />}
                     />
                   ))
                 }
