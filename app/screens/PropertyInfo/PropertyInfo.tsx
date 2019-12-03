@@ -8,7 +8,7 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useQuery } from '@apollo/react-hooks';
 
 import styles from './styles';
-import useFiximizeQuestionsFormInitialValues from '../FiximizeQuestions/FiximizeQuestionsForm/useFiximizeQuestionsFormInitialValues';
+import { RequiredInput } from '../FiximizeQuestions/FiximizeQuestionsForm';
 
 type Params = { 
   address: string;
@@ -38,35 +38,44 @@ const propertyInfo = {
   "halfBaths": 1,
   "mlsNumber": "939978",
   "style": "32 - Townhouse"
-}
-
+};
 
 const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const [dataArray, setDataArray] = React.useState([]);
-  const [, setInitialValues] = useFiximizeQuestionsFormInitialValues();
+  const [fiximizeQuestionsFormInitialValues, setFiximizeQuestionsFormInitialValues] = React.useState(null);
   const address = navigation.getParam("address", "13807 SE Allen Rd, Bellevue, WA, 98006");
   const { data, error, loading, refetch } = useQuery(PROPERTY_INFO, {
     variables: { query: { address: address || "13807 SE Allen Rd, Bellevue, WA, 98006" }}
   });
 
   const bootstrapAsync = () => {
-    let arr = []
+    let arr = [];
+    let inputValues = {};
     if (!error && data && data.propertyInfo) {
       for (let [key, value] of Object.entries(data.propertyInfo)) {
         if (key !== "__typename") {
           arr.push({ value, name: key });
+        };
+        if (RequiredInput.includes(key)) {
+          for (let i = 0 ; i < value; i++) {
+            inputValues[key] = {
+              ...inputValues[key],
+              [`${key}${i+1}`]: "",
+            };
+          }
         }
       }
+      // console.log("inputValues", inputValues)
       setDataArray(arr);
-      console.log("data.propertyInfo",data.propertyInfo)
-      // setInitialValues()
+      
+      setFiximizeQuestionsFormInitialValues({...inputValues});
     };
   };
-
+  
   const handleOnPress = React.useCallback(() => {
-    navigation.navigate("FiximizeQuestionsFormScreen", { address, propertyInfo: dataArray });
-  }, [address]);
+    navigation.navigate("FiximizeQuestionsFormScreen", { address, initialValues: fiximizeQuestionsFormInitialValues, propertyInfo: data.propertyInfo });
+  }, [address, data, fiximizeQuestionsFormInitialValues]);
 
   React.useEffect(() => {
     console.log("PropertyInfo Mount");

@@ -15,17 +15,15 @@ interface AsIsEstimateProps {
 
 const AsIsEstimate: React.ComponentType<AsIsEstimateProps> = (props) => {
   const form = useFormikContext<FiximizeQuestionsFormValues>();
-  const { errors, values } = form;
+  const { errors, values} = form;
   const { backFrom, handleStepNavigation } = props;
 
   const handleButtonOnPress: ButtonProps['onPress'] = () => {
-    // console.log("AsIsEstimate handleButtonOnPress values", values.asIsEstimate)
-    // console.log("AsIsEstimate handleButtonOnPress errors.asIsEstimate", errors.asIsEstimate)
-    if(errors.asIsEstimate) {
+    if(errors && errors["asIsEstimate"]) {
       return;
     };
 
-    handleStepNavigation("halfBathSize");
+    handleStepNavigation("kitchenWallCabinetSize");
   };
 
   React.useEffect(() => {
@@ -45,7 +43,7 @@ const AsIsEstimate: React.ComponentType<AsIsEstimateProps> = (props) => {
       <View style={styles.viewBox1}/>
       <NumberInput
         autoFocus
-        error={errors && errors.asIsEstimate} 
+        error={errors && errors["asIsEstimate"]} 
         keyboardType="number-pad"
         label="$"
         maxLength={8}
@@ -55,6 +53,7 @@ const AsIsEstimate: React.ComponentType<AsIsEstimateProps> = (props) => {
       <HelperText name="asIsEstimate"/>
       <View style={styles.viewBox2}/>
       <Button
+        disabled={!!!values["asIsEstimate"]}
         mode="contained" 
         onPress={handleButtonOnPress}
         style={styles.buttonContainer}

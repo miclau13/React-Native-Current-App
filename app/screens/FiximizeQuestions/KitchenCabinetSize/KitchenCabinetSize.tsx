@@ -19,11 +19,7 @@ const KitchenCabinetSize: React.ComponentType<KitchenCabinetSizeProps> = (props)
   const { errors, submitForm, values } = form;
   const { backFrom, field, handleStepNavigation } = props;
 
-  console.log("KitchenCabinetSize field", field )
-
   const handleButtonOnPress: ButtonProps['onPress'] = () => {
-    // console.log("KitchenCabinetSize handleButtonOnPress values", values[field.name])
-    // console.log("KitchenCabinetSize handleButtonOnPress errors[field.name]", errors[field.name])
     if(errors[field.name]) {
       return;
     };
@@ -61,6 +57,7 @@ const KitchenCabinetSize: React.ComponentType<KitchenCabinetSizeProps> = (props)
       <HelperText name={field.name}/>
       <View style={styles.viewBox2}/>
       <Button
+        disabled={!!!values[`${field.name}`]}
         mode="contained" 
         onPress={handleButtonOnPress}
         style={styles.buttonContainer}

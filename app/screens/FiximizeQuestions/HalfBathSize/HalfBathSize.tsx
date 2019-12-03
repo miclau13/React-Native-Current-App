@@ -8,31 +8,29 @@ import { FiximizeQuestionsFormProps, FiximizeQuestionsFormValues } from '../Fixi
 import HelperText from '../../../components/Formik/HelperText';
 import NumberInput from '../../../components/NumberInput';
 
-interface HalfBathSizeProps {
+interface halfBathSizeProps {
   backFrom: FiximizeQuestionsFormProps['backFrom'];
+  field: any;
   handleStepNavigation: FiximizeQuestionsFormProps['handleStepNavigation'];
 };
 
-const HalfBathSize: React.ComponentType<HalfBathSizeProps> = (props) => {
+const halfBathSize: React.ComponentType<halfBathSizeProps> = (props) => {
   const form = useFormikContext<FiximizeQuestionsFormValues>();
-  const { errors, submitForm, values } = form;
-  const { backFrom, handleStepNavigation } = props;
+  const { errors, values } = form;
+  const { backFrom, field, handleStepNavigation } = props;
 
   const handleButtonOnPress: ButtonProps['onPress'] = () => {
-    // console.log("HalfBathSize handleButtonOnPress values", values.halfBathSize)
-    // console.log("HalfBathSize handleButtonOnPress errors.halfBathSize", errors.halfBathSize)
-    if(errors.halfBathSize) {
+    if(errors && errors["halfBaths"] && errors["halfBaths"][field.name]) {
       return;
     };
-    handleStepNavigation("kitchenWallCabinetSize");
-    // submitForm();
+    handleStepNavigation(field.nextItem);
   };
 
   React.useEffect(() => {
     if (!!backFrom) {
       form.setFieldValue(backFrom, form.initialValues[backFrom]);
     };
-    return () => {console.log("HalfBathSize UnMount")}
+    return () => {console.log("halfBathSize UnMount")}
   }, []);
 
   return (
@@ -41,20 +39,21 @@ const HalfBathSize: React.ComponentType<HalfBathSizeProps> = (props) => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.viewBox1}/>
-      <Headline>Half Bath Size:</Headline>
+      <Headline>{`Half Bath Size #${field.description}:`}</Headline>
       <View style={styles.viewBox1}/>
       <NumberInput
         autoFocus
-        error={errors && errors.halfBathSize} 
+        error={errors && errors["halfBaths"] && errors["halfBaths"][field.name]} 
         keyboardType="number-pad"
         label="sq. ft."
         maxLength={8}
         mode="outlined"
-        name="halfBathSize"
+        name={`halfBaths.${field.name}`}
       />
-      <HelperText name="halfBathSize"/>
+      <HelperText name={`halfBaths.${field.name}`}/>
       <View style={styles.viewBox2}/>
       <Button
+        disabled={!!!values["halfBaths"][`${field.name}`]}
         mode="contained" 
         onPress={handleButtonOnPress}
         style={styles.buttonContainer}
@@ -65,4 +64,4 @@ const HalfBathSize: React.ComponentType<HalfBathSizeProps> = (props) => {
     </KeyboardAvoidingView>
   );
 }
-export default React.memo(HalfBathSize);
+export default React.memo(halfBathSize);

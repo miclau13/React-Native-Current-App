@@ -8,19 +8,19 @@ import { FiximizeQuestionsFormProps, FiximizeQuestionsFormValues } from '../Fixi
 import HelperText from '../../../components/Formik/HelperText';
 import NumberInput from '../../../components/NumberInput';
 
-interface FullBathSizeProps {
+interface BedroomSizeProps {
   backFrom: FiximizeQuestionsFormProps['backFrom'];
   field: any;
   handleStepNavigation: FiximizeQuestionsFormProps['handleStepNavigation'];
 };
 
-const FullBathSize: React.ComponentType<FullBathSizeProps> = (props) => {
+const BedroomSize: React.ComponentType<BedroomSizeProps> = (props) => {
   const form = useFormikContext<FiximizeQuestionsFormValues>();
   const { errors, values } = form;
   const { backFrom, field, handleStepNavigation } = props;
 
   const handleButtonOnPress: ButtonProps['onPress'] = () => {
-    if(errors && errors["fullBaths"] && errors["fullBaths"][field.name]) {
+    if(errors && errors["beds"] && errors["beds"][field.name]) {
       return;
     };
     handleStepNavigation(field.nextItem);
@@ -30,7 +30,7 @@ const FullBathSize: React.ComponentType<FullBathSizeProps> = (props) => {
     if (!!backFrom) {
       form.setFieldValue(backFrom, form.initialValues[backFrom]);
     };
-    return () => {console.log("FullBathSize UnMount")}
+    return () => {console.log("BedroomSize UnMount")}
   }, []);
 
   return (
@@ -39,21 +39,21 @@ const FullBathSize: React.ComponentType<FullBathSizeProps> = (props) => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.viewBox1}/>
-      <Headline>{`Bathroom Size #${field.description}:`}</Headline>
+      <Headline>{`Bedroom Size #${field.description}:`}</Headline>
       <View style={styles.viewBox1}/>
       <NumberInput
         autoFocus
-        error={errors && errors["fullBaths"] && errors["fullBaths"][field.name]} 
+        error={errors && errors["beds"] && errors["beds"][field.name]} 
         keyboardType="number-pad"
         label="sq. ft."
         maxLength={8}
         mode="outlined"
-        name={`fullBaths.${field.name}`}
+        name={`beds.${field.name}`}
       />
-      <HelperText name={`fullBaths.${field.name}`}/>
+      <HelperText name={`beds.${field.name}`}/>
       <View style={styles.viewBox2}/>
       <Button
-        disabled={!!!values["fullBaths"][`${field.name}`]}
+        disabled={!!!values["beds"][`${field.name}`]}
         mode="contained" 
         onPress={handleButtonOnPress}
         style={styles.buttonContainer}
@@ -64,4 +64,4 @@ const FullBathSize: React.ComponentType<FullBathSizeProps> = (props) => {
     </KeyboardAvoidingView>
   );
 }
-export default React.memo(FullBathSize);
+export default React.memo(BedroomSize);
