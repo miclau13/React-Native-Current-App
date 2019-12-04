@@ -36,6 +36,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const [createRehab] = useMutation(CREATE_REHAB);
   const createRehabInput = navigation.getParam("createRehabInput", null);
   const [data, setData] = React.useState();
+  const [arv, setArv] = React.useState();
 
   const bootstrapAsync = async () => {
     try {
@@ -54,6 +55,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
           dataArry.push({ category: key, value, checked: true  });
         }
         setData(dataArry);
+        setArv(result.data.createRehab.arv);
       }
     } catch (e) {
       console.log("createRehab e", e)
@@ -70,10 +72,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
     setData(result);
   }, [data]);
 
-  React.useEffect(() => {
-    bootstrapAsync();
-  }, []);
-
   const totalCost = React.useMemo(() => {
     const cost = (data || []).reduce((acc, item) => {
       if (item.checked) {
@@ -83,6 +81,14 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
     }, 0);
     return cost;
   }, [data]);
+
+  const handleOnPress = React.useCallback(() => {
+    navigation.navigate("ProfitSummaryScreen", { arv, asIs: createRehabInput.asIs, remodellingCost: totalCost });
+  }, [arv, data]);
+
+  React.useEffect(() => {
+    bootstrapAsync();
+  }, []);
 
   return (
     <View>
@@ -95,8 +101,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         <ScrollView>
           <Card title="Full Remodel">
             <>
-              {/* <Text h3 style={styles.costContainer}> */}
-                {/* {`$${totalCost}`} */}
                 <NumberFormat 
                   displayType={'text'} 
                   prefix={'$'}
@@ -104,7 +108,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
                   thousandSeparator={true} 
                   value={totalCost}
                 />
-              {/* </Text> */}
                 {
                   data.map((item, i) => (
                     <ListItem
@@ -127,6 +130,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
                 }
               <Button
                 mode="contained" 
+                onPress={handleOnPress}
                 style={styles.buttonContainer}
               >
                 {"Proceed"}

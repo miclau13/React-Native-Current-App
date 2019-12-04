@@ -19,8 +19,9 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const handleFiximizeQuestionsButtonOnPress = React.useCallback<CardProps['onPress']>(
     // () => navigation.push("FiximizeQuestionsFormScreen", { step: "address", previousStep: "home" })
     // () => navigation.push("FullRemodelSummaryScreen", { step: "address", previousStep: "home" })
-    () => navigation.push("AutoCompleteAddressScreen", { step: "autoCompleteAddress", previousStep: "home" })
     // () => navigation.push("PropertyInfoScreen", { step: "address", previousStep: "home" })
+    () => navigation.push("AutoCompleteAddressScreen", { step: "autoCompleteAddress", previousStep: "home" })
+    // () => navigation.push("ProfitSummaryScreen", { arv: 684171, asIs: 580000, remodellingCost: 71841 })
     
   , [navigation.push]);
 

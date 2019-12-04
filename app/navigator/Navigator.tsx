@@ -19,6 +19,7 @@ import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import LoginCheckingScreen from "../screens/LoginChecking";
 import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
+import ProfitSummaryScreen from "../screens/ProfitSummary";
 import PropertyInfoScreen from "../screens/PropertyInfo";
 import FullRemodelSummaryScreen from "../screens/FullRemodelSummary";
 import RemodelPackageRecordsScreen,  { strings as pricingRecordsStrings } from "../screens/RemodelPackageRecords";
@@ -46,7 +47,7 @@ const IOS_MODAL_ROUTES = ["OptionsScreen"];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AutoCompleteAddressScreen, FiximizeQuestionsFormScreen, HomeScreen, FullRemodelSummaryScreen, PropertyInfoScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen},
+  { AutoCompleteAddressScreen, FiximizeQuestionsFormScreen, HomeScreen, FullRemodelSummaryScreen, ProfitSummaryScreen, PropertyInfoScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen},
   { initialRouteName: "HomeScreen" }
 );
 
