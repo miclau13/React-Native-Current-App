@@ -9,6 +9,7 @@ import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navi
 
 import AuthLoadingScreen from "../screens/AuthLoading";
 import AutoCompleteAddressScreen  from "../screens/FiximizeQuestions/AutoCompleteAddress";
+import AutocompleteScreen  from "../screens/FiximizeQuestions/Autocomplete/Autocomplete";
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
@@ -47,7 +48,7 @@ const IOS_MODAL_ROUTES = ["OptionsScreen"];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AutoCompleteAddressScreen, HomeScreen, ProfitSummaryScreen, PropertyInfoScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen, 
+  { AutocompleteScreen, AutoCompleteAddressScreen, HomeScreen, ProfitSummaryScreen, PropertyInfoScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen, 
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
