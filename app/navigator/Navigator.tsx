@@ -12,7 +12,7 @@ import AutoCompleteAddressScreen  from "../screens/FiximizeQuestions/AutoComplet
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
 import DetailScreen from "../screens/Detail";
-import FiximizeQuestionsFormScreen from "../screens/FiximizeQuestions/FiximizeQuestionsForm";
+import FiximizeQuestionsFormScreen, { getPreviousStep as getFiximizeQuestionsPreviousStep } from "../screens/FiximizeQuestions/FiximizeQuestionsForm";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
 import InitalLoadingScreen from "../screens/InitialLoading";
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
@@ -47,7 +47,48 @@ const IOS_MODAL_ROUTES = ["OptionsScreen"];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AutoCompleteAddressScreen, FiximizeQuestionsFormScreen, HomeScreen, FullRemodelSummaryScreen, ProfitSummaryScreen, PropertyInfoScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen},
+  { AutoCompleteAddressScreen, HomeScreen, ProfitSummaryScreen, PropertyInfoScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen, 
+    FiximizeQuestionsFormScreen: {
+      screen: FiximizeQuestionsFormScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        const previousStep = navigation.getParam("previousStep");
+        const propertyInfo = navigation.getParam("propertyInfo", {});
+        const step = navigation.getParam("step");
+
+        const handleOnPress = () => {
+          if(step === "beds1") {
+            navigation.navigate("HomeScreen")
+          } else {
+            navigation.navigate("FiximizeQuestionsFormScreen", 
+            { 
+              step: previousStep, 
+              backFrom: step, 
+              previousStep: getFiximizeQuestionsPreviousStep(previousStep, propertyInfo) 
+            });
+          }
+        }
+        return { 
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                onPress={handleOnPress} 
+              />
+            )
+          }
+        }
+      }
+    },
+    FullRemodelSummaryScreen: {
+      screen: FullRemodelSummaryScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        return { 
+          headerLeft: null,
+        }
+      }
+    },
+  },
   { initialRouteName: "HomeScreen" }
 );
 

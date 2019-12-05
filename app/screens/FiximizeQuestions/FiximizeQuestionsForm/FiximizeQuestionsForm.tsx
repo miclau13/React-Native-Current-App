@@ -27,21 +27,50 @@ type Params = {
 type ScreenProps = {};
 
 const FiximizeQuestionsPreviousStepMap = {
-  "asIsEstimate": "address",
-  "halfBathSize": "asIsEstimate",
+  "kitchenWallCabinetSize": "asIsEstimate",
+  "kitchenBaseCabinetSize": "kitchenWallCabinetSize",
+  "kitchenIslandCabinetSize": "kitchenBaseCabinetSize",
 };
 
 export const RequiredInput = ["beds", "fullBaths", "halfBaths", "threeQuarterBaths"];
 
-export const getPreviousStep = (currentstep: FiximizeQuestionsStep, route: any) => {
-  // let route decide the previous step (enhance or maintain floor) if the current step is kitchenRemodel
-  // if (currentstep === "kitchenRemodel") {
-  //   return route;
-  // // the previous step must be kitchenRemodel if the current step is appliancesor cabinet
-  // } else if (currentstep === "kitchenAppliancesRemodel" || currentstep === "kitchenCabinetRemodel") {
-  //   return "kitchenRemodel";
-  // }
-  // return FiximizeQuestionsPreviousStepMap[currentstep];
+export const getPreviousStep = (currentstep: FiximizeQuestionsStep, propertyInfo: any) => {
+  // PreviousSteps for beds, fullBaths, threeQuarterBaths and halfBaths
+  if (FiximizeQuestionsPreviousStepMap[currentstep]) {
+    return FiximizeQuestionsPreviousStepMap[currentstep];
+  } else if (currentstep.includes("beds")) {
+    const previousIndex = +currentstep.slice(-1) - 1;
+    return "beds" + previousIndex;
+  } else if (currentstep.includes("fullBaths")) {
+    if (currentstep.slice(-1) === "1") {
+      return `beds${propertyInfo.beds}`;
+    } else {
+      const previousIndex = +currentstep.slice(-1) - 1;
+      return "fullBaths" + previousIndex;
+    }
+  } else if (currentstep.includes("threeQuarterBaths")) {
+    if (currentstep.slice(-1) === "1") {
+      return `fullBaths${propertyInfo.fullBaths}`;
+    } else {
+      const previousIndex = +currentstep.slice(-1) - 1;
+      return "threeQuarterBaths" + previousIndex;
+    }
+  } else if (currentstep.includes("halfBaths")) {
+    if (currentstep.slice(-1) === "1") {
+      return `threeQuarterBaths${propertyInfo.threeQuarterBaths}`;
+    } else {
+      const previousIndex = +currentstep.slice(-1) - 1;
+      return "halfBaths" + previousIndex;
+    }
+  } else if (currentstep === "asIsEstimate") {
+    if (propertyInfo.halfBaths) {
+      return `halfBaths${propertyInfo.halfBaths}`;
+    } else if (propertyInfo.threeQuarterBaths) {
+      return `threeQuarterBaths${propertyInfo.threeQuarterBaths}`;
+    } else {
+      return `fullBaths${propertyInfo.fullBaths}`;
+    }
+  }
 };
 
 export interface FiximizeQuestionsFormValues {
@@ -194,10 +223,6 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   }, [initialValues]);
 
   const handleStepNavigation = React.useCallback<FiximizeQuestionsFormProps['handleStepNavigation']>((nextStep, options = {}) => {
-    // if next step is appliances or cabinet, step must be kitchenRemodel
-    // const route = step === "kitchenFloorRemodel" || step === "kitchenEnhance" ? step : 
-    //   nextStep === "kitchenAppliancesRemodel" || nextStep === "kitchenCabinetRemodel" ? routeToFiximizeQuestions : 
-    //   "";
     navigation.navigate("FiximizeQuestionsFormScreen", { backFrom: "", step: nextStep, previousStep: step, ...options });
   }, [step]);
 
@@ -242,18 +267,6 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
             <KitchenCabinetSize backFrom={backFrom} field={item} key={item.name} handleStepNavigation={handleStepNavigation} />
             : null
         })}
-        {/* {step === "kitchenWallCabinetSize" ? 
-          <KitchenCabinetSize backFrom={backFrom} field={kitchenCabinetSizefields[0]} handleStepNavigation={handleStepNavigation} />
-          : null
-        }
-        {step === "kitchenBaseCabinetSize" ? 
-          <KitchenCabinetSize backFrom={backFrom} field={kitchenCabinetSizefields[1]} handleStepNavigation={handleStepNavigation} />
-          : null
-        }
-        {step === "kitchenIslandCabinetSize" ? 
-          <KitchenCabinetSize backFrom={backFrom} field={kitchenCabinetSizefields[2]} handleStepNavigation={handleStepNavigation} />
-          : null
-        } */}
       </View>
     </FiximizeQuestionsFormik>
   )

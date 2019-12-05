@@ -28,7 +28,11 @@ const FullBathSize: React.ComponentType<FullBathSizeProps> = (props) => {
 
   React.useEffect(() => {
     if (!!backFrom) {
-      form.setFieldValue(backFrom, form.initialValues[backFrom]);
+      if (backFrom.includes("fullBaths")) {
+        form.setFieldValue(`fullBaths.${backFrom}`, form.initialValues["fullBaths"][backFrom]);
+      } else if (backFrom.includes("threeQuarterBaths")) {
+        form.setFieldValue(`threeQuarterBaths.${backFrom}`, form.initialValues["threeQuarterBaths"][backFrom]);
+      }
     };
     return () => {console.log("FullBathSize UnMount")}
   }, []);

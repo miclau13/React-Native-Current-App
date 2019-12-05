@@ -28,7 +28,11 @@ const ThreeQuarterBathSize: React.ComponentType<ThreeQuarterBathSizeProps> = (pr
 
   React.useEffect(() => {
     if (!!backFrom) {
-      form.setFieldValue(backFrom, form.initialValues[backFrom]);
+      if (backFrom.includes("threeQuarterBaths")) {
+        form.setFieldValue(`threeQuarterBaths.${backFrom}`, form.initialValues["threeQuarterBaths"][backFrom]);
+      } else if (backFrom.includes("halfBaths")) {
+        form.setFieldValue(`halfBaths.${backFrom}`, form.initialValues["halfBaths"][backFrom]);
+      }
     };
     return () => {console.log("ThreeQuarterBathSize UnMount")}
   }, []);
@@ -39,7 +43,7 @@ const ThreeQuarterBathSize: React.ComponentType<ThreeQuarterBathSizeProps> = (pr
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.viewBox1}/>
-      <Headline>{`3/4 Size #${field.description}:`}</Headline>
+      <Headline>{`3/4 Bathroom Size #${field.description}:`}</Headline>
       <View style={styles.viewBox1}/>
       <NumberInput
         autoFocus
