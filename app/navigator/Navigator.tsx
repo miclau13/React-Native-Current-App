@@ -7,17 +7,14 @@ import { createSwitchNavigator, NavigationState, NavigationContainerProps } from
 import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
 
-import AuthLoadingScreen from "../screens/AuthLoading";
 import AutocompleteScreen  from "../screens/FiximizeQuestions/Autocomplete/Autocomplete";
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
-import DetailScreen from "../screens/Detail";
 import FiximizeQuestionsFormScreen, { getPreviousStep as getFiximizeQuestionsPreviousStep } from "../screens/FiximizeQuestions/FiximizeQuestionsForm";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
 import InitalLoadingScreen from "../screens/InitialLoading";
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import LoginCheckingScreen from "../screens/LoginChecking";
-import OptionsScreen from "../screens/Options";
 import PasswordResetScreen from "../screens/PasswordReset";
 import ProfitSummaryScreen from "../screens/ProfitSummary";
 import PropertyInfoScreen from "../screens/PropertyInfo";
@@ -198,7 +195,6 @@ const RootSwitch = createSwitchNavigator(
     LoginCheckingScreen,
     LoginScreen,
     MainNavigator,
-    AuthLoading: AuthLoadingScreen,
   }, 
   {
     initialRouteName: "InitalLoadingScreen",

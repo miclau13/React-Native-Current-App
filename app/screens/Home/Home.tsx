@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { CardProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
-import { Button, ButtonProps, Headline, TextInput, TextInputProps } from 'react-native-paper';
+import { Headline, TextInput } from 'react-native-paper';
 
 import styles from './styles';
 

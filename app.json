@@ -9,11 +9,11 @@
       "ios",
       "android"
     ],
-    "version": "3.0.0",
+    "version": "4.0.0",
     "orientation": "portrait",
     "icon": "./assets/favicon3.png",
     "splash": {
-      "image": "./assets/splashCompany.png",
+      "image": "./assets/fiximize.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
