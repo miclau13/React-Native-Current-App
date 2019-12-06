@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   viewBox2: {
-    flex: 10,
+    flex: 2,
   },
   viewBox3: {
     flex: 5,
