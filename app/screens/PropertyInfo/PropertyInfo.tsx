@@ -1,4 +1,5 @@
 import { gql } from 'apollo-boost';
+import { startCase } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, StatusBar, ScrollView, View } from 'react-native';
 import { Card, ListItem } from 'react-native-elements'
@@ -44,9 +45,9 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const { navigation } = props;
   const [dataArray, setDataArray] = React.useState([]);
   const [fiximizeQuestionsFormInitialValues, setFiximizeQuestionsFormInitialValues] = React.useState(null);
-  const address = navigation.getParam("address", "13807 SE Allen Rd, Bellevue, WA, 98006");
-  const { data, error, loading, refetch } = useQuery(PROPERTY_INFO, {
-    variables: { query: { address: address || "13807 SE Allen Rd, Bellevue, WA, 98006" }}
+  const address = navigation.getParam("address", "");
+  const { data, error, loading } = useQuery(PROPERTY_INFO, {
+    variables: { query: { address: address }}
   });
 
   const bootstrapAsync = () => {
@@ -66,9 +67,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
           }
         }
       }
-      // console.log("inputValues", inputValues)
       setDataArray(arr);
-      
       setFiximizeQuestionsFormInitialValues({...inputValues});
     };
   };
@@ -98,7 +97,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
                 <ListItem
                   bottomDivider
                   key={item.name}
-                  title={item.name}
+                  title={startCase(item.name)}
                   rightTitle={`${item.value}`}
                 />
               ))

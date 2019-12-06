@@ -2,9 +2,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { CardProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
+import { Button, ButtonProps, Headline, TextInput, TextInputProps } from 'react-native-paper';
 
 import styles from './styles';
-import FiximizeQuestionsCard from '../../components/FiximizeQuestions/FiximizeQuestionsCard';
 
 type Params = {
   name?: string;
@@ -16,14 +16,13 @@ type ScreenProps = {};
 const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
 
-  const handleFiximizeQuestionsButtonOnPress = React.useCallback<CardProps['onPress']>(
+  const handleOnFocus = React.useCallback<CardProps['onPress']>(
     // () => navigation.push("FiximizeQuestionsFormScreen", { step: "address", previousStep: "home" })
     // () => navigation.push("FullRemodelSummaryScreen", { step: "address", previousStep: "home" })
     // () => navigation.push("PropertyInfoScreen", { step: "address", previousStep: "home" })
     // () => navigation.push("AutoCompleteAddressScreen", { step: "autoCompleteAddress", previousStep: "home" })
     // () => navigation.push("ProfitSummaryScreen", { arv: 684171, asIs: 580000, remodellingCost: 71841 })
     () => navigation.push("AutocompleteScreen")
-    
   , [navigation.push]);
 
   React.useEffect(() => {
@@ -35,7 +34,19 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <FiximizeQuestionsCard onPress={handleFiximizeQuestionsButtonOnPress} elevation={5} />
+      <View style={styles.keyBoardContainer}>
+        <View style={styles.viewBox1}/>
+        <Headline>What's the address of your property?</Headline>
+        <View style={styles.viewBox1}/>
+        <TextInput
+          keyboardType="default"
+          label="Address"
+          mode="outlined"
+          onFocus={handleOnFocus}
+          textContentType="fullStreetAddress"
+        />
+        <View style={styles.viewBox3}/>
+      </View>
     </View>
   )
 };

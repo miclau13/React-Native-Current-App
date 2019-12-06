@@ -8,7 +8,6 @@ import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
 
 import AuthLoadingScreen from "../screens/AuthLoading";
-import AutoCompleteAddressScreen  from "../screens/FiximizeQuestions/AutoCompleteAddress";
 import AutocompleteScreen  from "../screens/FiximizeQuestions/Autocomplete/Autocomplete";
 import CameraScreen, { strings as cameraStrings } from "../screens/Camera";
 import CurrentLocationScreen from "../screens/CurrentLocation";
@@ -23,12 +22,8 @@ import PasswordResetScreen from "../screens/PasswordReset";
 import ProfitSummaryScreen from "../screens/ProfitSummary";
 import PropertyInfoScreen from "../screens/PropertyInfo";
 import FullRemodelSummaryScreen from "../screens/FullRemodelSummary";
-import RemodelPackageRecordsScreen,  { strings as pricingRecordsStrings } from "../screens/RemodelPackageRecords";
-import RemodelPackageRecordsDetailScreen from "../screens/RemodelPackageRecordsDetail";
 import RegisterScreen, { strings as registerStrings } from "../screens/Register";
 import SettingsScreen, { strings as settingsStrings } from "../screens/Settings";
-
-import { getPreviousStep as getCameraPreviousStep } from "../screens/Camera";
 
 const IOS_MODAL_ROUTES = ["OptionsScreen"];
 
@@ -48,7 +43,7 @@ const IOS_MODAL_ROUTES = ["OptionsScreen"];
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AutocompleteScreen, AutoCompleteAddressScreen, HomeScreen, ProfitSummaryScreen, PropertyInfoScreen, RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen, 
+  { AutocompleteScreen, HomeScreen, PropertyInfoScreen, 
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -86,6 +81,27 @@ const HomeStack = createStackNavigator(
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         return { 
           headerLeft: null,
+        }
+      }
+    },
+    ProfitSummaryScreen: {
+      screen: ProfitSummaryScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        return { 
+          headerLeft: null,
+          headerRight: (props) => {
+            return (
+              <Button 
+                {...props}
+                onPress={() => {
+                  navigation.navigate("HomeScreen");
+                }}
+              >
+                Skip
+              </Button> 
+            )
+          }
         }
       }
     },
@@ -130,17 +146,6 @@ SettingsStack.navigationOptions = {
   drawerIcon: ({ tintColor }) => <Icon name="md-cog" type="ionicon" color={tintColor} />
 };
 // SettingsStack End
-
-// RemodelPackageRecords Stack Start
-const RemodelPackageRecordsStack = createStackNavigator({ RemodelPackageRecordsScreen, RemodelPackageRecordsDetailScreen });
-
-RemodelPackageRecordsStack.navigationOptions = {
-  tabBarLabel: pricingRecordsStrings.pricingRecordsTitle,
-  tabBarIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />,
-  drawerLabel: pricingRecordsStrings.pricingRecordsTitle,
-  drawerIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />
-};
-// RemodelPackageRecordsStack End
 
 const MainNavigator = Platform.select({
   ios: createBottomTabNavigator({ HomeStack, SettingsStack }, {

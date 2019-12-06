@@ -1,29 +1,25 @@
-import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import styles from './styles';
 
-class AutocompleteOption extends PureComponent {
-  handlePress = () => {
-    const { onOptionPress, option: { key } } = this.props;
-    onOptionPress(key);
-  };
-
-  render() {
-    const { option: { key } } = this.props;
-    return (
-      <TouchableOpacity onPress={this.handlePress}>
-        <Text style={styles.autocompleteOptionText}>{key}</Text>
-      </TouchableOpacity>
-    );
-  }
+interface AutocompleteOptionProps {
+  onOptionPress(value: string): void;
+  option: { key: string; };
 }
 
-AutocompleteOption.propTypes = {
-  onOptionPress: PropTypes.func.isRequired,
-  option: PropTypes.shape({
-    key: PropTypes.string.isRequired,
-  }).isRequired,
+const AutocompleteOption: React.ComponentType<AutocompleteOptionProps> = (props) => {
+
+  const { onOptionPress, option: { key } } = props;
+
+  const handleOnPress = React.useCallback<TouchableOpacityProps['onPress']>(() => {
+    onOptionPress(key);
+  }, [key])
+
+  return (
+    <TouchableOpacity onPress={handleOnPress}>
+      <Text style={styles.autocompleteOptionText}>{key}</Text>
+    </TouchableOpacity>
+  )
 };
 
 export default AutocompleteOption;

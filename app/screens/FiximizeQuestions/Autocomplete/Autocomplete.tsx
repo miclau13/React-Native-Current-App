@@ -1,12 +1,12 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { Dimensions, Keyboard, StatusBar, Platform, View } from 'react-native';
-import { NavigationEvents } from 'react-navigation';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import { useQuery } from '@apollo/react-hooks';
 
 import AutocompleteView from './AutocompleteView';
+import styles from './styles';
 
 const NAVIGATION_HEIGHT_LANDSCAPE = 32;
 const IOS_NAVIGATION_HEIGHT_PORTRAIT = 64;
@@ -72,16 +72,19 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
     const { navigation } = props;
     console.log("AutoCompleteAddressForm onsubmit vaues", value);
     navigation.navigate("PropertyInfoScreen", { address: value });
-  }
+  };
 
   const updateOptions = async (value) => {
-    const result = await refetch({ query: { query: value } });
-    const optionsList = result && (result.data.iBuyerProjectsAutoComplete || []).map(item => {
-      return item.value;
-    }) || [];
-    const options = optionsList.map(option => ({ key: option }));
-    setOptions(options);
-  }
+    if (value.length >= 1) {
+      const result = await refetch({ query: { query: value } });
+      let optionsList = [];
+      if (result && result.data && result.data.iBuyerProjectsAutoComplete) {
+        optionsList = result.data.iBuyerProjectsAutoComplete.map(item => item.value);
+      };
+      const options = optionsList.map(option => ({ key: option }));
+      setOptions(options);
+    };
+  };
 
   const updateOptionsListHeight = () => {
     const { height: windowHeight, width: windowWidth } = Dimensions.get('window');
@@ -109,9 +112,9 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
           - TEXT_INPUT_HEIGHT;
         break;
       default:
-    }
+    };
     setOptionsListHeight(optionsListHeight);
-  }
+  };
 
   React.useEffect(() => {
     console.log("Autocomplete Mount");
@@ -125,10 +128,10 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
   }, []);
 
   return (
-      <View
-        onLayout={handleLayout}
-        style={{ flex: 1 }}
-      >
+    <View
+      onLayout={handleLayout}
+      style={styles.container}
+    >
       <AutocompleteView
         handleOnPress={handleOnPress}
         isValidAddress={isValidAddress}
