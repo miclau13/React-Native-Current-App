@@ -83,7 +83,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   }, [data]);
 
   const handleOnPress = React.useCallback(() => {
-    navigation.navigate("ProfitSummaryScreen", { arv, asIs: createRehabInput.asIs, remodellingCost: totalCost });
+    navigation.navigate("ProfitSummaryScreen", { arv, asIs: createRehabInput.asIs, remodellingCost: totalCost, step: "summary" });
   }, [arv, data]);
 
   React.useEffect(() => {

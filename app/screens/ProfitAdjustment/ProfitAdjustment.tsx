@@ -1,0 +1,75 @@
+import React from 'react';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Button, ButtonProps, Headline, HelperText, TextInput, TextInputProps } from 'react-native-paper';
+import { NavigationStackScreenComponent } from "react-navigation-stack";
+import NumberFormat from 'react-number-format';
+
+import styles from './styles';
+// import TextInput from '../../components/NumberFormat/DollarInput';
+
+interface ProfitSummaryViewProps {
+  arv: number;
+  setArv(arv: number): void;
+  // TODO type
+  handleStepNavigation: any;
+}
+
+const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) => {
+  const { arv, setArv, handleStepNavigation} = props;
+  const [ARV, setARV] = React.useState(arv.toString());
+
+  const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
+    console.log("ProfitAdjustment handleOnChangeText text",text)
+    setARV(text);
+  };
+
+  const handleOnPress: ButtonProps['onPress'] = () => {
+    if (ARV.length < 1) {
+      return;
+    };
+    setArv(+ARV);
+    handleStepNavigation("summary");
+  }
+
+  React.useEffect(() => {
+    return () => {console.log("ProfitAdjustment UnMount")}
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.keyBoardContainer}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        <View style={styles.viewBox1}/>
+        <Headline>ARV Estimate:</Headline>
+        <View style={styles.viewBox1}/>
+        <TextInput
+          error={ARV.length < 1}
+          keyboardType="number-pad"
+          label="$"
+          mode="outlined"
+          onChangeText={handleOnChangeText}
+          value={ARV}
+          textContentType="none"
+        />
+        <HelperText 
+          type="error"
+          visible={ARV.length < 1}
+        >
+          {"This field is required"}
+        </HelperText>
+        <View style={styles.viewBox2}/>
+        <Button 
+          mode="contained" 
+          onPress={handleOnPress}
+          style={styles.nextButton}
+        >
+          Confirm
+        </Button>
+        <View style={styles.viewBox3}/>
+      </KeyboardAvoidingView>
+    </View>
+  );
+}
+export default React.memo(ProfitAdjustment);

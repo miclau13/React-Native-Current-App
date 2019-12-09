@@ -21,8 +21,9 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     // () => navigation.push("FullRemodelSummaryScreen", { step: "address", previousStep: "home" })
     // () => navigation.push("PropertyInfoScreen", { step: "address", previousStep: "home" })
     // () => navigation.push("AutoCompleteAddressScreen", { step: "autoCompleteAddress", previousStep: "home" })
-    // () => navigation.push("ProfitSummaryScreen", { arv: 684171, asIs: 580000, remodellingCost: 71841 })
+    // () => navigation.push("ProfitSummaryScreen", { arv: 684171, asIs: 580000, remodellingCost: 71841, step: "summary" })
     () => navigation.push("AutocompleteScreen")
+    // () => navigation.push("ProfitAdjustmentScreen", { arv: 100000 })
   , [navigation.push]);
 
   React.useEffect(() => {

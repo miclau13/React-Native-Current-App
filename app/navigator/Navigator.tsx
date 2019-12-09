@@ -85,9 +85,11 @@ const HomeStack = createStackNavigator(
       screen: ProfitSummaryScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         const { navigation } = props;
+        const step = navigation.getParam("step");
         return { 
-          headerLeft: null,
-          headerRight: (props) => {
+          headerLeft: step === "summary" ? 
+            (props) => <HeaderBackButton {...props} /> : null,
+          headerRight: step === "summary" ? (props) => {
             return (
               <Button 
                 {...props}
@@ -95,10 +97,10 @@ const HomeStack = createStackNavigator(
                   navigation.navigate("HomeScreen");
                 }}
               >
-                Skip
+                Done
               </Button> 
             )
-          }
+          } : null
         }
       }
     },

@@ -25,7 +25,7 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
 
   useEffect(() => {
     // TODO dont use setTImeout
-    setTimeout(bootstrapAsync, 0.1);
+    setTimeout(bootstrapAsync, 0.01);
   });
 
   return (

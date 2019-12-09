@@ -2,18 +2,21 @@ import { gql } from 'apollo-boost';
 import React from 'react';
 import { ActivityIndicator, ScrollView, StatusBar, View } from 'react-native';
 import { Card, ListItem, Text } from 'react-native-elements'
-import { Button } from 'react-native-paper';
+import { Button, ButtonProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import NumberFormat from 'react-number-format';
 
 // import { useMutation } from '@apollo/react-hooks';
+import ProfitSummaryView from './ProfitSummaryView';
 import Speedometer from './ProfitSummarySpeedometerChart';
 import styles from './styles';
+import ProfitAdjustment from '../ProfitAdjustment';
 
 type Params = {
   arv: number;
   asIs: number;
   remodellingCost: number;
+  step: string;
 };
 
 type ScreenProps = {};
@@ -37,9 +40,10 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const { navigation } = props;
   // const [createRehab] = useMutation(CREATE_REHAB);
   // const createRehabInput = navigation.getParam("createRehabInput", null);
-  const arv = navigation.getParam("arv", 0);
   const asIs = navigation.getParam("asIs", 0);
   const remodellingCost = navigation.getParam("remodellingCost", 0);
+  const step = navigation.getParam("step", "summary");
+  const [arv, setArv] = React.useState(navigation.getParam("arv", 0));
   const profit = React.useMemo(() => {
     return +(arv - asIs - remodellingCost);
   }, [arv, asIs, remodellingCost]);
@@ -53,6 +57,10 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     return profit / asIs * 100;
   },[profit, asIs]);
 
+  const handleStepNavigation = React.useCallback((nextStep, options = {}) => {
+    navigation.navigate("ProfitSummaryScreen", { step: nextStep, ...options });
+  }, [step]);
+
   console.log("arv", arv, "asIs", asIs,"remodellingCost", remodellingCost, "profitPercent", profitPercent)
 
   const bootstrapAsync = async () => {
@@ -63,68 +71,23 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   }, []);
 
   return (
-    <View>
-      {false ?
-        <>
-          <ActivityIndicator />
-          <StatusBar barStyle="default" />
-        </>
+    <>
+      {step === "edit" ?
+        <ProfitAdjustment 
+          arv={arv}
+          setArv={setArv}
+          handleStepNavigation={handleStepNavigation}
+        />
         :
-        <ScrollView>
-          <Card title="Profit Summary">
-            <>
-            <Speedometer value={profitPercent} />
-                <NumberFormat 
-                  decimalScale={0}
-                  displayType={'text'} 
-                  prefix={'$'}
-                  renderText={value => <Text h3 style={{ marginBottom: 8, marginTop: 64, textAlign: 'center' }}>{`Est. Profit: ${value}`}</Text>}
-                  thousandSeparator={true} 
-                  value={profit}
-                />
-                {
-                  data.map((item, i) => (
-                    <ListItem
-                      bottomDivider
-                      key={i}
-                      title={item.name}
-                      rightTitle={<NumberFormat 
-                        decimalScale={0}
-                        displayType={'text'} 
-                        prefix={'$'}
-                        renderText={value => <Text>{value}</Text>}
-                        thousandSeparator={true} 
-                        value={item.value}
-                      />}
-                    />
-                  ))
-                }
-              <View style={styles.container}>
-                <Button
-                  mode="contained" 
-                  style={styles.buttonContainer}
-                >
-                  {"Edit"}
-                </Button>
-                <Button
-                  mode="contained" 
-                  style={styles.buttonContainer}
-                >
-                  {"Save"}
-                </Button>
-                <Button
-                  mode="contained" 
-                  style={styles.buttonContainer}
-                >
-                  {"Submit"}
-                </Button>
-              </View>
-            </>
-        </Card>
-      </ScrollView>
+        <ProfitSummaryView
+          data={data}
+          handleStepNavigation={handleStepNavigation}
+          profit={profit}
+          profitPercent={profitPercent}
+        />
       }
       
-    </View>
+    </>
   )
 };
 
