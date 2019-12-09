@@ -120,7 +120,6 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   }, [initialValues]);
 
   const onSubmit = React.useCallback(values => {
-    // console.log("FiximizeQuestionsForm onsubmit vaues", values);
     const { asIsEstimate, beds, fullBaths, halfBaths, threeQuarterBaths,
       kitchenBaseCabinetSize, kitchenIslandCabinetSize, kitchenWallCabinetSize, } = values;
     const bedsInfo = _.map(beds, (value, key) => {
@@ -136,7 +135,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
       return { size: +value, order: +key[key.length - 1]};
     });
     const createRehabInput = {
-      address: address || "13807 SE Allen Rd, Bellevue, WA, 98006",
+      address: address,
       asIs: +asIsEstimate,
       propertyDetails: {
         bedsInfo,
@@ -176,11 +175,10 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
     _.forEach(initialValues["fullBaths"], (value, key) => {
       const index = Number(key.length - 1);
       const order = Number(key[index]);
-      const nextStep = !order === propertyInfo["fullBaths"] ? key.slice(0, -1).concat(`${order + 1}`) :
+      const nextStep = !(order === propertyInfo["fullBaths"]) ? key.slice(0, -1).concat(`${order + 1}`) :
       propertyInfo["threeQuarterBaths"] >= 1 ? "threeQuarterBaths1" : 
       propertyInfo["halfBaths"] >= 1 ? "halfBaths1" :
       "asIsEstimate";
-
       result.push({
         name: key, 
         description: order, 
@@ -196,7 +194,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
     _.forEach(initialValues["halfBaths"], (value, key) => {
       const index = Number(key.length - 1);
       const order = Number(key[index]);
-      const nextStep = !order === propertyInfo["halfBaths"] ? key.slice(0, -1).concat(`${order + 1}`) :
+      const nextStep = !(order === propertyInfo["halfBaths"]) ? key.slice(0, -1).concat(`${order + 1}`) :
       "asIsEstimate";
       result.push({
         name: key, description: order, nextItem: nextStep
@@ -211,7 +209,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
     _.forEach(initialValues["threeQuarterBaths"], (value, key) => {
       const index = Number(key.length - 1);
       const order = Number(key[index]);
-      const nextStep = !order === propertyInfo["threeQuarterBaths"] ? key.slice(0, -1).concat(`${order + 1}`) :
+      const nextStep = !(order === propertyInfo["threeQuarterBaths"]) ? key.slice(0, -1).concat(`${order + 1}`) :
       propertyInfo["halfBaths"] >= 1 ? "halfBaths1" :
       "asIsEstimate";
 
