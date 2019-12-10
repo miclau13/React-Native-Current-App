@@ -9,25 +9,33 @@ import styles from './styles';
 
 interface ProfitSummaryViewProps {
   arv: number;
+  asIs: number;
+  setAsIs(asIs: number): void;
   setArv(arv: number): void;
   // TODO type
   handleStepNavigation: any;
 }
 
 const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) => {
-  const { arv, setArv, handleStepNavigation} = props;
+  const { arv, asIs, setAsIs, setArv, handleStepNavigation} = props;
   const [ARV, setARV] = React.useState(arv.toString());
+  const [ASIS, setASIS] = React.useState(asIs.toString());
 
-  const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
+  const handleOnChangeText: (key: string) => TextInputProps['onChangeText'] =  (key) => (text) => {
     console.log("ProfitAdjustment handleOnChangeText text",text)
-    setARV(text);
+    if (key === "ARV") {
+      setARV(text);
+    } else if (key === "ASIS"){
+      setASIS(text);
+    }
   };
 
   const handleOnPress: ButtonProps['onPress'] = () => {
-    if (ARV.length < 1) {
+    if (ARV.length < 1 || ASIS.length < 1) {
       return;
     };
     setArv(+ARV);
+    setAsIs(+ASIS);
     handleStepNavigation("summary");
   }
 
@@ -49,7 +57,7 @@ const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) =
           keyboardType="number-pad"
           label="$"
           mode="outlined"
-          onChangeText={handleOnChangeText}
+          onChangeText={handleOnChangeText("ARV")}
           value={ARV}
           textContentType="none"
         />
@@ -59,7 +67,25 @@ const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) =
         >
           {"This field is required"}
         </HelperText>
-        <View style={styles.viewBox2}/>
+        {/* <View style={styles.viewBox2}/> */}
+        <View style={styles.viewBox1}/>
+        <Headline>As-Is :</Headline>
+        <View style={styles.viewBox1}/>
+        <TextInput
+          error={ASIS.length < 1}
+          keyboardType="number-pad"
+          label="$"
+          mode="outlined"
+          onChangeText={handleOnChangeText("ASIS")}
+          value={ASIS}
+          textContentType="none"
+        />
+        <HelperText 
+          type="error"
+          visible={ASIS.length < 1}
+        >
+          {"This field is required"}
+        </HelperText>
         <Button 
           mode="contained" 
           onPress={handleOnPress}

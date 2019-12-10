@@ -1,4 +1,5 @@
 import { gql } from 'apollo-boost';
+import { omit } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, ScrollView, StatusBar, View } from 'react-native';
 import { Card, ListItem, Text } from 'react-native-elements'
@@ -20,7 +21,9 @@ const CREATE_REHAB = gql`
   mutation CreateRehab($input: CreateRehabInput!) {
     createRehab(input: $input) {
       arv
+      rehabId
       rehabItemPackage {
+        id
         rehabItems {
           category
           cost
@@ -35,13 +38,17 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const { navigation } = props;
   const [createRehab] = useMutation(CREATE_REHAB);
   const createRehabInput = navigation.getParam("createRehabInput", null);
-  const [data, setData] = React.useState();
   const [arv, setArv] = React.useState();
+  const [data, setData] = React.useState();
+  const [rehabId, setRehabId] = React.useState();
+  const [rehabItems, setRehabItems] = React.useState();
+  const [rehabItemPackageId, setRehabItemPackageId] = React.useState();
 
   const bootstrapAsync = async () => {
     try {
       const result = await createRehab({ variables: { input: createRehabInput } });
       if (result) {
+        // console.log("FullRemodelSummary bootstrapAsync result", result)
         const itemsMap = result.data.createRehab.rehabItemPackage.rehabItems.reduce((acc, item) => {
           if (!acc[item.category]) {
             acc[item.category] = item.cost;
@@ -54,8 +61,13 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         for (let [key, value] of Object.entries(itemsMap)) {
           dataArry.push({ category: key, value, checked: true  });
         }
-        setData(dataArry);
         setArv(result.data.createRehab.arv);
+        setData(dataArry);
+        setRehabId(result.data.createRehab.rehabId);
+        setRehabItems(result.data.createRehab.rehabItemPackage.rehabItems.map(item => {
+          return omit(item, ["__typename"]);
+        }));
+        setRehabItemPackageId(result.data.createRehab.rehabItemPackage.id);
       }
     } catch (e) {
       console.log("createRehab e", e)
@@ -68,9 +80,11 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         item.checked = !data[i].checked
       }
       return item;
-    })
+    });
+    const updatedRehabItems = rehabItems.filter(item => item.category !== data[i].category);
     setData(result);
-  }, [data]);
+    setRehabItems(updatedRehabItems);
+  }, [data, rehabItems]);
 
   const totalCost = React.useMemo(() => {
     const cost = (data || []).reduce((acc, item) => {
@@ -83,8 +97,16 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   }, [data]);
 
   const handleOnPress = React.useCallback(() => {
-    navigation.navigate("ProfitSummaryScreen", { arv, asIs: createRehabInput.asIs, remodellingCost: totalCost, step: "summary" });
-  }, [arv, data]);
+    navigation.navigate("ProfitSummaryScreen", { 
+      arv, rehabId, 
+      asIs: createRehabInput.asIs, 
+      rehabItemPackage: {
+        rehabItems,
+        id: rehabItemPackageId,
+      },
+      remodellingCost: totalCost, 
+      step: "summary" });
+  }, [arv, data, rehabId, rehabItems, rehabItemPackageId]);
 
   React.useEffect(() => {
     bootstrapAsync();

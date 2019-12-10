@@ -88,7 +88,10 @@ const HomeStack = createStackNavigator(
         const step = navigation.getParam("step");
         return { 
           headerLeft: step === "summary" ? 
-            (props) => <HeaderBackButton {...props} /> : null,
+            (props) => <HeaderBackButton {...props} /> : 
+            (props) => <HeaderBackButton {...props} onPress={() => {
+              navigation.navigate("ProfitSummaryScreen", { step: "summary" });
+            }}/>,
           headerRight: step === "summary" ? (props) => {
             return (
               <Button 

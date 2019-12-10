@@ -10,13 +10,16 @@ import styles from './styles';
 interface ProfitSummaryViewProps {
   data: any;
   // TODO type
+  handleSaveOnPress: any;
+  handleSubmitOnPress: any;
   handleStepNavigation: any;
   profit: number;
   profitPercent: number;
+  status: string;
 };
 
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
-  const { data, handleStepNavigation, profit, profitPercent } = props; 
+  const { data, handleSaveOnPress, handleSubmitOnPress, handleStepNavigation, profit, profitPercent, status } = props; 
 
   const handleEditOnPress: ButtonProps['onPress'] = () => {
     handleStepNavigation("edit")
@@ -66,12 +69,14 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
             </Button>
             <Button
               mode="contained" 
+              onPress={handleSaveOnPress}
               style={styles.buttonContainer}
             >
               {"Save"}
             </Button>
             <Button
               mode="contained" 
+              onPress={handleSubmitOnPress}
               style={styles.buttonContainer}
             >
               {"Submit"}
@@ -79,6 +84,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
           </View>
         </>
     </Card>
+    <Text style={{ textAlign: 'center' }}>{status}</Text>
   </ScrollView>
   );
 }
