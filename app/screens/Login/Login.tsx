@@ -2,7 +2,6 @@ import { encode as btoa } from 'base-64'
 import { AuthSession } from 'expo';
 import * as Crypto from 'expo-crypto';
 import * as Random from 'expo-random';
-import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from 'expo-secure-store';
 // import jwtDecode from 'jwt-decode';
 import React from 'react';
@@ -12,7 +11,6 @@ import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 import styles from "./styles";
 import strings from "./strings";
-import { BathroomRemodelFormValues } from '../BathroomRemodelForm';
 import config from '../../../config';
 
 type Params = {
@@ -20,6 +18,10 @@ type Params = {
 };
 
 type ScreenProps = {};
+
+const prodConfig = {
+  uri: "https://agent.trudeed.com/auth/fiximize-viewer"
+}
 
 function toQueryString(params: object) {
   return (
@@ -86,7 +88,14 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       const response = await fetch(`https://${auth0.domain}/oauth/token`, options);
       const responseJson = await response.json();
       const { access_token, id_token, refresh_token } = responseJson;
-      // console.log("Login responseJson %o", responseJson)
+      const userResponse = await fetch(prodConfig.uri, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({access_token})
+      });
       SecureStore.setItemAsync("accessToken", access_token, {});
       SecureStore.setItemAsync("idToken", id_token, {});
       SecureStore.setItemAsync("refreshToken", refresh_token, {});
