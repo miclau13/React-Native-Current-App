@@ -51,7 +51,7 @@ const HomeStack = createStackNavigator(
 
         const handleOnPress = () => {
           if(step === "beds1") {
-            navigation.navigate("HomeScreen")
+            navigation.navigate("PropertyInfoScreen")
           } else {
             navigation.navigate("FiximizeQuestionsFormScreen", 
             { 
