@@ -51,6 +51,10 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const step = navigation.getParam("step", "summary");
   const [arv, setArv] = React.useState(navigation.getParam("arv", 0));
   const [asIs, setAsIs] = React.useState(navigation.getParam("asIs", 0));
+  // const arv = navigation.getParam("arv", 0);
+  // const setArv = navigation.getParam("setArv", null);
+  // const asIs = navigation.getParam("asIs", 0);
+  // const setAsIs = navigation.getParam("setAsIs", null);
   const [loading, setLoading] = React.useState(false);
   const [status, setStatus] = React.useState("");
   const profit = React.useMemo(() => {
@@ -59,7 +63,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const data = [
     { name: "Est. ARV", value: arv },
     { name: "As-Is", value: asIs },
-    { name: "Remodelling Cost", value: remodellingCost },
+    { name: "Remodeling Cost", value: remodellingCost },
   ]
 
   const profitPercent = React.useMemo(() => {

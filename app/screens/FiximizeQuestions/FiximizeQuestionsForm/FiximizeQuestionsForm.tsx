@@ -93,9 +93,9 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   const initialValues = React.useMemo(() => {
     return ({
       asIsEstimate: "",
-      kitchenWallCabinetSize: "",
-      kitchenBaseCabinetSize: "",
-      kitchenIslandCabinetSize: "",
+      kitchenWallCabinetSize: "0",
+      kitchenBaseCabinetSize: "0",
+      kitchenIslandCabinetSize: "0",
       ...formInitialValues,
     })
   }, [formInitialValues]);
