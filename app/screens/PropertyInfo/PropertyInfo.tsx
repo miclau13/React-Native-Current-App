@@ -25,7 +25,6 @@ const PROPERTY_INFO = gql`
       fullBaths
       threeQuarterBaths
       halfBaths
-      mlsNumber
       style
     }
   }
