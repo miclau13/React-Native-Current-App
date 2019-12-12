@@ -70,7 +70,6 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   const handleOnPress = () => {
     const { navigation } = props;
-    console.log("AutoCompleteAddressForm onsubmit vaues", value);
     navigation.navigate("PropertyInfoScreen", { address: value });
   };
 

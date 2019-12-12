@@ -61,7 +61,12 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
           for (let i = 0 ; i < value; i++) {
             inputValues[key] = {
               ...inputValues[key],
-              [`${key}${i+1}`]: "",
+              [`${key}${i+1}`]: 
+                key === "beds" ? "132" : 
+                key === "fullBaths" ? "60" :
+                key === "threeQuarterBaths" ? "40" :
+                key === "halfBaths" ? "20" :
+                "0",
             };
           }
         }
