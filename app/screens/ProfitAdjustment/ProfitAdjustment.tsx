@@ -1,28 +1,22 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { Button, ButtonProps, Headline, HelperText, TextInput, TextInputProps } from 'react-native-paper';
-import { NavigationStackScreenComponent } from "react-navigation-stack";
-import NumberFormat from 'react-number-format';
 
 import styles from './styles';
-// import TextInput from '../../components/NumberFormat/DollarInput';
 
 interface ProfitSummaryViewProps {
   arv: number;
   asIs: number;
-  setAsIs(asIs: number): void;
-  setArv(arv: number): void;
   // TODO type
   handleStepNavigation: any;
 }
 
 const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) => {
-  const { arv, asIs, setAsIs, setArv, handleStepNavigation} = props;
+  const { arv, asIs, handleStepNavigation } = props;
   const [ARV, setARV] = React.useState(arv.toString());
   const [ASIS, setASIS] = React.useState(asIs.toString());
 
   const handleOnChangeText: (key: string) => TextInputProps['onChangeText'] =  (key) => (text) => {
-    console.log("ProfitAdjustment handleOnChangeText text",text)
     if (key === "ARV") {
       setARV(text);
     } else if (key === "ASIS"){
@@ -34,12 +28,11 @@ const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) =
     if (ARV.length < 1 || ASIS.length < 1) {
       return;
     };
-    setArv(+ARV);
-    setAsIs(+ASIS);
-    handleStepNavigation("summary");
+    handleStepNavigation("summary", { arv: +ARV, asIs: +ASIS });
   }
 
   React.useEffect(() => {
+    console.log("ProfitAdjustment Mount")
     return () => {console.log("ProfitAdjustment UnMount")}
   }, []);
 

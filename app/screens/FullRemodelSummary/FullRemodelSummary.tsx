@@ -12,6 +12,8 @@ import { useMutation } from '@apollo/react-hooks';
 import styles from './styles';
 
 type Params = {
+  arv?: number;
+  asIs?: number;
   createRehabInput?: object;
 };
 
@@ -39,16 +41,19 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const [createRehab] = useMutation(CREATE_REHAB);
   const createRehabInput = navigation.getParam("createRehabInput", null);
   const [arv, setArv] = React.useState();
+  const [asIs, setAsIs] = React.useState(createRehabInput.asIs);
   const [data, setData] = React.useState();
   const [rehabId, setRehabId] = React.useState();
   const [rehabItems, setRehabItems] = React.useState();
   const [rehabItemPackageId, setRehabItemPackageId] = React.useState();
 
+  const updatedArv = navigation.getParam("arv", null);
+  const updatedAsIs = navigation.getParam("asIs", null);
+
   const bootstrapAsync = async () => {
     try {
       const result = await createRehab({ variables: { input: createRehabInput } });
       if (result) {
-        // console.log("FullRemodelSummary bootstrapAsync result", result)
         const itemsMap = result.data.createRehab.rehabItemPackage.rehabItems.reduce((acc, item) => {
           if (!acc[item.category]) {
             acc[item.category] = item.cost;
@@ -98,71 +103,75 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const handleOnPress = React.useCallback(() => {
     navigation.navigate("ProfitSummaryScreen", { 
-      arv, rehabId, 
-      asIs: createRehabInput.asIs, 
+      rehabId,
+      arv: updatedArv ? updatedArv : arv, 
+      asIs: updatedAsIs ? updatedAsIs: asIs,
       rehabItemPackage: {
         rehabItems,
         id: rehabItemPackageId,
       },
       remodellingCost: totalCost, 
       step: "summary" });
-  }, [arv, data, rehabId, rehabItems, rehabItemPackageId]);
+  }, [arv, data, rehabId, rehabItems, rehabItemPackageId, setArv, setAsIs]);
 
   React.useEffect(() => {
+    console.log("FullRemodelSummary Mount");
     bootstrapAsync();
+    return () => {
+      console.log("FullRemodelSummary UnMount");
+    }
   }, []);
 
+  if (!data) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+        <StatusBar barStyle="default" />
+      </View>
+    )
+  };
+
   return (
-    <View>
-      {!data ?
+    <ScrollView>
+      <Card title="Full Remodel">
         <>
-          <ActivityIndicator />
-          <StatusBar barStyle="default" />
-        </>
-        :
-        <ScrollView>
-          <Card title="Full Remodel">
-            <>
-                <NumberFormat 
+          <NumberFormat 
+            displayType={'text'} 
+            prefix={'$'}
+            renderText={value => <Text h3 style={{marginBottom: 8, textAlign: 'center',}}>{value}</Text>}
+            thousandSeparator={true} 
+            value={totalCost}
+          />
+          {
+            data.map((item, i) => (
+              <ListItem
+                bottomDivider
+                checkBox={{ 
+                  checked: item.checked,
+                  onPress: handleCheckBoxOnPress(i)
+                }}
+                key={i}
+                title={item.category}
+                rightTitle={<NumberFormat 
                   displayType={'text'} 
                   prefix={'$'}
-                  renderText={value => <Text h3 style={{marginBottom: 8, textAlign: 'center',}}>{value}</Text>}
+                  renderText={value => <Text>{value}</Text>}
                   thousandSeparator={true} 
-                  value={totalCost}
-                />
-                {
-                  data.map((item, i) => (
-                    <ListItem
-                      bottomDivider
-                      checkBox={{ 
-                        checked: item.checked,
-                        onPress: handleCheckBoxOnPress(i)
-                      }}
-                      key={i}
-                      title={item.category}
-                      rightTitle={<NumberFormat 
-                        displayType={'text'} 
-                        prefix={'$'}
-                        renderText={value => <Text>{value}</Text>}
-                        thousandSeparator={true} 
-                        value={item.value}
-                      />}
-                    />
-                  ))
-                }
-              <Button
-                mode="contained" 
-                onPress={handleOnPress}
-                style={styles.buttonContainer}
-              >
-                {"Proceed"}
-              </Button>
-            </>
-        </Card>
-      </ScrollView>
-      }
-      
-    </View>
+                  value={item.value}
+                />}
+              />
+            ))
+          }
+        <Button
+          mode="contained" 
+          onPress={handleOnPress}
+          style={styles.buttonContainer}
+        >
+          {"Proceed"}
+        </Button>
+      </>
+    </Card>
+  </ScrollView>
   )
 };
 

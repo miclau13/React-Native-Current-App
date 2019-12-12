@@ -81,37 +81,37 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     return () => {console.log("PropertyInfo UnMount")}
   }, [data]);
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+        <StatusBar barStyle="default" />
+      </View>
+    )
+  };
+
   return (
-    <View>
-      {loading ?
-        <>
-          <ActivityIndicator />
-          <StatusBar barStyle="default" />
-        </>
-        :
-        <ScrollView>
-          <Card title="Property Info">
-            {
-              dataArray.map(item => (
-                <ListItem
-                  bottomDivider
-                  key={item.name}
-                  title={startCase(item.name)}
-                  rightTitle={`${item.value}`}
-                />
-              ))
-            } 
-          </Card>
-          <Button
-            mode="contained" 
-            onPress={handleOnPress}
-            style={styles.buttonContainer}
-          >
-            {"Continue"}
-          </Button>
-        </ScrollView>
-      }
-    </View>
+    <ScrollView>
+      <Card title="Property Info">
+        {
+          dataArray.map(item => (
+            <ListItem
+              bottomDivider
+              key={item.name}
+              title={startCase(item.name)}
+              rightTitle={`${item.value}`}
+            />
+          ))
+        } 
+      </Card>
+      <Button
+        mode="contained" 
+        onPress={handleOnPress}
+        style={styles.buttonContainer}
+      >
+        {"Continue"}
+      </Button>
+    </ScrollView>
   )
 };
 

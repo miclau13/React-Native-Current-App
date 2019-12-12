@@ -49,12 +49,9 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const rehabItemsPackage = navigation.getParam("rehabItemPackage", {});
   const remodellingCost = navigation.getParam("remodellingCost", 0);
   const step = navigation.getParam("step", "summary");
-  const [arv, setArv] = React.useState(navigation.getParam("arv", 0));
-  const [asIs, setAsIs] = React.useState(navigation.getParam("asIs", 0));
-  // const arv = navigation.getParam("arv", 0);
-  // const setArv = navigation.getParam("setArv", null);
-  // const asIs = navigation.getParam("asIs", 0);
-  // const setAsIs = navigation.getParam("setAsIs", null);
+  const arv = navigation.getParam("arv", 0);
+  const asIs = navigation.getParam("asIs", 0);
+
   const [loading, setLoading] = React.useState(false);
   const [status, setStatus] = React.useState("");
   const profit = React.useMemo(() => {
@@ -64,7 +61,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     { name: "Est. ARV", value: arv },
     { name: "As-Is", value: asIs },
     { name: "Remodeling Cost", value: remodellingCost },
-  ]
+  ];
 
   const profitPercent = React.useMemo(() => {
     return profit / asIs * 100;
@@ -79,6 +76,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         id: rehabId,
       }
     };
+    console.log("updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     try {
       setLoading(true);
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
@@ -116,13 +114,14 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
 
   const handleStepNavigation = React.useCallback((nextStep, options = {}) => {
     navigation.navigate("ProfitSummaryScreen", { step: nextStep, ...options });
+    options && navigation.setParams({ ...options });
   }, [step]);
 
-  const bootstrapAsync = async () => {
-  };
-
   React.useEffect(() => {
-    bootstrapAsync();
+    console.log("ProfitSummary Mount");
+    return () => {
+      console.log("ProfitSummary UnMount");
+    }
   }, []);
 
   if (loading) {
@@ -140,8 +139,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         <ProfitAdjustment 
           arv={arv}
           asIs={asIs}
-          setAsIs={setAsIs}
-          setArv={setArv}
           handleStepNavigation={handleStepNavigation}
         />
         :

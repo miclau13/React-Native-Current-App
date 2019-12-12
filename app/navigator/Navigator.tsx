@@ -85,10 +85,17 @@ const HomeStack = createStackNavigator(
       screen: ProfitSummaryScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         const { navigation } = props;
+        const arv = navigation.getParam("arv");
+        const asIs = navigation.getParam("asIs");
         const step = navigation.getParam("step");
+        console.log("ProfitSummaryScreen navigationOptions step", step)
+        console.log("ProfitSummaryScreen navigationOptions arv", arv)
+        console.log("ProfitSummaryScreen navigationOptions asIs", asIs)
         return { 
           headerLeft: step === "summary" ? 
-            (props) => <HeaderBackButton {...props} /> : 
+            (props) => <HeaderBackButton {...props} onPress={() => {
+              navigation.navigate("FullRemodelSummaryScreen", { arv, asIs });
+            }}/> : 
             (props) => <HeaderBackButton {...props} onPress={() => {
               navigation.navigate("ProfitSummaryScreen", { step: "summary" });
             }}/>,
