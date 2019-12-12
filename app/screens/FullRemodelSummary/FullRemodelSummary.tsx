@@ -133,7 +133,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   return (
     <ScrollView>
-      <Card title="Full Remodel">
+      <Card title="Remodeling Costs">
         <>
           <NumberFormat 
             displayType={'text'} 
