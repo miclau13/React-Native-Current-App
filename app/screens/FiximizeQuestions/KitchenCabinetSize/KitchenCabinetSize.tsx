@@ -32,7 +32,7 @@ const KitchenCabinetSize: React.ComponentType<KitchenCabinetSizeProps> = (props)
 
   React.useEffect(() => {
     if (!!backFrom) {
-      form.setFieldValue(backFrom, form.initialValues[backFrom]);
+      // form.setFieldValue(backFrom, form.initialValues[backFrom]);
     };
     return () => {console.log("KitchenCabinetSize UnMount")}
   }, []);

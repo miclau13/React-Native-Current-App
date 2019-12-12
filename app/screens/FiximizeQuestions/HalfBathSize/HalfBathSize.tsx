@@ -28,11 +28,11 @@ const halfBathSize: React.ComponentType<halfBathSizeProps> = (props) => {
 
   React.useEffect(() => {
     if (!!backFrom) {
-      if (backFrom.includes("halfBaths")) {
-        form.setFieldValue(`halfBaths.${backFrom}`, form.initialValues["halfBaths"][backFrom]);
-      } else if (backFrom.includes("asIsEstimate")) {
-        form.setFieldValue(backFrom, form.initialValues[backFrom]);
-      }
+      // if (backFrom.includes("halfBaths")) {
+      //   form.setFieldValue(`halfBaths.${backFrom}`, form.initialValues["halfBaths"][backFrom]);
+      // } else if (backFrom.includes("asIsEstimate")) {
+      // form.setFieldValue(backFrom, form.initialValues[backFrom]);
+      // }
     };
     return () => {console.log("halfBathSize UnMount")}
   }, []);

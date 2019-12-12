@@ -17,6 +17,7 @@ const LoggedInProvider = <T extends string>({
 
   const bootstrapAsync = async () => {
     const accessToken = await SecureStore.getItemAsync("accessToken", {});
+    console.log("accessToken")
     if (accessToken) {
       setValue(true);
     }

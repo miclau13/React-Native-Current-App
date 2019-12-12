@@ -1,9 +1,10 @@
+import * as SecureStore from 'expo-secure-store';
 import React, { useEffect} from 'react';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 
 import styles from './styles';
-import LoggedInContext from '../../common/LoggedInContext';
+// import LoggedInContext from '../../common/LoggedInContext';
 
 type Params = {};
 
@@ -12,11 +13,11 @@ type ScreenProps = {};
 const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, ScreenProps>> = (props) => {
   const { navigation } = props;
 
-  const loggedIn = React.useContext(LoggedInContext);
-  console.log("loggedIn",loggedIn)
+  // const loggedIn = React.useContext(LoggedInContext);
 
-  const bootstrapAsync = async () => {
-    if (loggedIn) {
+  const bootstrapAsync = async() => {
+    const accessToken = await SecureStore.getItemAsync("accessToken", {});
+    if (accessToken) {
       navigation.navigate("MainNavigator");
     } else {
       navigation.navigate("AuthTabs");
@@ -25,16 +26,18 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
 
   useEffect(() => {
     // TODO dont use setTImeout
-    setTimeout(bootstrapAsync, 0.01);
-    return () => {}
-  });
+    console.log("InitialLoading Mount");
+    bootstrapAsync()
+    return () => {console.log("InitialLoading UnMount");}
+  }, []);
 
   return (
-    <LoggedInContext.Consumer>
-      {loggedIn => (
-        <LoadingComponent loggedIn={loggedIn} />
-      )}
-    </LoggedInContext.Consumer>
+    // <LoggedInContext.Consumer>
+    //   {loggedIn => (
+    //     <LoadingComponent loggedIn={loggedIn} />
+    //   )}
+    // </LoggedInContext.Consumer>
+    <LoadingComponent />
   )
 };
 

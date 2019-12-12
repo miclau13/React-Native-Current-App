@@ -28,11 +28,11 @@ const BedroomSize: React.ComponentType<BedroomSizeProps> = (props) => {
 
   React.useEffect(() => {
     if (!!backFrom) {
-      if (backFrom.includes("beds")) {
-        form.setFieldValue(`beds.${backFrom}`, form.initialValues["beds"][backFrom]);
-      } else if (backFrom.includes("fullBaths")) {
-        form.setFieldValue(`fullBaths.${backFrom}`, form.initialValues["fullBaths"][backFrom]);
-      }
+      // if (backFrom.includes("beds")) {
+      //   form.setFieldValue(`beds.${backFrom}`, form.initialValues["beds"][backFrom]);
+      // } else if (backFrom.includes("fullBaths")) {
+      //   form.setFieldValue(`fullBaths.${backFrom}`, form.initialValues["fullBaths"][backFrom]);
+      // }
     };
     return () => {console.log("BedroomSize UnMount")}
   }, []);
