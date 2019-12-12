@@ -83,7 +83,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       if (result) {
         setStatus("Updated Successfully!")
       }
-      setLoading(false);
+
     } catch (e) {
       console.log("ProfitSummary handleSaveOnPress e", e);
       setLoading(false);
@@ -91,6 +91,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   };
 
   const handleSubmitOnPress = async () => {
+    setLoading(true);
     const updateRehabItemsPackageInput = {
       rehabItemsPackage,
       rehabRequest: {
@@ -100,15 +101,12 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       }
     };
     try {
-      setLoading(true);
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
       if (result) {
         setStatus("Submitted Successfully!")
       }
-      setLoading(false);
     } catch (e) {
       console.log("ProfitSummary handleSaveOnPress e", e);
-      setLoading(false);
     }
   };
 
@@ -131,7 +129,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         <StatusBar barStyle="default" />
       </View>
     )
-  }
+  };
 
   return (
     <>

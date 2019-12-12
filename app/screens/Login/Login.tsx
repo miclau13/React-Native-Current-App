@@ -3,9 +3,8 @@ import { AuthSession } from 'expo';
 import * as Crypto from 'expo-crypto';
 import * as Random from 'expo-random';
 import * as SecureStore from 'expo-secure-store';
-// import jwtDecode from 'jwt-decode';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, StatusBar, Text, View } from 'react-native';
 import { Button } from "react-native-elements";
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
@@ -52,6 +51,7 @@ const auth0 = {
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const redirectFrom = navigation.getParam("redirectFrom", null);
+  const [loading, setLoading] = React.useState(false);
 
   const generateCodeVerifier = async () => {
     const randomBytes = await Random.getRandomBytesAsync(32);
@@ -104,11 +104,6 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     }
   }
 
-  React.useEffect(() => {
-    generateCodeVerifier().then(verifier => generateCodeChallenge(verifier));
-    return () => {};
-  }, []);
-
   const completeLogin = React.useCallback(() => {
     if (redirectFrom) {
       navigation.navigate(redirectFrom, { authorized: true });
@@ -118,8 +113,8 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   }, [navigation]);
 
   const login = async () => {
+    setLoading(true);
     const redirectUrl = AuthSession.getRedirectUrl();
-    console.log("login redirectUrl",redirectUrl)
     // WebBrowser.openAuthSessionAsync('https://dev-agent.trudeed.com/auth/login', "https://dev-agent.trudeed.com/auth/login");
     const authUrl = `https://${auth0.domain}/authorize?${toQueryString({
       client_id: auth0.clientId,
@@ -144,7 +139,22 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       console.log("err: ");
       console.log(JSON.stringify(err));
     }
-  }
+  };
+
+  React.useEffect(() => {
+    console.log("Login Mount");
+    generateCodeVerifier().then(verifier => generateCodeChallenge(verifier));
+    return () => {console.log("Login UnMount");};
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+        <StatusBar barStyle="default" />
+      </View>
+    )
+  };
 
   return (
     <View style={styles.container}>

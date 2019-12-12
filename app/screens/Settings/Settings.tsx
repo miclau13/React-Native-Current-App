@@ -42,6 +42,7 @@ const Settings: NavigationStackScreenComponent<Params, ScreenProps> = (props) =>
 
   React.useEffect(() => {
     bootstrapAsync();
+    return () => {}
   }, [handleButtonOnPress, isLogin]);
   // console.log("isLogin", isLogin)
   return (
