@@ -133,12 +133,15 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
         await SecureStore.setItemAsync("code", code, {});
         await exchangeCodeForTokens();
         completeLogin();
+      } else if (result.type === 'cancel') {
+        console.log("cancel la")
+        setLoading(false);
       }
     }
     catch(err) {
       console.log("err: ");
       console.log(JSON.stringify(err));
-    }
+    };
   };
 
   React.useEffect(() => {
