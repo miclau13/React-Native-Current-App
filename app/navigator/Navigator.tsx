@@ -16,6 +16,7 @@ import InitalLoadingScreen from "../screens/InitialLoading";
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import LoginCheckingScreen from "../screens/LoginChecking";
 import PasswordResetScreen from "../screens/PasswordReset";
+import ProfileScreen, { strings as profileStrings } from "../screens/Profile";
 import ProfitSummaryScreen from "../screens/ProfitSummary";
 import PropertyInfoScreen from "../screens/PropertyInfo";
 import FullRemodelSummaryScreen from "../screens/FullRemodelSummary";
@@ -153,11 +154,22 @@ SettingsStack.navigationOptions = {
 };
 // SettingsStack End
 
+// ProfileStack Start
+const ProfileStack = createStackNavigator({ ProfileScreen });
+
+ProfileStack.navigationOptions = {
+  tabBarLabel: profileStrings.title,
+  tabBarIcon: ({ tintColor }) => <Icon name="user-circle" type="font-awesome" color={tintColor} />,
+  drawerLabel: settingsStrings.settingsTitle,
+  drawerIcon: ({ tintColor }) => <Icon name="user-circle" type="font-awesome" color={tintColor} />
+};
+// ProfileStack End
+
 const MainNavigator = Platform.select({
-  ios: createBottomTabNavigator({ HomeStack, SettingsStack }, {
+  ios: createBottomTabNavigator({ HomeStack, ProfileStack }, {
     resetOnBlur: true,
   }),
-  android: createBottomTabNavigator({ HomeStack, SettingsStack }, {
+  android: createBottomTabNavigator({ HomeStack, ProfileStack }, {
     lazy: false,
     resetOnBlur: true,
   }),

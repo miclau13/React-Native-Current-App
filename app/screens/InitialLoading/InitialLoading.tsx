@@ -41,7 +41,7 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
   )
 };
 
-const LoadingComponent = (props) => {
+export const LoadingComponent = (props) => {
   return (
     <View style={styles.container}>
       <ActivityIndicator />
