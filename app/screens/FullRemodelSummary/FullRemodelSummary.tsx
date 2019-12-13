@@ -112,7 +112,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
       },
       remodellingCost: totalCost, 
       step: "summary" });
-  }, [arv, data, rehabId, rehabItems, rehabItemPackageId, setArv, setAsIs]);
+  }, [arv, data, rehabId, rehabItems, rehabItemPackageId, setArv, setAsIs, updatedArv, updatedAsIs]);
 
   React.useEffect(() => {
     console.log("FullRemodelSummary Mount");
