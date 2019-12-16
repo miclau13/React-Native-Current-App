@@ -1,5 +1,5 @@
 import { gql } from 'apollo-boost';
-import { omit } from 'lodash';
+import { omit, sortBy } from 'lodash';
 import React from 'react';
 import { ActivityIndicator, ScrollView, StatusBar, View } from 'react-native';
 import { Card, ListItem, Text } from 'react-native-elements'
@@ -63,11 +63,20 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
           return acc;
         }, {});
         let dataArry = [];
+        const orderMapForData = {
+          "Kitchen": 0,
+          "Full Bath": 1,
+          "Flooring": 2,
+          "Painting - Walls": 3,
+          "Clean up": 4,
+          "Staging": 5,
+        };
         for (let [key, value] of Object.entries(itemsMap)) {
-          dataArry.push({ category: key, value, checked: true  });
-        }
+          dataArry.push({ category: key, value, checked: true, order: orderMapForData[key] });
+        };
+  
         setArv(result.data.createRehab.arv);
-        setData(dataArry);
+        setData(sortBy(dataArry, ["order"]));
         setRehabId(result.data.createRehab.rehabId);
         setRehabItems(result.data.createRehab.rehabItemPackage.rehabItems.map(item => {
           return omit(item, ["__typename"]);
