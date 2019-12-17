@@ -90,7 +90,7 @@ const HomeStack = createStackNavigator(
         const asIs = navigation.getParam("asIs");
         const step = navigation.getParam("step");
         const submitted = navigation.getParam("submitted");
-        console.log("ProfitSummaryScreen submitted, ",submitted)
+        // console.log("ProfitSummaryScreen submitted, ",submitted)
         return { 
           headerLeft: step === "summary" ? 
             (props) => <HeaderBackButton {...props} onPress={() => {
