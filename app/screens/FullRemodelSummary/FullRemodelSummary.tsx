@@ -15,6 +15,7 @@ type Params = {
   arv?: number;
   asIs?: number;
   createRehabInput?: object;
+  submitted?: boolean;
 };
 
 type ScreenProps = {};
@@ -30,7 +31,9 @@ const CREATE_REHAB = gql`
           category
           cost
           name
+          selected
         }
+        submitted
       }
     }
   }
@@ -46,35 +49,45 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const [rehabId, setRehabId] = React.useState();
   const [rehabItems, setRehabItems] = React.useState();
   const [rehabItemPackageId, setRehabItemPackageId] = React.useState();
+  const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
+  // console.log("FullRemodelSummary submitted",submitted)
 
   const updatedArv = navigation.getParam("arv", null);
   const updatedAsIs = navigation.getParam("asIs", null);
+  const updatedSubmitted = navigation.getParam("submitted", false);
+  // console.log("FullRemodelSummary updatedSubmitted",updatedSubmitted)
 
   const bootstrapAsync = async () => {
+    // console.log("FullRemodelSummary bootstrapAsync",createRehab)
     try {
       const result = await createRehab({ variables: { input: createRehabInput } });
       if (result) {
         const itemsMap = result.data.createRehab.rehabItemPackage.rehabItems.reduce((acc, item) => {
           if (!acc[item.category]) {
-            acc[item.category] = item.cost;
+            acc[item.category] = {
+              cost: item.cost,
+              selected: item.selected,
+            }
           } else {
-            acc[item.category] += item.cost;
+            acc[item.category]["cost"] += item.cost;
           }
           return acc;
         }, {});
+        // console.log("FullRemodelSummary itemsMap", itemsMap)
         let dataArry = [];
         const orderMapForData = {
           "Kitchen": 0,
           "Full Bath": 1,
           "Flooring": 2,
-          "Painting - Walls": 3,
+          "Interior Paint": 3,
+          "Paint - Walls": 3,
           "Clean up": 4,
           "Staging": 5,
         };
         for (let [key, value] of Object.entries(itemsMap)) {
-          dataArry.push({ category: key, value, checked: true, order: orderMapForData[key] });
+          dataArry.push({ category: key, value: value.cost, selected: value.selected, order: orderMapForData[key] });
         };
-  
+        // console.log("FullRemodelSummary dataArry", dataArry)
         setArv(result.data.createRehab.arv);
         setData(sortBy(dataArry, ["order"]));
         setRehabId(result.data.createRehab.rehabId);
@@ -82,27 +95,36 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
           return omit(item, ["__typename"]);
         }));
         setRehabItemPackageId(result.data.createRehab.rehabItemPackage.id);
+        setSubmitted(result.data.createRehab.rehabItemPackage.submitted);
       }
     } catch (e) {
       console.log("createRehab e", e)
     }
   };
 
-  const handleCheckBoxOnPress = React.useCallback((i) => () => {
+  const handleCheckBoxOnPress = (i) => () => {
     const result = data.map((item, index) => {
       if (index === i) {
-        item.checked = !data[i].checked
+        item.selected = !data[i].selected
       }
       return item;
     });
-    const updatedRehabItems = rehabItems.filter(item => item.category !== data[i].category);
+    // console.log("FullRemodelSummary rehabItems", rehabItems)
+    const updatedRehabItems = rehabItems.map((item) => {
+      // console.log("data[i].category",data[i].category)
+      if (item.category === data[i].category) {
+        item.selected = !item.selected;
+      }
+      return item;
+    });
+    // console.log("FullRemodelSummary updatedRehabItems", updatedRehabItems)
     setData(result);
     setRehabItems(updatedRehabItems);
-  }, [data, rehabItems]);
+  };
 
   const totalCost = React.useMemo(() => {
     const cost = (data || []).reduce((acc, item) => {
-      if (item.checked) {
+      if (item.selected) {
         acc += item.value;
       }
       return acc;
@@ -120,8 +142,10 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         id: rehabItemPackageId,
       },
       remodellingCost: totalCost, 
-      step: "summary" });
-  }, [arv, data, rehabId, rehabItems, rehabItemPackageId, setArv, setAsIs, updatedArv, updatedAsIs]);
+      step: "summary",
+      submitted: updatedSubmitted ? updatedSubmitted : submitted,
+    });
+  }, [arv, data, rehabId, rehabItems, rehabItemPackageId, setArv, setAsIs, updatedArv, updatedAsIs, updatedSubmitted]);
 
   React.useEffect(() => {
     console.log("FullRemodelSummary Mount");
@@ -129,7 +153,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
     return () => {
       console.log("FullRemodelSummary UnMount");
     }
-  }, []);
+  }, [submitted]);
 
   if (!data) {
     return (
@@ -156,7 +180,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
               <ListItem
                 bottomDivider
                 checkBox={{ 
-                  checked: item.checked,
+                  checked: item.selected,
                   onPress: handleCheckBoxOnPress(i)
                 }}
                 key={i}

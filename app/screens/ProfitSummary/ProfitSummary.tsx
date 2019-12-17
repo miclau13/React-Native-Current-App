@@ -17,6 +17,7 @@ type Params = {
   rehabItemPackage: object;
   remodellingCost: number;
   step: string;
+  submitted: boolean;
 };
 
 type ScreenProps = {};
@@ -53,6 +54,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const asIs = navigation.getParam("asIs", 0);
 
   const [loading, setLoading] = React.useState(false);
+  const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
   const [status, setStatus] = React.useState("");
   const profit = React.useMemo(() => {
     return +(arv - asIs - remodellingCost);
@@ -66,7 +68,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const profitPercent = React.useMemo(() => {
     return profit / asIs * 100;
   },[profit, asIs]);
-
+  // console.log("ProfitSummary submitted",submitted)
   const handleSaveOnPress = async () => {
     const updateRehabItemsPackageInput = {
       rehabItemsPackage,
@@ -76,12 +78,13 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         id: rehabId,
       }
     };
-    console.log("updateRehabItemsPackageInput",updateRehabItemsPackageInput)
+    // console.log("ProfitSummary updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     try {
       setLoading(true);
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
       if (result) {
-        setStatus("Updated Successfully!")
+        setStatus("Updated Successfully!");
+        setLoading(false);
       }
 
     } catch (e) {
@@ -93,27 +96,33 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const handleSubmitOnPress = async () => {
     setLoading(true);
     const updateRehabItemsPackageInput = {
-      rehabItemsPackage,
+      rehabItemsPackage: { ...rehabItemsPackage, selected: true, submitted: true },
       rehabRequest: {
         arv,
         asIs,
         id: rehabId,
       }
     };
+    // console.log("ProfitSummary updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     try {
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
       if (result) {
-        setStatus("Submitted Successfully!")
+        setStatus("Submitted Successfully!");
+        setSubmitted(true);
+        navigation.setParams({ submitted: true });
+        setLoading(false);
       }
     } catch (e) {
       console.log("ProfitSummary handleSaveOnPress e", e);
+      setLoading(false);
     }
   };
 
   const handleStepNavigation = React.useCallback((nextStep, options = {}) => {
-    navigation.navigate("ProfitSummaryScreen", { step: nextStep, ...options });
-    options && navigation.setParams({ ...options });
-  }, [step]);
+    // console.log("handleStepNavigation submitted",submitted)
+    navigation.navigate("ProfitSummaryScreen", { submitted, step: nextStep, ...options });
+    options && navigation.setParams({ submitted, ...options });
+  }, [step, submitted]);
 
   React.useEffect(() => {
     console.log("ProfitSummary Mount");
@@ -148,6 +157,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
           profit={profit}
           profitPercent={profitPercent}
           status={status}
+          submitted={submitted}
         />
       }
       

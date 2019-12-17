@@ -71,7 +71,7 @@ const Profile: NavigationStackScreenComponent<Params, ScreenProps> = (props) => 
 
   React.useEffect(() => {
     return () => {}
-  }, [handleLogOutOnPress]);
+  }, [data, error, handleLogOutOnPress]);
 
   if (loading || error) {
     return (

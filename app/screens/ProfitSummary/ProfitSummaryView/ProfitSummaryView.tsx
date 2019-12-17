@@ -16,13 +16,14 @@ interface ProfitSummaryViewProps {
   profit: number;
   profitPercent: number;
   status: string;
+  submitted: boolean;
 };
 
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
-  const { data, handleSaveOnPress, handleSubmitOnPress, handleStepNavigation, profit, profitPercent, status } = props; 
+  const { data, handleSaveOnPress, handleSubmitOnPress, handleStepNavigation, profit, profitPercent, status, submitted } = props; 
 
   const handleEditOnPress: ButtonProps['onPress'] = () => {
-    handleStepNavigation("edit")
+    handleStepNavigation("edit");
   };
 
   React.useEffect(() => {
@@ -75,6 +76,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
               {"Save"}
             </Button>
             <Button
+              disabled={submitted}
               mode="contained" 
               onPress={handleSubmitOnPress}
               style={styles.buttonContainer}

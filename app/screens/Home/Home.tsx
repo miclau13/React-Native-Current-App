@@ -6,6 +6,9 @@ import { Headline, TextInput } from 'react-native-paper';
 
 import styles from './styles';
 
+import * as SecureStore from 'expo-secure-store';
+import { StackActions, NavigationActions } from 'react-navigation';
+
 type Params = {
   name?: string;
   profilePictureUri?: string;
@@ -26,8 +29,21 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     // () => navigation.push("ProfitAdjustmentScreen", { arv: 100000 })
   , [navigation.push]);
 
+  const signOutAsync = async () => {
+    await SecureStore.deleteItemAsync("accessToken", {});
+    await SecureStore.deleteItemAsync("idToken", {});
+    await SecureStore.deleteItemAsync("refreshToken", {});
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
+    });
+    navigation.dispatch(resetAction);
+    navigation.navigate("AuthTabs");
+  }
+
   React.useEffect(() => {
     console.log("Home Mount");
+    // signOutAsync()
     return () => {
       console.log("Home UnMount");
     }
