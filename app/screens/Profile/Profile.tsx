@@ -41,42 +41,51 @@ type ScreenProps = {};
 
 const Profile: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const { data, error, loading } = useQuery(VIEWER);
+  const { data, error, loading, refetch } = useQuery(VIEWER);
 
-  const address = data && data.viewer ? data.viewer.address : "(TBC)";
-  const avatar = data && data.viewer ? data.viewer.picture : null;
+  const address = error ? "Please Re-login" : data && data.viewer ? data.viewer.address : "(TBC)";
+  const avatar =error ? "Please Re-login" : data && data.viewer ? data.viewer.picture : null;
   const avatarBackground = "https://orig00.deviantart.net/dcd7/f/2014/027/2/0/mountain_background_by_pukahuna-d73zlo5.png"
   const tels = [
-    { "id": 1, "name": "Mobile", "number": data && data.viewer ? data.viewer.phoneNumber : "(TBC)" },
+    { "id": 1, "name": "Mobile", "number": error ? "Please Re-login" : data && data.viewer ? data.viewer.phoneNumber : "(TBC)" },
     // { "id": 2, "name": "Work", "number": "+41 (112)-435-9887" }
   ];
   const emails = [
-    { "id": 1, "name": "Personal", "email": data && data.viewer ? data.viewer.email : "(TBC)" },
+    { "id": 1, "name": "Personal", "email": error ? "Please Re-login" : data && data.viewer ? data.viewer.email : "(TBC)" },
     // { "id": 2, "name": "Work", "email": "elsie@work.com" }
   ];
-  const name = data && data.viewer ? `${data.viewer.givenName} ${data.viewer.familyName}`: "(TBC)";
+  const name = error ? "Please Re-login" : data && data.viewer ? `${data.viewer.givenName} ${data.viewer.familyName}`: "(TBC)";
 
   const signOutAsync = async () => {
     await SecureStore.deleteItemAsync("accessToken", {});
     await SecureStore.deleteItemAsync("idToken", {});
     await SecureStore.deleteItemAsync("refreshToken", {});
-    const resetAction = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
-    });
-    navigation.dispatch(resetAction);
+    // const resetAction = StackActions.reset({
+    //   index: 0,
+    //   actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
+    // });
+    // navigation.dispatch(resetAction);
     navigation.navigate("AuthTabs");
   }
   const handleLogOutOnPress = () => signOutAsync();
 
+  const handleRefetch = async () => {
+    await refetch();
+  }
   React.useEffect(() => {
-    return () => {}
-  }, [data, error, handleLogOutOnPress]);
-
-  if (loading || error) {
+    console.log("Profile Mount");
+    return () => {console.log("Profile UnMount");}
+  });
+  React.useEffect(() => {
+    console.log("Profile refetch mount");
+    handleRefetch();
+    return () => {console.log("Profile refetch UnMount");}
+  }, []);
+// console.log("Profile data", data)
+  if (loading) {
     return (
       <LoadingComponent />
-    )
+    );
   };
 
   return (
