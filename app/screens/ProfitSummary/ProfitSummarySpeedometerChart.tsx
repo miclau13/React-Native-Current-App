@@ -32,7 +32,7 @@ const ProfitSummarySpeedmeterChart: React.ComponentType<ProfitSummarySpeedmeterC
         labels={labels}
         minValue={-50}
         maxValue={100}
-        size={300}
+        size={250}
         value={value} 
       />
     </SafeAreaView>

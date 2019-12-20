@@ -2,18 +2,21 @@ import { isNil } from 'lodash';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { Card, Icon, ListItem, Text } from 'react-native-elements'
-import { Button, ButtonProps } from 'react-native-paper';
+import { Banner, BannerAction, Button, ButtonProps } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
 import Speedometer from '../ProfitSummarySpeedometerChart';
 import styles from './styles';
 
 interface ProfitSummaryViewProps {
-  data: any;
   // TODO type
+  bannerMessages: string;
+  data: any;
+  handleBannerButtonOnClick: BannerAction['onPress'];
   handleSaveOnPress: any;
   handleSubmitOnPress: any;
   handleStepNavigation: any;
+  hasBanner: boolean;
   isQualified: boolean;
   profit: number;
   profitPercent: number;
@@ -22,8 +25,9 @@ interface ProfitSummaryViewProps {
 };
 
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
-  const { data, handleSaveOnPress, handleSubmitOnPress, handleStepNavigation, isQualified, profit, profitPercent, status, submitted } = props; 
-
+  const { bannerMessages, data, handleBannerButtonOnClick, handleSaveOnPress, handleSubmitOnPress, 
+    handleStepNavigation, hasBanner, isQualified, profit, profitPercent, status, submitted } = props; 
+    console.log("ProfitSummaryView bannerMessages",bannerMessages)
   const handleEditOnPress: ButtonProps['onPress'] = () => {
     handleStepNavigation("edit");
   };
@@ -34,6 +38,25 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
 
   return (
     <ScrollView>
+      <Banner 
+        actions={[
+          {
+            label: 'Close',
+            onPress: handleBannerButtonOnClick,
+          },
+        ]}
+        //TODO change the access
+        image={({size}) => <Icon
+          color={data[4].color}
+          name={data[4].icon}
+          size={size}
+          type='font-awesome'
+        />}
+        style={{ backgroundColor: '#e9d8f2'}}
+        visible={hasBanner}
+      >
+        <Text>{bannerMessages}</Text>
+      </Banner>  
       <Card title="Profit Summary">
         <>
         <Speedometer value={profitPercent} />
