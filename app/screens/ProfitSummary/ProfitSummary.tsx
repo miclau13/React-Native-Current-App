@@ -66,9 +66,9 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   ];
 
   const profitPercent = React.useMemo(() => {
-    return profit / asIs * 100;
-  },[profit, asIs]);
-  // console.log("ProfitSummary submitted",submitted)
+    return profit / remodellingCost * 100;
+  },[profit, remodellingCost]);
+
   const handleSaveOnPress = async () => {
     const updateRehabItemsPackageInput = {
       rehabItemsPackage,
@@ -130,6 +130,8 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       console.log("ProfitSummary UnMount");
     }
   }, []);
+
+  console.log("ProfitSummary profitPercent" ,profitPercent)
 
   if (loading) {
     return (

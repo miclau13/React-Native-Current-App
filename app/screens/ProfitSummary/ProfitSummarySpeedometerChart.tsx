@@ -18,7 +18,8 @@ const ProfitSummarySpeedmeterChart: React.ComponentType<ProfitSummarySpeedmeterC
 
   const calculateLabelFromValue = (value, labels, minValue, maxValue) => {
     // const currentValue = (value) / (maxValue - minValue);
-    const currentIndex = value < 0 ? 0 : value > 10 ? 2 : 1;
+    console.log("calculateLabelFromValue value" ,value)
+    const currentIndex = value < 0 ? 0 : value > 50 ? 2 : 1;
     const label = labels[currentIndex];
     return label;
   };
@@ -29,8 +30,8 @@ const ProfitSummarySpeedmeterChart: React.ComponentType<ProfitSummarySpeedmeterC
         allowedDecimals={2}
         calculateLabelFromValue={calculateLabelFromValue}
         labels={labels}
-        minValue={-10}
-        maxValue={20}
+        minValue={-50}
+        maxValue={100}
         size={300}
         value={value} 
       />
