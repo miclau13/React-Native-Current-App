@@ -7,19 +7,21 @@ import { createSwitchNavigator, NavigationState, NavigationContainerProps } from
 import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
 
+import AsIsEstimateScreen from "../screens/AsIsEstimate";
 import AutocompleteScreen  from "../screens/FiximizeQuestions/Autocomplete/Autocomplete";
 import FiximizeQuestionsFormScreen, { getPreviousStep as getFiximizeQuestionsPreviousStep } from "../screens/FiximizeQuestions/FiximizeQuestionsForm";
+import FullRemodelSummaryScreen from "../screens/FullRemodelSummary";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
 import InitalLoadingScreen from "../screens/InitialLoading";
 import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import ProfileScreen, { strings as profileStrings } from "../screens/Profile";
 import ProfitSummaryScreen from "../screens/ProfitSummary";
 import PropertyInfoScreen from "../screens/PropertyInfo";
-import FullRemodelSummaryScreen from "../screens/FullRemodelSummary";
+import TotalDebtsScreen from "../screens/TotalDebts";
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AutocompleteScreen, HomeScreen, PropertyInfoScreen, 
+  { AsIsEstimateScreen, AutocompleteScreen, HomeScreen, PropertyInfoScreen, TotalDebtsScreen,
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -29,7 +31,7 @@ const HomeStack = createStackNavigator(
         const step = navigation.getParam("step");
 
         const handleOnPress = () => {
-          if(step === "asIsEstimate") {
+          if(step === "beds1") {
             navigation.navigate("PropertyInfoScreen")
           } else {
             navigation.navigate("FiximizeQuestionsFormScreen", 

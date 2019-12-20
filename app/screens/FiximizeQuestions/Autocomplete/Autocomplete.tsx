@@ -70,7 +70,7 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   const handleOnPress = () => {
     const { navigation } = props;
-    navigation.navigate("PropertyInfoScreen", { address: value });
+    navigation.navigate("AsIsEstimateScreen", { address: value });
   };
 
   const updateOptions = async (value) => {

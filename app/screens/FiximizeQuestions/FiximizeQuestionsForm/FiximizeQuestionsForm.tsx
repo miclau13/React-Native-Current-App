@@ -5,17 +5,25 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import * as yup from 'yup';
 
 import styles from './styles';
-import AsIsEstimate from '../AsIsEstimate';
 import BedroomSize from '../BedroomSize';
 import FullBathSize from '../FullBathSize';
 import HalfBathSize from '../HalfBathSize';
 import KitchenCabinetSize from '../KitchenCabinetSize';
 import FiximizeQuestionsFormik from '../../../components/FiximizeQuestions/FiximizeQuestionsFormik';
 import ThreeQuarterBathSize from '../ThreeQuarterBathSize';
+import VacantProperty from '../VacantProperty';
 
-type FiximizeQuestionsStep = "asIsEstimate" | "halfBathSize" | "kitchenWallCabinetSize" | "kitchenBaseCabinetSize" | "kitchenIslandCabinetSize";
+type FiximizeQuestionsStepForBeds = "beds1" | "beds2" | "beds3" |"beds4" |"beds5";
+type FiximizeQuestionsStepForFullBaths = "fullBaths1" | "fullBaths2" | "fullBaths3" |"fullBaths4" |"fullBaths5";
+type FiximizeQuestionsStepForThreeQuarterBaths = "threeQuarterBaths1" | "threeQuarterBaths2" | "threeQuarterBaths3" |"threeQuarterBaths4" |"threeQuarterBaths5";
+type FiximizeQuestionsStepForHalfBaths = "halfBaths1" | "halfBaths2" | "halfBaths3" |"halfBaths4" |"halfBaths5";
+
+type FiximizeQuestionsStep = FiximizeQuestionsStepForBeds | FiximizeQuestionsStepForFullBaths | FiximizeQuestionsStepForThreeQuarterBaths | FiximizeQuestionsStepForHalfBaths |
+  "halfBathSize" | "kitchenWallCabinetSize" | "kitchenBaseCabinetSize" | "kitchenIslandCabinetSize" | "vacant";
 
 type Params = {
+  asIsEstimate: number;
+  totalDebts: number;
   step: FiximizeQuestionsStep;
   address?: string;
   backFrom?: FiximizeQuestionsStep;
@@ -30,6 +38,7 @@ const FiximizeQuestionsPreviousStepMap = {
   // "kitchenWallCabinetSize": "asIsEstimate",
   "kitchenBaseCabinetSize": "kitchenWallCabinetSize",
   "kitchenIslandCabinetSize": "kitchenBaseCabinetSize",
+  "vacant": "kitchenIslandCabinetSize",
 };
 
 export const RequiredInput = ["beds", "fullBaths", "halfBaths", "threeQuarterBaths"];
@@ -39,8 +48,9 @@ export const getPreviousStep = (currentstep: FiximizeQuestionsStep, propertyInfo
   if (FiximizeQuestionsPreviousStepMap[currentstep]) {
     return FiximizeQuestionsPreviousStepMap[currentstep];
   } else if (currentstep.includes("beds")) {
+    // TODO either here or navigator back to property info screen
     if (currentstep.slice(-1) === "1") {
-      return "asIsEstimate";
+      return "PropertyInfoScreen";
     } else {
       const previousIndex = +currentstep.slice(-1) - 1;
       return "beds" + previousIndex;
@@ -78,7 +88,8 @@ export const getPreviousStep = (currentstep: FiximizeQuestionsStep, propertyInfo
 };
 
 export interface FiximizeQuestionsFormValues {
-  asIsEstimate: string;
+  asIsEstimate: number;
+  vacant: number;
 };
 
 export interface FiximizeQuestionsFormProps {
@@ -90,19 +101,22 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   const { navigation } = props;
   const backFrom = navigation.getParam("backFrom", null);
   const address = navigation.getParam("address", "");
+  const asIsEstimate = navigation.getParam("asIsEstimate", null);
+  const totalDebts = navigation.getParam("totalDebts", null);
   const formInitialValues = navigation.getParam("initialValues", {});
   const propertyInfo = navigation.getParam("propertyInfo", {});
-  const step = navigation.getParam("step", "asIsEstimate");
+  const step = navigation.getParam("step", "beds1");
 
   const initialValues = React.useMemo(() => {
     return ({
-      asIsEstimate: "",
+      asIsEstimate,
       kitchenWallCabinetSize: "0",
       kitchenBaseCabinetSize: "0",
       kitchenIslandCabinetSize: "0",
+      vacant: 1,
       ...formInitialValues,
     })
-  }, [formInitialValues]);
+  }, [asIsEstimate, formInitialValues]);
 
   const validationSchema = React.useMemo(() => {
     let shape = {};
@@ -125,7 +139,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
 
   const onSubmit = React.useCallback(values => {
     const { asIsEstimate, beds, fullBaths, halfBaths, threeQuarterBaths,
-      kitchenBaseCabinetSize, kitchenIslandCabinetSize, kitchenWallCabinetSize, } = values;
+      kitchenBaseCabinetSize, kitchenIslandCabinetSize, kitchenWallCabinetSize, vacant } = values;
     const bedsInfo = _.map(beds, (value, key) => {
       return { size: +value, order: +key[key.length - 1]};
     });
@@ -151,14 +165,14 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
         threeQuarterBathsInfo,
       }
     };
-    navigation.navigate("FullRemodelSummaryScreen", { createRehabInput });
+    navigation.navigate("FullRemodelSummaryScreen", { createRehabInput, totalDebts, vacant: !!vacant });
   }, []);
 
   const kitchenCabinetSizefields = React.useMemo(() => {
     return [
       { name: "kitchenWallCabinetSize", description: "Wall", nextItem: "kitchenBaseCabinetSize"},
       { name: "kitchenBaseCabinetSize", description: "Base", nextItem: "kitchenIslandCabinetSize"},
-      { name: "kitchenIslandCabinetSize", description: "Island", nextItem: ""},
+      { name: "kitchenIslandCabinetSize", description: "Island", nextItem: "vacant"},
     ]
   }, []);
 
@@ -240,10 +254,6 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
       validationSchema={validationSchema}
     >
       <View style={styles.container}>
-        {step === "asIsEstimate" ? 
-          <AsIsEstimate backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
-          : null
-        }
         {bedroomSizefields.map((item) => {
           return step === item.name ? 
             <BedroomSize backFrom={backFrom} field={item} key={item.name} handleStepNavigation={handleStepNavigation} />
@@ -269,6 +279,10 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
             <KitchenCabinetSize backFrom={backFrom} field={item} key={item.name} handleStepNavigation={handleStepNavigation} />
             : null
         })}
+        {step === "vacant" ? 
+          <VacantProperty backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
+          : null
+        }
       </View>
     </FiximizeQuestionsFormik>
   )

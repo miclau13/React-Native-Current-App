@@ -16,6 +16,8 @@ type Params = {
   asIs?: number;
   createRehabInput?: object;
   submitted?: boolean;
+  totalDebts?: number;
+  vacant?: boolean;
 };
 
 type ScreenProps = {};
@@ -50,15 +52,14 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const [rehabItems, setRehabItems] = React.useState();
   const [rehabItemPackageId, setRehabItemPackageId] = React.useState();
   const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
-  // console.log("FullRemodelSummary submitted",submitted)
 
   const updatedArv = navigation.getParam("arv", null);
   const updatedAsIs = navigation.getParam("asIs", null);
   const updatedSubmitted = navigation.getParam("submitted", false);
-  // console.log("FullRemodelSummary updatedSubmitted",updatedSubmitted)
+  const totalDebts = navigation.getParam("totalDebts", null);
+  const vacant = navigation.getParam("vacant", null);
 
   const bootstrapAsync = async () => {
-    // console.log("FullRemodelSummary bootstrapAsync",createRehab)
     try {
       const result = await createRehab({ variables: { input: createRehabInput } });
       if (result) {
@@ -73,7 +74,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
           }
           return acc;
         }, {});
-        // console.log("FullRemodelSummary itemsMap", itemsMap)
         let dataArry = [];
         const orderMapForData = {
           "Kitchen": 0,
@@ -87,7 +87,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         for (let [key, value] of Object.entries(itemsMap)) {
           dataArry.push({ category: key, value: value.cost, selected: value.selected, order: orderMapForData[key] });
         };
-        // console.log("FullRemodelSummary dataArry", dataArry)
         setArv(result.data.createRehab.arv);
         setData(sortBy(dataArry, ["order"]));
         setRehabId(result.data.createRehab.rehabId);
@@ -109,15 +108,12 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
       }
       return item;
     });
-    // console.log("FullRemodelSummary rehabItems", rehabItems)
     const updatedRehabItems = rehabItems.map((item) => {
-      // console.log("data[i].category",data[i].category)
       if (item.category === data[i].category) {
         item.selected = !item.selected;
       }
       return item;
     });
-    // console.log("FullRemodelSummary updatedRehabItems", updatedRehabItems)
     setData(result);
     setRehabItems(updatedRehabItems);
   };
@@ -135,6 +131,8 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const handleOnPress = React.useCallback(() => {
     navigation.navigate("ProfitSummaryScreen", { 
       rehabId,
+      totalDebts,
+      vacant,
       arv: updatedArv ? updatedArv : arv, 
       asIs: updatedAsIs ? updatedAsIs: asIs,
       rehabItemPackage: {

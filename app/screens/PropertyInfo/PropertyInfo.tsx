@@ -13,6 +13,8 @@ import { RequiredInput } from '../FiximizeQuestions/FiximizeQuestionsForm';
 
 type Params = { 
   address: string;
+  asIsEstimate: number;
+  totalDebts: number;
 };
 
 type ScreenProps = {};
@@ -30,7 +32,7 @@ const PROPERTY_INFO = gql`
   }
 `;
 
-const propertyInfo = {
+const propertyInfoForTesting = {
   "beds": 3,
   "sqft": 1801,
   "fullBaths": 1,
@@ -45,6 +47,8 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const [dataArray, setDataArray] = React.useState([]);
   const [fiximizeQuestionsFormInitialValues, setFiximizeQuestionsFormInitialValues] = React.useState(null);
   const address = navigation.getParam("address", "");
+  const asIsEstimate = navigation.getParam("asIsEstimate", null);
+  const totalDebts = navigation.getParam("totalDebts", null);
   const { data, error, loading } = useQuery(PROPERTY_INFO, {
     variables: { query: { address: address }}
   });
@@ -77,7 +81,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
   
   const handleOnPress = React.useCallback(() => {
-    navigation.navigate("FiximizeQuestionsFormScreen", { address, initialValues: fiximizeQuestionsFormInitialValues, propertyInfo: data.propertyInfo, step: "asIsEstimate" });
+    navigation.navigate("FiximizeQuestionsFormScreen", { address, asIsEstimate, totalDebts, initialValues: fiximizeQuestionsFormInitialValues, propertyInfo: data.propertyInfo, step: "beds1" });
   }, [address, data, fiximizeQuestionsFormInitialValues]);
 
   React.useEffect(() => {

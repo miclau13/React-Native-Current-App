@@ -1,6 +1,7 @@
+import { isNil } from 'lodash';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
-import { Card, ListItem, Text } from 'react-native-elements'
+import { Card, Icon, ListItem, Text } from 'react-native-elements'
 import { Button, ButtonProps } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
@@ -13,6 +14,7 @@ interface ProfitSummaryViewProps {
   handleSaveOnPress: any;
   handleSubmitOnPress: any;
   handleStepNavigation: any;
+  isQualified: boolean;
   profit: number;
   profitPercent: number;
   status: string;
@@ -20,7 +22,7 @@ interface ProfitSummaryViewProps {
 };
 
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
-  const { data, handleSaveOnPress, handleSubmitOnPress, handleStepNavigation, profit, profitPercent, status, submitted } = props; 
+  const { data, handleSaveOnPress, handleSubmitOnPress, handleStepNavigation, isQualified, profit, profitPercent, status, submitted } = props; 
 
   const handleEditOnPress: ButtonProps['onPress'] = () => {
     handleStepNavigation("edit");
@@ -49,7 +51,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                   bottomDivider
                   key={i}
                   title={item.name}
-                  rightTitle={<NumberFormat 
+                  rightTitle={isNil(item.value) ? null : <NumberFormat 
                     decimalScale={0}
                     displayType={'text'} 
                     prefix={'$'}
@@ -57,6 +59,14 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                     thousandSeparator={true} 
                     value={item.value}
                   />}
+                  rightIcon={isNil(item.icon) ? null :
+                    <Icon
+                      color={item.color}
+                      name={item.icon}
+                      size={16}
+                      type='font-awesome'
+                    />
+                  }
                 />
               ))
             }
@@ -76,7 +86,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
               {"Save"}
             </Button>
             <Button
-              disabled={submitted}
+              disabled={submitted || !isQualified}
               mode="contained" 
               onPress={handleSubmitOnPress}
               style={styles.buttonContainer}

@@ -18,6 +18,8 @@ type Params = {
   remodellingCost: number;
   step: string;
   submitted: boolean;
+  totalDebts: number;
+  vacant: boolean;
 };
 
 type ScreenProps = {};
@@ -43,15 +45,40 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   }
 `;
 
+const checkIsQualified = (args: {
+  arv: number;
+  asIs: number;
+  remodellingCost: number;
+  totalDebts: number;
+  vacant: boolean;
+}) => {
+  const { arv, asIs, remodellingCost, totalDebts, vacant } = args;
+  console.log("checkIsQualified fields arv, asIs, remodellingCost, totalDebts, vacant\n", arv, asIs, remodellingCost, totalDebts, vacant)
+  // First gate: 
+  if (asIs + remodellingCost >= arv) {
+    return false;
+  } // Second gate:
+  else if (totalDebts + remodellingCost >= arv * 0.8 ) {
+    return false;
+  } // Third gate:
+  else if (!vacant) {
+    return false;
+  };
+  return true;
+};
+
 const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const [updateRehabItemsPackage] = useMutation(UPDATE_REHAB_ITEMS_PACKAGE);
+  const arv = navigation.getParam("arv", 0);
+  const asIs = navigation.getParam("asIs", 0);
   const rehabId = navigation.getParam("rehabId", null);
   const rehabItemsPackage = navigation.getParam("rehabItemPackage", {});
   const remodellingCost = navigation.getParam("remodellingCost", 0);
   const step = navigation.getParam("step", "summary");
-  const arv = navigation.getParam("arv", 0);
-  const asIs = navigation.getParam("asIs", 0);
+  const totalDebts = navigation.getParam("totalDebts", null);
+  const vacant = navigation.getParam("vacant", null);
+  const isQualified = checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant });
 
   const [loading, setLoading] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
@@ -63,6 +90,8 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     { name: "Est. ARV", value: arv },
     { name: "As-Is", value: asIs },
     { name: "Remodeling Cost", value: remodellingCost },
+    { name: "Total Debts", value: totalDebts },
+    { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935'},
   ];
 
   const profitPercent = React.useMemo(() => {
@@ -78,7 +107,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         id: rehabId,
       }
     };
-    // console.log("ProfitSummary updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     try {
       setLoading(true);
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
@@ -103,7 +131,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         id: rehabId,
       }
     };
-    // console.log("ProfitSummary updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     try {
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
       if (result) {
@@ -119,7 +146,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   };
 
   const handleStepNavigation = React.useCallback((nextStep, options = {}) => {
-    // console.log("handleStepNavigation submitted",submitted)
     navigation.navigate("ProfitSummaryScreen", { submitted, step: nextStep, ...options });
     options && navigation.setParams({ submitted, ...options });
   }, [step, submitted]);
@@ -130,8 +156,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       console.log("ProfitSummary UnMount");
     }
   }, []);
-
-  console.log("ProfitSummary profitPercent" ,profitPercent)
 
   if (loading) {
     return (
@@ -156,6 +180,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
           handleSaveOnPress={handleSaveOnPress}
           handleSubmitOnPress={handleSubmitOnPress}
           handleStepNavigation={handleStepNavigation}
+          isQualified={isQualified}
           profit={profit}
           profitPercent={profitPercent}
           status={status}
