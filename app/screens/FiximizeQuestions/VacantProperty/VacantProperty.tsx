@@ -30,11 +30,7 @@ const VacantProperty: React.ComponentType<VacantPropertyProps> = (props) => {
   };
 
   const buttons = ['NO', 'YES'];
-
-  const buttonGroupList = [
-    { buttons, name: "vacant", title: "Vacant?"},
-  ];
-
+  
   React.useEffect(() => {
     console.log("VacantProperty Mount")
     return () => {console.log("VacantProperty UnMount")}

@@ -56,6 +56,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const updatedArv = navigation.getParam("arv", null);
   const updatedAsIs = navigation.getParam("asIs", null);
   const updatedSubmitted = navigation.getParam("submitted", false);
+  const updatedVacant = navigation.getParam("vacant", null);
   const totalDebts = navigation.getParam("totalDebts", null);
   const vacant = navigation.getParam("vacant", null);
 
@@ -132,7 +133,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
     navigation.navigate("ProfitSummaryScreen", { 
       rehabId,
       totalDebts,
-      vacant,
       arv: updatedArv ? updatedArv : arv, 
       asIs: updatedAsIs ? updatedAsIs: asIs,
       rehabItemPackage: {
@@ -142,8 +142,10 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
       remodellingCost: totalCost, 
       step: "summary",
       submitted: updatedSubmitted ? updatedSubmitted : submitted,
+      vacant: updatedVacant ? updatedVacant: vacant,
     });
-  }, [arv, data, rehabId, rehabItems, rehabItemPackageId, setArv, setAsIs, updatedArv, updatedAsIs, updatedSubmitted]);
+  }, [arv, data, rehabId, rehabItems, rehabItemPackageId, setArv, setAsIs, 
+    updatedArv, updatedAsIs, updatedSubmitted, updatedVacant, vacant]);
 
   React.useEffect(() => {
     console.log("FullRemodelSummary Mount");

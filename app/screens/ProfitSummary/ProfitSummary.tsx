@@ -1,7 +1,7 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
-import { Banner, BannerAction, Button, ButtonProps } from 'react-native-paper';
+import { BannerAction } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import { useMutation } from '@apollo/react-hooks';
@@ -62,17 +62,17 @@ const checkIsQualified = (args: {
     isQualified = false;
     bannerMessagesArr.push("- The sum of As-IS and Remodeling Cost is not smaller than Est. ARV!");
   } // Second gate:
-  else if (totalDebts + remodellingCost >= arv * 0.8 ) {
+  if (totalDebts + remodellingCost >= arv * 0.8 ) {
     isQualified = false;
     bannerMessagesArr.push("- The sum of Total Debts and Remodeling Cost is not smaller than 80% of Est. ARV!");
   } // Third gate:
-  else if (!vacant) {
+  if (!vacant) {
     isQualified = false;
     bannerMessagesArr.push("- The property is not vacant!");
   };
   isQualified ? bannerMessagesArr.push("Qualified! Feel free to submit!") : bannerMessagesArr.unshift("Unqualified! Please check the reasons below: ");
   const bannerMessages = bannerMessagesArr.join("\n");
-  console.log("checkIsQualified bannerMessages",bannerMessages)
+  // console.log("checkIsQualified bannerMessages",bannerMessages)
   return { bannerMessages, isQualified };
 };
 
@@ -90,7 +90,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
 
   const [bannerMessages, setBannerMessages] = React.useState(checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
   const [isQualified, setIsQualified] = React.useState(checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
-  const [hasBanner, setHasBanner] = React.useState(true);
+  const [hasBanner, setHasBanner] = React.useState(!navigation.getParam("submitted", false));
   const [loading, setLoading] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
   const [status, setStatus] = React.useState("");
@@ -102,14 +102,14 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     { name: "As-Is", value: asIs },
     { name: "Remodeling Cost", value: remodellingCost },
     { name: "Total Debts", value: totalDebts },
-    { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935'},
+    { name: "Vacant", icon: isQualified ? "check" : "close", color: isQualified ? '#43a048' : '#e53935'},
   ];
 
   const profitPercent = React.useMemo(() => {
     return profit / remodellingCost * 100;
   },[profit, remodellingCost]);
 
-  const handleBannerButtonOnClick = React.useCallback<BannerAction['onPress']>(() => setHasBanner(false), []);
+  const handleBannerButtonOnClick = React.useCallback<BannerAction['onPress']>(() => setHasBanner(false), [hasBanner]);
 
   const handleSaveOnPress = async () => {
     const updateRehabItemsPackageInput = {
@@ -151,6 +151,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         setSubmitted(true);
         navigation.setParams({ submitted: true });
         setLoading(false);
+        setHasBanner(false);
       }
     } catch (e) {
       console.log("ProfitSummary handleSaveOnPress e", e);
@@ -170,6 +171,14 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     }
   }, []);
 
+  React.useEffect(() => {
+    setBannerMessages(checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
+    setIsQualified(checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
+    return () => {
+      // console.log("ProfitSummary un update banner");
+    }
+  }, [arv, asIs, remodellingCost, totalDebts, vacant]);
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -186,6 +195,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
           arv={arv}
           asIs={asIs}
           handleStepNavigation={handleStepNavigation}
+          vacant={vacant}
         />
         :
         <ProfitSummaryView

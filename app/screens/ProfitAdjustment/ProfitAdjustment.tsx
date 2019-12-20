@@ -1,5 +1,6 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { ButtonGroup, ButtonGroupProps } from 'react-native-elements';
 import { Button, ButtonProps, Headline, HelperText, TextInput, TextInputProps } from 'react-native-paper';
 
 import styles from './styles';
@@ -9,12 +10,14 @@ interface ProfitSummaryViewProps {
   asIs: number;
   // TODO type
   handleStepNavigation: any;
+  vacant: boolean;
 }
 
 const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) => {
-  const { arv, asIs, handleStepNavigation } = props;
+  const { arv, asIs, handleStepNavigation, vacant } = props;
   const [ARV, setARV] = React.useState(arv.toString());
   const [ASIS, setASIS] = React.useState(asIs.toString());
+  const [VACANT, setVACANT] = React.useState(vacant ? 1 : 0);
 
   const handleOnChangeText: (key: string) => TextInputProps['onChangeText'] =  (key) => (text) => {
     if (key === "ARV") {
@@ -28,8 +31,14 @@ const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) =
     if (ARV.length < 1 || ASIS.length < 1) {
       return;
     };
-    handleStepNavigation("summary", { arv: +ARV, asIs: +ASIS });
-  }
+    handleStepNavigation("summary", { arv: +ARV, asIs: +ASIS, vacant: !!VACANT });
+  };
+
+  const handleVacantOnPress: ButtonGroupProps['onPress'] = (index) => {
+    setVACANT(index);
+  };
+
+  const buttons = ['NO', 'YES'];
 
   React.useEffect(() => {
     console.log("ProfitAdjustment Mount")
@@ -60,7 +69,6 @@ const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) =
         >
           {"This field is required"}
         </HelperText>
-        {/* <View style={styles.viewBox2}/> */}
         <View style={styles.viewBox1}/>
         <Headline>As-Is :</Headline>
         <View style={styles.viewBox1}/>
@@ -79,6 +87,17 @@ const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) =
         >
           {"This field is required"}
         </HelperText>
+        <View style={styles.viewBox1}/>
+        <Headline>Vacant?</Headline>
+        <View style={styles.viewBox1}/>
+        {/* <Title style={styles.title}>Vacant?</Title> */}
+        <ButtonGroup
+          buttons={buttons}
+          onPress={handleVacantOnPress}
+          selectedButtonStyle={styles.buttonSelectedContainer}
+          selectedIndex={VACANT}
+        />
+        <View style={styles.viewBox2}/>
         <Button 
           mode="contained" 
           onPress={handleOnPress}

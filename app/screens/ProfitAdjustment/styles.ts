@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
   },
+  buttonSelectedContainer: {
+    backgroundColor: primaryButtonColor,
+  },
   container: {
     alignItems: "center",
     flex: 1,

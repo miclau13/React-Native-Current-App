@@ -8,7 +8,7 @@ function useFiximizeQuestionsFormInitialValues() {
     asIsEstimate: "",
     halfBathSize: "",
   }
-  console.log("initialValues",initialValues, "  fiximizeQuestionsFromInitalValues", fiximizeQuestionsFromInitalValues)
+  // console.log("initialValues",initialValues, "  fiximizeQuestionsFromInitalValues", fiximizeQuestionsFromInitalValues)
   return [initialValues, setInitialValues, fiximizeQuestionsFromInitalValues];
 }
 

@@ -27,7 +27,7 @@ interface ProfitSummaryViewProps {
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
   const { bannerMessages, data, handleBannerButtonOnClick, handleSaveOnPress, handleSubmitOnPress, 
     handleStepNavigation, hasBanner, isQualified, profit, profitPercent, status, submitted } = props; 
-    console.log("ProfitSummaryView bannerMessages",bannerMessages)
+    // console.log("ProfitSummaryView hasBanner",hasBanner)
   const handleEditOnPress: ButtonProps['onPress'] = () => {
     handleStepNavigation("edit");
   };
