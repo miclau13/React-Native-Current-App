@@ -77,7 +77,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
   
   const handleOnPress = React.useCallback(() => {
-    navigation.navigate("FiximizeQuestionsFormScreen", { address, initialValues: fiximizeQuestionsFormInitialValues, propertyInfo: data.propertyInfo, step: "beds1" });
+    navigation.navigate("FiximizeQuestionsFormScreen", { address, initialValues: fiximizeQuestionsFormInitialValues, propertyInfo: data.propertyInfo, step: "asIsEstimate" });
   }, [address, data, fiximizeQuestionsFormInitialValues]);
 
   React.useEffect(() => {

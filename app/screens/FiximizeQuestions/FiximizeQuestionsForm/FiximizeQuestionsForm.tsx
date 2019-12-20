@@ -27,7 +27,7 @@ type Params = {
 type ScreenProps = {};
 
 const FiximizeQuestionsPreviousStepMap = {
-  "kitchenWallCabinetSize": "asIsEstimate",
+  // "kitchenWallCabinetSize": "asIsEstimate",
   "kitchenBaseCabinetSize": "kitchenWallCabinetSize",
   "kitchenIslandCabinetSize": "kitchenBaseCabinetSize",
 };
@@ -39,8 +39,12 @@ export const getPreviousStep = (currentstep: FiximizeQuestionsStep, propertyInfo
   if (FiximizeQuestionsPreviousStepMap[currentstep]) {
     return FiximizeQuestionsPreviousStepMap[currentstep];
   } else if (currentstep.includes("beds")) {
-    const previousIndex = +currentstep.slice(-1) - 1;
-    return "beds" + previousIndex;
+    if (currentstep.slice(-1) === "1") {
+      return "asIsEstimate";
+    } else {
+      const previousIndex = +currentstep.slice(-1) - 1;
+      return "beds" + previousIndex;
+    }
   } else if (currentstep.includes("fullBaths")) {
     if (currentstep.slice(-1) === "1") {
       return `beds${propertyInfo.beds}`;
@@ -62,7 +66,7 @@ export const getPreviousStep = (currentstep: FiximizeQuestionsStep, propertyInfo
       const previousIndex = +currentstep.slice(-1) - 1;
       return "halfBaths" + previousIndex;
     }
-  } else if (currentstep === "asIsEstimate") {
+  } else if (currentstep === "kitchenWallCabinetSize") {
     if (propertyInfo.halfBaths) {
       return `halfBaths${propertyInfo.halfBaths}`;
     } else if (propertyInfo.threeQuarterBaths) {
@@ -88,7 +92,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   const address = navigation.getParam("address", "");
   const formInitialValues = navigation.getParam("initialValues", {});
   const propertyInfo = navigation.getParam("propertyInfo", {});
-  const step = navigation.getParam("step", "beds1");
+  const step = navigation.getParam("step", "asIsEstimate");
 
   const initialValues = React.useMemo(() => {
     return ({
@@ -178,7 +182,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
       const nextStep = !(order === propertyInfo["fullBaths"]) ? key.slice(0, -1).concat(`${order + 1}`) :
       propertyInfo["threeQuarterBaths"] >= 1 ? "threeQuarterBaths1" : 
       propertyInfo["halfBaths"] >= 1 ? "halfBaths1" :
-      "asIsEstimate";
+      "kitchenWallCabinetSize";
       result.push({
         name: key, 
         description: order, 
@@ -195,7 +199,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
       const index = Number(key.length - 1);
       const order = Number(key[index]);
       const nextStep = !(order === propertyInfo["halfBaths"]) ? key.slice(0, -1).concat(`${order + 1}`) :
-      "asIsEstimate";
+      "kitchenWallCabinetSize";
       result.push({
         name: key, description: order, nextItem: nextStep
       })
@@ -211,7 +215,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
       const order = Number(key[index]);
       const nextStep = !(order === propertyInfo["threeQuarterBaths"]) ? key.slice(0, -1).concat(`${order + 1}`) :
       propertyInfo["halfBaths"] >= 1 ? "halfBaths1" :
-      "asIsEstimate";
+      "kitchenWallCabinetSize";
 
       result.push({
         name: key, description: order, nextItem: nextStep

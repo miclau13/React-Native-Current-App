@@ -23,7 +23,7 @@ const AsIsEstimate: React.ComponentType<AsIsEstimateProps> = (props) => {
       return;
     };
 
-    handleStepNavigation("kitchenWallCabinetSize");
+    handleStepNavigation("beds1");
   };
 
   React.useEffect(() => {
