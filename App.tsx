@@ -13,12 +13,14 @@ import { LoggedInProvider } from './app/common/LoggedInContext';
       const token = await SecureStore.getItemAsync("accessToken", {});
       operation.setContext({
         headers: {
-          authorization: token ? `Bearer ${token}` : ''
+          // authorization: token ? `Bearer ${token}` : '',
+          deviceId: "miclololo"
         }
       })
     },
-    uri: 'https://agent.trudeed.com/graphql',
-    // uri: 'http://192.168.100.89:3000/graphql',
+    // uri: 'https://agent.trudeed.com/graphql',
+    // uri: 'https://dev-agent.trudeed.com/graphql',
+    uri: 'http://192.168.100.89:3000/graphql',
   });
 
 const App = () => {

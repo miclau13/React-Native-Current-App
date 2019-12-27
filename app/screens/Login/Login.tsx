@@ -3,8 +3,9 @@ import { AuthSession } from 'expo';
 import * as Crypto from 'expo-crypto';
 import * as Random from 'expo-random';
 import * as SecureStore from 'expo-secure-store';
+import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { ActivityIndicator, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, Linking, StatusBar, Text, View } from 'react-native';
 import { Button } from "react-native-elements";
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
@@ -20,7 +21,13 @@ type ScreenProps = {};
 
 const prodConfig = {
   uri: "https://agent.trudeed.com/auth/fiximize-viewer"
-}
+};
+const devConfig = {
+  uri: "https://dev-agent.trudeed.com/auth/fiximize-viewer"
+};
+const localhostConfig = {
+  uri: "http://192.168.100.89:3000/auth/fiximize-viewer"
+};
 
 function toQueryString(params: object) {
   return (
@@ -52,6 +59,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const redirectFrom = navigation.getParam("redirectFrom", null);
   const [loading, setLoading] = React.useState(false);
+  const [URI, setURI] = React.useState("");
 
   const generateCodeVerifier = async () => {
     const randomBytes = await Random.getRandomBytesAsync(32);
@@ -88,7 +96,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       const response = await fetch(`https://${auth0.domain}/oauth/token`, options);
       const responseJson = await response.json();
       const { access_token, id_token, refresh_token } = responseJson;
-      const userResponse = await fetch(prodConfig.uri, {
+      const userResponse = await fetch(localhostConfig.uri, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -114,8 +122,14 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   const login = async () => {
     setLoading(true);
+    // const response = await fetch("http://192.168.100.89:3000/auth/fiximize-login");
+    // const responseURI = await response.json();
+    // console.log({response})
+    // console.log({responseURI})
+    // await WebBrowser.openAuthSessionAsync(responseURI, responseURI);
+    // setLoading(false);
+
     const redirectUrl = AuthSession.getRedirectUrl();
-    // WebBrowser.openAuthSessionAsync('https://dev-agent.trudeed.com/auth/login', "https://dev-agent.trudeed.com/auth/login");
     const authUrl = `https://${auth0.domain}/authorize?${toQueryString({
       client_id: auth0.clientId,
       code_challenge: await SecureStore.getItemAsync("codeChallenge"),
@@ -126,6 +140,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       nonce: 'nonce',
       // returnUrl: "https://dev-agent.trudeed.com/auth/login"
     })}`;
+    console.log("authUrl", authUrl)
     try {
       const result = await AuthSession.startAsync({ authUrl });
       if (result.type === 'success') {
@@ -144,9 +159,12 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     };
   };
 
+
+
   React.useEffect(() => {
     console.log("Login Mount");
     generateCodeVerifier().then(verifier => generateCodeChallenge(verifier));
+    // testing();
     return () => {console.log("Login UnMount");};
   }, []);
 
