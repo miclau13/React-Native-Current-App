@@ -160,7 +160,7 @@ LoginStack.navigationOptions = (props: NavigationContainerProps<NavigationState>
   }
   return {
     tabBarVisible,
-    tabBarLabel: loginStrings.loginTitle,
+    tabBarLabel: loginStrings.title,
     tabBarIcon: ({ tintColor }) => {
       let iconName = Platform.select({ ios: "ios-log-in", android: "md-log-in" });
       return <Icon name={iconName} type="ionicon" color={tintColor} />;

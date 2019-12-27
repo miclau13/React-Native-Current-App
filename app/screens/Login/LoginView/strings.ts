@@ -1,4 +1,4 @@
 const strings = {
-  title: "Login"
+  title: "Login View"
 }
 export default strings;

@@ -24,7 +24,6 @@
       "assets/**/*"
     ],
     "ios": {
-      "name": "Fiximize",
       "supportsTablet": true,
       "bundleIdentifier": "com.trudeed.fiximize"
     },
