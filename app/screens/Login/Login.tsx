@@ -1,6 +1,7 @@
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import * as WebBrowser from 'expo-web-browser';
+import queryString from 'query-string';
 import React from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
@@ -58,9 +59,9 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     const responseURI = await response.json();
     try {
       const result = await WebBrowser.openAuthSessionAsync(responseURI, responseURI);
-      console.log("result indside handleLoginOnPress",result)
+      const accessToken = queryString.parseUrl(result["url"]).query.accessToken;
+      await SecureStore.setItemAsync("accessToken", accessToken as string);
       if (result.type === 'success') {
-        console.log("result", result)
         completeLogin();
       } else if (result.type === 'cancel') {
         console.log("cancel la")
@@ -71,9 +72,37 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       console.log("err: ");
       console.log(JSON.stringify(err));
     };
-    
-    setLoading(false);
+
+    // const redirectUrl = AuthSession.getRedirectUrl();
+    // const authUrl = `https://${auth0.domain}/authorize?${toQueryString({
+    //   client_id: auth0.clientId,
+    //   code_challenge: await SecureStore.getItemAsync("codeChallenge"),
+    //   code_challenge_method: 'S256',
+    //   redirect_uri: redirectUrl,
+    //   response_type: 'code',
+    //   scope: auth0.scope,
+    //   nonce: 'nonce',
+    // })}`;
+    // console.log("authUrl", authUrl)
+    // try {
+    //   const result = await AuthSession.startAsync({ authUrl });
+    //   if (result.type === 'success') {
+    //     const { params: { code } } = result;
+    //     await SecureStore.setItemAsync("code", code, {});
+    //     await exchangeCodeForTokens();
+    //     completeLogin();
+    //   } else if (result.type === 'cancel') {
+    //     console.log("cancel la")
+    //     setLoading(false);
+    //   }
+    // }
+    // catch(err) {
+    //   console.log("err: ");
+    //   console.log(JSON.stringify(err));
+    // };
   };
+
+
 
   React.useEffect(() => {
     console.log("Login Mount");

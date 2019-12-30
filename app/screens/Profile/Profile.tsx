@@ -58,13 +58,6 @@ const Profile: NavigationStackScreenComponent<Params, ScreenProps> = (props) => 
 
   const signOutAsync = async () => {
     await SecureStore.deleteItemAsync("accessToken", {});
-    await SecureStore.deleteItemAsync("idToken", {});
-    await SecureStore.deleteItemAsync("refreshToken", {});
-    // const resetAction = StackActions.reset({
-    //   index: 0,
-    //   actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
-    // });
-    // navigation.dispatch(resetAction);
     navigation.navigate("AuthTabs");
   }
   const handleLogOutOnPress = () => signOutAsync();
@@ -81,7 +74,7 @@ const Profile: NavigationStackScreenComponent<Params, ScreenProps> = (props) => 
     handleRefetch();
     return () => {console.log("Profile refetch UnMount");}
   }, []);
-// console.log("Profile data", data)
+
   if (loading) {
     return (
       <LoadingComponent />

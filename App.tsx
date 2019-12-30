@@ -11,10 +11,11 @@ import { LoggedInProvider } from './app/common/LoggedInContext';
   const client = new ApolloClient({
     request: async (operation) => {
       const token = await SecureStore.getItemAsync("accessToken", {});
+      const deviceId = await SecureStore.getItemAsync("deviceId", {});
       operation.setContext({
         headers: {
-          // authorization: token ? `Bearer ${token}` : '',
-          deviceId: "miclololo"
+          deviceId,
+          authorization: token ? `Bearer ${token}` : '',
         }
       })
     },
