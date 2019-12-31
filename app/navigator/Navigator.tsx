@@ -17,11 +17,13 @@ import LoginScreen, { strings as loginStrings } from "../screens/Login";
 import ProfileScreen, { strings as profileStrings } from "../screens/Profile";
 import ProfitSummaryScreen from "../screens/ProfitSummary";
 import PropertyInfoScreen from "../screens/PropertyInfo";
+import RehabRecordsScreen, { strings as rehabRecordStrings } from "../screens/RehabRecords";
+import RehabRecordsDetailScreen from "../screens/RehabRecordsDetail";
 import TotalDebtsScreen from "../screens/TotalDebts";
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AsIsEstimateScreen, AutocompleteScreen, HomeScreen, PropertyInfoScreen, TotalDebtsScreen,
+  { AsIsEstimateScreen, AutocompleteScreen, HomeScreen, PropertyInfoScreen, RehabRecordsScreen, RehabRecordsDetailScreen, TotalDebtsScreen,
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -136,11 +138,22 @@ ProfileStack.navigationOptions = {
 };
 // ProfileStack End
 
+// RehabRecordsStack Start
+const RehabRecordsStack = createStackNavigator({ RehabRecordsScreen, RehabRecordsDetailScreen });
+
+RehabRecordsStack.navigationOptions = {
+  tabBarLabel: rehabRecordStrings.title,
+  tabBarIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />,
+  drawerLabel: rehabRecordStrings.title,
+  drawerIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />
+};
+// RehabRecordsStack End
+
 const MainNavigator = Platform.select({
-  ios: createBottomTabNavigator({ HomeStack, ProfileStack }, {
+  ios: createBottomTabNavigator({ HomeStack, RehabRecordsStack, ProfileStack,  }, {
     resetOnBlur: true,
   }),
-  android: createBottomTabNavigator({ HomeStack, ProfileStack }, {
+  android: createBottomTabNavigator({ HomeStack, RehabRecordsStack, ProfileStack,  }, {
     lazy: false,
     resetOnBlur: true,
   }),

@@ -7,7 +7,6 @@ import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 import LoginView from './LoginView';
 import { LoadingComponent } from '../InitialLoading';
-import config from '../../../config';
 
 type Params = {
   redirectFrom?: string;
@@ -15,21 +14,9 @@ type Params = {
 
 type ScreenProps = {};
 
-const prodConfig = {
-  uri: "https://agent.trudeed.com/auth/fiximize-viewer"
-};
-const devConfig = {
-  uri: "https://dev-agent.trudeed.com/auth/fiximize-viewer"
-};
-const localhostConfig = {
-  uri: "http://192.168.100.89:3000/auth/fiximize-viewer"
-};
-
-const auth0 = {
-  domain: config.AUTH0_DOMAIN,
-  clientId: config.AUTH0_CLIENT_ID,
-  scope: config.AUTHO_SCOPE,
-};
+const LOGINURL_PROD = "https://portal.trudeed.com/auth/fiximize-login";
+const LOGINURL_DEV = "https://dev-agent.trudeed.com/auth/fiximize-login";
+const LOGINURL_LOCALHOST = "http://192.168.100.89:3000/auth/fiximize-login";
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
@@ -50,13 +37,14 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     if(!deviceId) {
       await SecureStore.setItemAsync("deviceId", Constants.sessionId);
     };
-    const response = await fetch("http://192.168.100.89:3000/auth/fiximize-login", {
+    const response = await fetch(LOGINURL_DEV, {
       method: 'get',
       headers: {
         "device-id": deviceId,
       }
     });
     const responseURI = await response.json();
+    console.log("responseURI", responseURI)
     try {
       const result = await WebBrowser.openAuthSessionAsync(responseURI, responseURI);
       const accessToken = queryString.parseUrl(result["url"]).query.accessToken;
@@ -72,37 +60,8 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       console.log("err: ");
       console.log(JSON.stringify(err));
     };
-
-    // const redirectUrl = AuthSession.getRedirectUrl();
-    // const authUrl = `https://${auth0.domain}/authorize?${toQueryString({
-    //   client_id: auth0.clientId,
-    //   code_challenge: await SecureStore.getItemAsync("codeChallenge"),
-    //   code_challenge_method: 'S256',
-    //   redirect_uri: redirectUrl,
-    //   response_type: 'code',
-    //   scope: auth0.scope,
-    //   nonce: 'nonce',
-    // })}`;
-    // console.log("authUrl", authUrl)
-    // try {
-    //   const result = await AuthSession.startAsync({ authUrl });
-    //   if (result.type === 'success') {
-    //     const { params: { code } } = result;
-    //     await SecureStore.setItemAsync("code", code, {});
-    //     await exchangeCodeForTokens();
-    //     completeLogin();
-    //   } else if (result.type === 'cancel') {
-    //     console.log("cancel la")
-    //     setLoading(false);
-    //   }
-    // }
-    // catch(err) {
-    //   console.log("err: ");
-    //   console.log(JSON.stringify(err));
-    // };
+    setLoading(false);
   };
-
-
 
   React.useEffect(() => {
     console.log("Login Mount");
