@@ -1,9 +1,10 @@
 import { isNumber } from 'lodash';
 import React from 'react';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView  } from 'react-native';
 import { Icon, ListItem, ListItemProps, Text } from 'react-native-elements'
 import NumberFormat from 'react-number-format';
 
+import styles from './styles';
 interface RehabRecordsViewProps {
   // TODO type
   expandPropertyDetails: boolean;
@@ -37,7 +38,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                   decimalScale={0}
                   displayType={'text'} 
                   prefix={item.unit ? null : '$'}
-                  renderText={value => <Text>{value}</Text>}
+                  renderText={value => <Text style={styles.subtitleStyle} >{value}</Text>}
                   suffix={item.unit}
                   thousandSeparator={true}
                   value={item.value}

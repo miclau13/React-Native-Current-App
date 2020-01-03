@@ -21,18 +21,38 @@ const MY_REHAB_REQUESTS = gql`
       propertyDetails
       vacant
       totalDebts
+      rehabItemsPackage {
+        id
+        rehabItems {
+          category
+          cost
+          name
+        }
+      }
     }
+  }
+`;
+
+const REHAB_ITEMS_PACKAGE = gql`
+  query RehabItemsPackage($query: RehabItemsPackageQuery!) {
+    rehabItemsPackage(query: $query) {
+        id
+        rehabItems {
+          category
+          cost
+          name
+        }
+      }
   }
 `;
 
 const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const { data, loading, refetch } = useQuery(MY_REHAB_REQUESTS);
-  // const [loading, setLoading] = React.useState(false);
-  // console.log("RehabRecords data", data && data.myRehabRequests);
+  const { data, loading } = useQuery(MY_REHAB_REQUESTS);
+  const myRehabRequests = data && data.myRehabRequests;
 
   const handleItemOnPress = index => (event) => {
-    navigation.push("RehabRecordsDetailScreen", { detail: data.myRehabRequests[index]} );
+    navigation.push("RehabRecordsDetailScreen", { detail: myRehabRequests[index]} );
   }
 
   React.useEffect(() => {
@@ -51,7 +71,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   return (
     <RehabRecordsView 
       handleItemOnPress={handleItemOnPress}
-      rehabRecords={data.myRehabRequests}
+      rehabRecords={myRehabRequests}
     />
   )
 };

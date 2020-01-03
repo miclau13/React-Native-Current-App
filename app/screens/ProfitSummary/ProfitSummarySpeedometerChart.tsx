@@ -2,15 +2,16 @@ import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
 import RNSpeedometer from '../../components/Chart/Speedometer';
+import { primaryGreen, primaryRed, primaryYellow } from '../../styles/constants';
 
 type ProfitSummarySpeedmeterChartProps = {
   value: number;
 }
 
 const labels = [
-  { name: "Bad", labelColor: '#e53935', activeBarColor: '#e53935'},
-  { name: "Marginal", labelColor: '#fdd835', activeBarColor: '#fdd835'},
-  { name: "Good", labelColor: '#43a048', activeBarColor: '#43a048'},
+  { name: "Bad", labelColor: primaryRed, activeBarColor: primaryRed },
+  { name: "Marginal", labelColor: primaryYellow, activeBarColor: primaryYellow },
+  { name: "Good", labelColor: primaryGreen, activeBarColor: primaryGreen },
 ]
 
 const ProfitSummarySpeedmeterChart: React.ComponentType<ProfitSummarySpeedmeterChartProps> = (props) => {

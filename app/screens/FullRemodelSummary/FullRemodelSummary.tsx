@@ -171,7 +171,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
           <NumberFormat 
             displayType={'text'} 
             prefix={'$'}
-            renderText={value => <Text h3 style={{marginBottom: 8, textAlign: 'center',}}>{value}</Text>}
+            renderText={value => <Text h3 style={{ marginBottom: 8, textAlign: 'center' }}>{value}</Text>}
             thousandSeparator={true} 
             value={totalCost}
           />

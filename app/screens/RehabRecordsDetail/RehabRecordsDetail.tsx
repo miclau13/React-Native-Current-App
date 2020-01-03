@@ -1,10 +1,11 @@
 
-import { isNumber, reduce, sortBy } from 'lodash';
+import { isNil, isNumber, reduce, sortBy } from 'lodash';
 import React from 'react';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import RehabRecordsDetailView from './RehabRecordsDetailView';
 import { LoadingComponent } from '../InitialLoading';
+import { CalculateRemodelingCost } from '../../common/utils/Calculator';
 
 type Params = {
   // TODO type
@@ -15,25 +16,45 @@ type ScreenProps = {};
 
 const getItemAttributes = (key, index = -1) => {
   switch (key) {
-    case "arv": 
-      return {
-        name: "Est. ARV: ",
-        order: 1,
-      };
     case "address": 
       return {
         name: "Address: ",
         order: 0,
+      };
+    case "arv": 
+      return {
+        name: "Est. ARV: ",
+        order: 1,
       };
     case "asIs":
       return {
         name: "AS-IS: ",
         order: 2,
       };
+    case "remodelingCost":
+      return {
+        name: "Remodeling Cost: ",
+        order: 3,
+      };
+    case "profit":
+      return {
+        name: "Profit: ",
+        order: 4,
+      };
+    case "totalDebts":
+      return {
+        name: "Total Debts: ",
+        order: 5,
+      };
+    case "vacant":
+      return {
+        name: "Vacant: ",
+        order: 6,
+      };
     case "propertyDetails":
       return {
         name: "Property Details: ",
-        order: 5,
+        order: 7,
       };
     case "bedsInfo":
       return {
@@ -70,16 +91,6 @@ const getItemAttributes = (key, index = -1) => {
         name: "Kitchen Cabinet Upper Length: ",
         order: 16,
       };
-    case "totalDebts":
-      return {
-        name: "Total Debts: ",
-        order: 3,
-      };
-    case "vacant":
-      return {
-        name: "Vacant: ",
-        order: 4,
-      };
     default:
       return {};
   };
@@ -90,7 +101,6 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
   const [loading, setLoading] = React.useState(false);
   const [expandPropertyDetails, setExpandPropertyDetails] = React.useState(true);
   const detail = navigation.getParam("detail", null);
-  console.log("detail",detail)
 
   const items = React.useMemo(() => sortBy(reduce(detail, (result, value, key) => {
     const { name, order } = getItemAttributes(key);
@@ -109,9 +119,21 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
           };
         };
       } else {
-        result.push({ name, order, value: value || "NA" });
+        console.log("key", key)
+        console.log("value", value)
+        result.push({ name, order, value: isNil(value) ? "NA" : value });
       }
     };
+    if (key === "rehabItemsPackage") {
+      const { arv, asIs } = detail;
+      const remodellingCost = CalculateRemodelingCost(value.rehabItems);
+      const { name: nameForRemodelingCost, order: orderForRemodelingCost } = getItemAttributes("remodelingCost");
+      result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: remodellingCost });
+      const profit = arv - asIs - remodellingCost;
+      let { name: nameForProfit, order: orderForProfit } = getItemAttributes("profit");
+      result.push({ name: nameForProfit, order: orderForProfit, value: profit });
+    }
+
     return result;
   }, []), ['order']), [detail]);
 
