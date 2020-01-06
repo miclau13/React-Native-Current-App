@@ -229,10 +229,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     )
   };
 
-  console.log("ProfitSummary vacant", vacant)
-  console.log("ProfitSummary bannerMessages", bannerMessages)
-  console.log("ProfitSummary hasBanner", hasBanner)
-  console.log("ProfitSummary isQualified", isQualified)
   return (
     <>
       {step === "edit" ?
