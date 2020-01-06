@@ -1,20 +1,17 @@
 import { isNumber } from 'lodash';
 import React from 'react';
 import { SafeAreaView, ScrollView  } from 'react-native';
-import { Icon, ListItem, ListItemProps, Text } from 'react-native-elements'
+import { Icon, ListItem, Text } from 'react-native-elements';
 import NumberFormat from 'react-number-format';
 
 import styles from './styles';
-interface RehabRecordsViewProps {
-  // TODO type
-  expandPropertyDetails: boolean;
-  handlePropertyDetailsOnPress: ListItemProps['onPress'];
-  items: any;
+import { RehabRecordsDetailProps } from '../RehabRecordsDetail';
+interface RehabRecordsViewProps extends RehabRecordsDetailProps {
 };
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {
   const { expandPropertyDetails, handlePropertyDetailsOnPress, items } = props;  
-  console.log("items", items)
+
   React.useEffect(() => {
     console.log("RehabRecordsView Mount")
     return () => {console.log("RehabRecordsView UnMount")}

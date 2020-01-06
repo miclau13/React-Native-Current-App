@@ -1,15 +1,14 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
+import { ListItemProps } from 'react-native-elements';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import { useQuery } from '@apollo/react-hooks';
 
 import RehabRecordsView from './RehabRecordsView';
 import { LoadingComponent } from '../InitialLoading';
+import { MyRehabRequests } from '../../generated/MyRehabRequests';
 
-type Params = {};
-
-type ScreenProps = {};
 
 const MY_REHAB_REQUESTS = gql`
   query MyRehabRequests {
@@ -34,12 +33,21 @@ const MY_REHAB_REQUESTS = gql`
   }
 `;
 
+type Params = {};
+
+type ScreenProps = {};
+
+export type RehabRecordsProps = {
+  rehabRecords: MyRehabRequests['myRehabRequests'];
+  handleItemOnPress(index: number): ListItemProps['onPress'];
+};
+
 const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const { data, loading } = useQuery(MY_REHAB_REQUESTS);
+  const { data, loading } = useQuery<MyRehabRequests>(MY_REHAB_REQUESTS);
   const myRehabRequests = data && data.myRehabRequests || [];
 
-  const handleItemOnPress = index => (event) => {
+  const handleItemOnPress: RehabRecordsProps['handleItemOnPress'] = index => (event) => {
     navigation.push("RehabRecordsDetailScreen", { detail: myRehabRequests[index]} );
   }
 

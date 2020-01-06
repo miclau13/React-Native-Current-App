@@ -4,14 +4,11 @@ import { Icon, ListItem, Text } from 'react-native-elements';
 import { Chip } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
+import styles from './styles';
+import { RehabRecordsProps } from '../RehabRecords';
 import { CalculateRemodelingCost, FindLabelAttributes } from '../../../common/utils/Calculator';
 
-import styles from './styles';
-
-interface RehabRecordsViewProps {
-  // TODO type
-  handleItemOnPress: any;
-  rehabRecords: any;
+interface RehabRecordsViewProps extends RehabRecordsProps{
 };
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {

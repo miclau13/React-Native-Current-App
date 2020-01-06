@@ -4,8 +4,6 @@ import React from 'react';
 import { ListItemProps } from 'react-native-elements'
 import { ButtonProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
-import NumberFormat from 'react-number-format';
-
 
 import { useMutation } from '@apollo/react-hooks';
 
@@ -13,8 +11,6 @@ import FullRemodelSummaryView from './FullRemodelSummaryView';
 import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
 import { LoadingComponent } from '../InitialLoading';
 import { CreateRehab, CreateRehab_createRehab_rehabItemPackage_rehabItems, CreateRehabVariables } from '../../generated/CreateRehab';
-
-// TODO move it to other file location
 
 export interface Params {
   flow: FiximizeFlow;
