@@ -48,7 +48,7 @@ const PropertyInfoAdjustment: React.ComponentType<PropertyInfoAdjustmentViewProp
     if (_beds.length < 1 || _sqft.length < 1) {
       return;
     };
-    handleStepNavigation("summary", { beds: +_beds, sqft: +_sqft, fullBath: +_fullBaths, threeQuarterBaths: +_threeQuarterBaths, halfBaths: +_halfBaths });
+    handleStepNavigation("summary", { beds: +_beds, sqft: +_sqft, fullBaths: +_fullBaths, threeQuarterBaths: +_threeQuarterBaths, halfBaths: +_halfBaths });
   };
 
   React.useEffect(() => {

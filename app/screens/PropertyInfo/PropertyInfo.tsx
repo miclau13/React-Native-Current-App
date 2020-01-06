@@ -67,7 +67,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       if (RequiredInput.includes(item.name)) {
         for (let i = 0 ; i < item.value; i++) {
           inputValues[item.name] = {
-            ...inputValues[item.value],
+            ...inputValues[item.name],
             [`${item.name}${i+1}`]: 
               item.name === "beds" ? "132" : 
               item.name === "fullBaths" ? "60" :
@@ -115,6 +115,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const handleOnPress = React.useCallback(() => {
     navigation.navigate("FiximizeQuestionsFormScreen", 
     { 
+      flow,
       address,
       postalCode,
       arvEstimate,
@@ -181,11 +182,11 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
         :
         (
           <PropertyInfoAdjustment 
-            beds={(dataArray.find(data => data.name === 'beds'))?.value || beds}
-            sqft={(dataArray.find(data => data.name === 'sqft'))?.value || sqft}
-            fullBaths={(dataArray.find(data => data.name === 'fullBaths'))?.value || fullBaths}
-            threeQuarterBaths={(dataArray.find(data => data.name === 'threeQuarterBaths'))?.value || threeQuarterBaths}
-            halfBaths={(dataArray.find(data => data.name === 'halfBaths'))?.value || halfBaths}
+            beds={(dataArray.find(data => data.name === 'beds'))?.value ?? beds}
+            sqft={(dataArray.find(data => data.name === 'sqft'))?.value ?? sqft}
+            fullBaths={(dataArray.find(data => data.name === 'fullBaths'))?.value ?? fullBaths}
+            threeQuarterBaths={(dataArray.find(data => data.name === 'threeQuarterBaths'))?.value ?? threeQuarterBaths}
+            halfBaths={(dataArray.find(data => data.name === 'halfBaths'))?.value ?? halfBaths}
             handleStepNavigation={handleStepNavigation}
           />
         )

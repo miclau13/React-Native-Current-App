@@ -143,8 +143,10 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
     try {
       let result;
       if (flow === FiximizeFlow.AutoCompleteAddress) {
+        console.log('calling createRehab')
         result = await createRehab({ variables: { input: createRehabInput } });
       } else {
+        console.log('calling createRehabNoArv')
         result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }})
       }
       if (result) {
