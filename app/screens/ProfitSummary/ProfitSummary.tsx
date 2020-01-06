@@ -6,6 +6,7 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useMutation } from '@apollo/react-hooks';
 
 import ProfitSummaryView from './ProfitSummaryView';
+import { CheckIsQualified } from './utils';
 import { LoadingComponent } from '../InitialLoading';
 import { Params as FullRemodelSummaryParams, FullRemodelSummaryProps, FullRemodelSummaryState } from '../FullRemodelSummary';
 import ProfitAdjustment from '../ProfitAdjustment';
@@ -83,44 +84,6 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   }
 `;
 
-const checkIsQualified = (args: {
-  arv: number;
-  asIs: number;
-  remodellingCost: number;
-  totalDebts: number;
-  vacant: boolean;
-}) => {
-  const { arv, asIs, remodellingCost, totalDebts, vacant } = args;
-
-  let bannerMessagesArr = [];
-  let isQualified = true;
-  // First gate: 
-  if (asIs + remodellingCost >= arv) {
-    isQualified = false;
-    bannerMessagesArr.push("- The sum of As-IS and Remodeling Cost is not smaller than Est. ARV!");
-  };
-  // Second gate:
-  if (totalDebts + remodellingCost >= arv * 0.8 ) {
-    isQualified = false;
-    bannerMessagesArr.push("- The sum of Total Debts and Remodeling Cost is not smaller than 80% of Est. ARV!");
-  };
-  // Third gate:
-  if (!vacant) {
-    isQualified = false;
-    bannerMessagesArr.push("- The property is not vacant!");
-  };
-
-  if (isQualified) {
-    bannerMessagesArr.push("Qualified! Feel free to submit!");
-  } else {
-    bannerMessagesArr.unshift("Not Qualified due to these reasons: ");
-    bannerMessagesArr.push("Please EDIT the values to retry.");
-  };
-
-  const bannerMessages = bannerMessagesArr.join("\n");
-
-  return { bannerMessages, isQualified };
-};
 
 const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
@@ -135,8 +98,8 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const totalDebts = navigation.getParam("totalDebts", null);
   const vacant = navigation.getParam("vacant", null);
 
-  const [bannerMessages, setBannerMessages] = React.useState<ProfitSummaryState['bannerMessages']>(checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
-  const [isQualified, setIsQualified] = React.useState<ProfitSummaryState['isQualified']>(checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
+  const [bannerMessages, setBannerMessages] = React.useState<ProfitSummaryState['bannerMessages']>(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
+  const [isQualified, setIsQualified] = React.useState<ProfitSummaryState['isQualified']>(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
   const [hasBanner, setHasBanner] = React.useState<ProfitSummaryState['hasBanner']>(!navigation.getParam("submitted", false));
   const [loading, setLoading] = React.useState<ProfitSummaryState['loading']>(false);
   const [submitted, setSubmitted] = React.useState<ProfitSummaryState['submitted']>(navigation.getParam("submitted", false));
@@ -223,8 +186,8 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
 
   React.useEffect(() => {
     console.log("ProfitSummary useEffect start update banner");
-    setBannerMessages(checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
-    setIsQualified(checkIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
+    setBannerMessages(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
+    setIsQualified(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
     return () => {
       console.log("ProfitSummary useEffect delete update banner");
     }

@@ -47,7 +47,7 @@ const TotalDebts: NavigationStackScreenComponent<Params, ScreenProps> = (props) 
 
   if (loading) {
     return (
-     <LoadingComponent />
+      <LoadingComponent />
     )
   };
 
