@@ -28,6 +28,7 @@ const MY_REHAB_REQUESTS = gql`
           cost
           name
         }
+        submitted
       }
     }
   }

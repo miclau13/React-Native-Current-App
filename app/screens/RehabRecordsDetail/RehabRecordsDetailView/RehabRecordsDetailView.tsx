@@ -14,7 +14,7 @@ interface RehabRecordsViewProps {
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {
   const { expandPropertyDetails, handlePropertyDetailsOnPress, items } = props;  
-
+  console.log("items", items)
   React.useEffect(() => {
     console.log("RehabRecordsView Mount")
     return () => {console.log("RehabRecordsView UnMount")}

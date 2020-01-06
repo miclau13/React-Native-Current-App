@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
-import { Icon, ListItem, Text } from 'react-native-elements'
+import { Icon, ListItem, Text } from 'react-native-elements';
+import { Chip } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
 import { CalculateRemodelingCost, FindLabelAttributes } from '../../../common/utils/Calculator';
@@ -40,7 +41,12 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                 <Icon color={labelColor} name="circle" size={32} type="font-awesome" />
               }
               onPress={handleItemOnPress(i)}
-              title={rehabRecord.address}
+              rightIcon={rehabItemsPackage.submitted ? 
+                <Chip>
+                  Submitted
+                </Chip>
+                : null
+              }
               subtitle={
                 <>
                   <View style={styles.viewBox1} />
@@ -72,6 +78,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                   />
                 </>
               }
+              title={rehabRecord.address}
             />
           )
         })}

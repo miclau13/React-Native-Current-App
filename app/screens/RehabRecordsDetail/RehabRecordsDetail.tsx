@@ -118,6 +118,8 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
             result.push({ name, order, category: "propertyDetails", value: value[property], style: { paddingLeft: 16 }, unit: " linear ft." });
           };
         };
+      } else if (key === "vacant") {
+        result.push({ name, order, value: isNil(value) ? "NA" : value ? "Yes" : "No" });
       } else {
         result.push({ name, order, value: isNil(value) ? "NA" : value });
       }
