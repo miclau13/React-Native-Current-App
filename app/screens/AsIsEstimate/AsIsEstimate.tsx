@@ -15,7 +15,7 @@ const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const { navigation } = props;
   const address = navigation.getParam("address", null);
   const [loading, setLoading] = React.useState(false);
-  const [asIsEstimate, setAsIsEstimate] = React.useState("1");
+  const [asIsEstimate, setAsIsEstimate] = React.useState("");
 
   const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
     setAsIsEstimate(text);
@@ -37,7 +37,7 @@ const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   if (loading) {
     return (
-     <LoadingComponent />
+      <LoadingComponent />
     )
   };
 

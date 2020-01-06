@@ -107,7 +107,6 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   const formInitialValues = navigation.getParam("initialValues", {});
   const propertyInfo = navigation.getParam("propertyInfo", {});
   const step = navigation.getParam("step", "beds1");
-  console.log("screenProps", screenProps)
   const initialValues = React.useMemo(() => {
     return ({
       asIsEstimate,

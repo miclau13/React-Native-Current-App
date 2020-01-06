@@ -98,17 +98,24 @@ const checkIsQualified = (args: {
   if (asIs + remodellingCost >= arv) {
     isQualified = false;
     bannerMessagesArr.push("- The sum of As-IS and Remodeling Cost is not smaller than Est. ARV!");
-  } // Second gate:
+  };
+  // Second gate:
   if (totalDebts + remodellingCost >= arv * 0.8 ) {
     isQualified = false;
     bannerMessagesArr.push("- The sum of Total Debts and Remodeling Cost is not smaller than 80% of Est. ARV!");
-  } // Third gate:
+  };
+  // Third gate:
   if (!vacant) {
     isQualified = false;
     bannerMessagesArr.push("- The property is not vacant!");
   };
 
-  isQualified ? bannerMessagesArr.push("Qualified! Feel free to submit!") : bannerMessagesArr.unshift("Unqualified! Please check the reasons below: ");
+  if (isQualified) {
+    bannerMessagesArr.push("Qualified! Feel free to submit!");
+  } else {
+    bannerMessagesArr.unshift("Not Qualified due to these reasons: ");
+    bannerMessagesArr.push("Please EDIT the values to retry.");
+  };
 
   const bannerMessages = bannerMessagesArr.join("\n");
 

@@ -46,7 +46,6 @@ const ProfitAdjustment: React.ComponentType<ProfitAdjustmentOuterProps>  = (prop
     if (_arv.length < 1 || _asIs.length < 1) {
       return;
     };
-    console.log("ProfitAdjustment handleOnPress !!_vacant", !!_vacant)
     handleStepNavigation("summary", { arv: +_arv, asIs: +_asIs, vacant: !!_vacant });
   };
 
