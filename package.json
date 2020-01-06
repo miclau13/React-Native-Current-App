@@ -6,7 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "apollo:generate": "mkdir app/generated && apollo client:codegen --excludes=node_modules/* --includes=**/*.tsx --endpoint http://localhost:3000/graphql --target typescript --tagName=gql --outputFlat app/generated"
+    "apollo:generate": "mkdir -p app/generated && apollo client:codegen --excludes=node_modules/* --includes=**/*.tsx --endpoint http://localhost:3000/graphql --target typescript --tagName=gql --outputFlat app/generated"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",

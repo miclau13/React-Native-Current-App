@@ -17,6 +17,7 @@ export interface MyRehabRequests_myRehabRequests_rehabItemsPackage {
   __typename: "RehabItemsPackage";
   id: string;
   rehabItems: MyRehabRequests_myRehabRequests_rehabItemsPackage_rehabItems[];
+  submitted: boolean;
 }
 
 export interface MyRehabRequests_myRehabRequests {

@@ -21,6 +21,23 @@ export interface CreateRehabInput {
   vacant?: boolean | null;
 }
 
+export interface CreateRehabNoArvInput {
+  address: string;
+  postalCode: string;
+  arv: number;
+  asIs: number;
+  propertyDetails?: PropertyDetailsInput | null;
+  images?: (string | null)[] | null;
+  sqft?: number | null;
+  beds?: number | null;
+  fullBaths?: number | null;
+  threeQuarterBaths?: number | null;
+  halfBaths?: number | null;
+  style?: string | null;
+  totalDebts?: number | null;
+  vacant?: boolean | null;
+}
+
 export interface DetailInput {
   size: number;
   order: number;
