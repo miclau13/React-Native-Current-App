@@ -12,7 +12,7 @@ interface LoginViewProps {
 
 const LoginView: React.ComponentType<LoginViewProps> = (props) => {
   const { handleOnPress } = props;
-  // console.log("FiximizeImage", FiximizeImage)
+
   React.useEffect(() => {
     console.log("LoginView Mount")
     return () => {console.log("LoginView UnMount")}
@@ -28,14 +28,14 @@ const LoginView: React.ComponentType<LoginViewProps> = (props) => {
         PlaceholderContent={<ActivityIndicator />}
       />
       <View style={styles.viewBox2} />
-      <Title>Please Login to get the estimate price.</Title>
+      <Title>Ready to Fiximize?</Title>
       <View style={styles.viewBox1} />
       <Button 
         mode="contained" 
         onPress={handleOnPress}
         style={styles.nextButton}
       >
-        {`LOGIN`}
+        {`Sign Up or Login`}
       </Button>
       <View style={styles.viewBox3} />
     </View>
