@@ -33,23 +33,10 @@ const MY_REHAB_REQUESTS = gql`
   }
 `;
 
-const REHAB_ITEMS_PACKAGE = gql`
-  query RehabItemsPackage($query: RehabItemsPackageQuery!) {
-    rehabItemsPackage(query: $query) {
-        id
-        rehabItems {
-          category
-          cost
-          name
-        }
-      }
-  }
-`;
-
 const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const { data, loading } = useQuery(MY_REHAB_REQUESTS);
-  const myRehabRequests = data && data.myRehabRequests;
+  const myRehabRequests = data && data.myRehabRequests || [];
 
   const handleItemOnPress = index => (event) => {
     navigation.push("RehabRecordsDetailScreen", { detail: myRehabRequests[index]} );

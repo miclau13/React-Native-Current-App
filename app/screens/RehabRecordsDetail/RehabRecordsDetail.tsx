@@ -119,8 +119,6 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
           };
         };
       } else {
-        console.log("key", key)
-        console.log("value", value)
         result.push({ name, order, value: isNil(value) ? "NA" : value });
       }
     };

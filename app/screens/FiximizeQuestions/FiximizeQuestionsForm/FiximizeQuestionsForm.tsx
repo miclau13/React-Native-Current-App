@@ -12,6 +12,7 @@ import KitchenCabinetSize from '../KitchenCabinetSize';
 import FiximizeQuestionsFormik from '../../../components/FiximizeQuestions/FiximizeQuestionsFormik';
 import ThreeQuarterBathSize from '../ThreeQuarterBathSize';
 import VacantProperty from '../VacantProperty';
+import { CreateRehab, CreateRehabVariables } from '../../../generated/CreateRehab';
 
 type FiximizeQuestionsStepForBeds = "beds1" | "beds2" | "beds3" |"beds4" |"beds5";
 type FiximizeQuestionsStepForFullBaths = "fullBaths1" | "fullBaths2" | "fullBaths3" |"fullBaths4" |"fullBaths5";
@@ -98,7 +99,7 @@ export interface FiximizeQuestionsFormProps {
 }
 
 const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
-  const { navigation } = props;
+  const { navigation, screenProps } = props;
   const backFrom = navigation.getParam("backFrom", null);
   const address = navigation.getParam("address", "");
   const asIsEstimate = navigation.getParam("asIsEstimate", null);
@@ -106,7 +107,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   const formInitialValues = navigation.getParam("initialValues", {});
   const propertyInfo = navigation.getParam("propertyInfo", {});
   const step = navigation.getParam("step", "beds1");
-
+  console.log("screenProps", screenProps)
   const initialValues = React.useMemo(() => {
     return ({
       asIsEstimate,
@@ -152,7 +153,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
     const threeQuarterBathsInfo = _.map(threeQuarterBaths, (value, key) => {
       return { size: +value, order: +key[key.length - 1]};
     });
-    const createRehabInput = {
+    const createRehabInput: CreateRehabVariables['input'] = {
       address: address,
       asIs: +asIsEstimate,
       propertyDetails: {
@@ -163,9 +164,11 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
         kitchenCabinetIslandLength: +kitchenIslandCabinetSize,
         kitchenCabinetUpperLength: +kitchenWallCabinetSize,
         threeQuarterBathsInfo,
-      }
+      },
+      totalDebts: +totalDebts,
+      vacant: !!vacant,
     };
-    navigation.navigate("FullRemodelSummaryScreen", { createRehabInput, totalDebts, vacant: !!vacant });
+    navigation.navigate("FullRemodelSummaryScreen", { createRehabInput });
   }, []);
 
   const kitchenCabinetSizefields = React.useMemo(() => {

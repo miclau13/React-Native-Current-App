@@ -1,5 +1,5 @@
 const strings = {
-  title: "Full Remodel Summary"
+  title: "Profit Adjustment View"
 }
 
 export default strings;

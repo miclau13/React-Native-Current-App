@@ -9,14 +9,12 @@ import { FiximizeQuestionsFormProps, FiximizeQuestionsFormValues } from '../Fixi
 
 interface VacantPropertyProps {
   backFrom: FiximizeQuestionsFormProps['backFrom'];
-  field: any;
   handleStepNavigation: FiximizeQuestionsFormProps['handleStepNavigation'];
 };
 
 const VacantProperty: React.ComponentType<VacantPropertyProps> = (props) => {
   const form = useFormikContext<FiximizeQuestionsFormValues>();
   const { errors, setFieldValue, submitForm, values } = form;
-  // const { backFrom, field, handleStepNavigation } = props;
 
   const handleOnPress: ButtonGroupProps['onPress'] = (index) => {
     setFieldValue("vacant", index);

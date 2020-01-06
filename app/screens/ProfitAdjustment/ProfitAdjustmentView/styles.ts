@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { primaryButtonColor, screenWidth } from '../../styles';
+import { primaryButtonColor, screenWidth } from '../../../styles';
 
 const styles = StyleSheet.create({
   autocompleteTextInput: {
