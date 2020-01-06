@@ -4,19 +4,24 @@ import React from 'react';
 import { ListItemProps } from 'react-native-elements'
 import { ButtonProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
+import NumberFormat from 'react-number-format';
+
 
 import { useMutation } from '@apollo/react-hooks';
 
 import FullRemodelSummaryView from './FullRemodelSummaryView';
+import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
 import { LoadingComponent } from '../InitialLoading';
 import { CreateRehab, CreateRehab_createRehab_rehabItemPackage_rehabItems, CreateRehabVariables } from '../../generated/CreateRehab';
 
 // TODO move it to other file location
 
 export interface Params {
+  flow: FiximizeFlow;
   arv?: CreateRehab['createRehab']['arv'];
   asIs?: number;
   createRehabInput?: CreateRehabVariables['input'];
+  createRehabNoArvInput?: object;
   submitted?: boolean;
   totalDebts?: number;
   vacant?: boolean;
@@ -74,6 +79,25 @@ const CREATE_REHAB = gql`
   }
 `;
 
+const CREATE_REHAB_NO_ARV = gql`
+  mutation CreateRehabNoArv($input: CreateRehabNoArvInput!) {
+    createRehabNoArv(input: $input) {
+      arv
+      rehabId
+      rehabItemPackage {
+        id
+        rehabItems {
+          category
+          cost
+          name
+          selected
+        }
+        submitted
+      }
+    }
+  }
+`;
+
 const GetOrderForRehabItemsCategory = (key: string) => {
   switch (key) {
     case "Kitchen": 
@@ -96,9 +120,13 @@ const GetOrderForRehabItemsCategory = (key: string) => {
 
 const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const [createRehab] = useMutation<CreateRehab, CreateRehabVariables>(CREATE_REHAB);
+  const [createRehabNoArv] = useMutation(CREATE_REHAB_NO_ARV);
 
   const { navigation } = props;
+  const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
   const createRehabInput = navigation.getParam("createRehabInput", null);
+  const flow = navigation.getParam("flow", null);
+
   const totalDebts = createRehabInput.totalDebts;
   const vacant = createRehabInput.vacant;
   const asIs = createRehabInput.asIs;
@@ -115,11 +143,16 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const updatedSubmitted = navigation.getParam("submitted", false);
   const updatedVacant = navigation.getParam("vacant", null);
 
-
   const bootstrapAsync = async () => {
     try {
-      const result = await createRehab({ variables: { input: createRehabInput } });
+      let result;
+      if (flow === FiximizeFlow.AutoCompleteAddress) {
+        result = await createRehab({ variables: { input: createRehabInput } });
+      } else {
+        result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }})
+      }
       if (result) {
+        let rehab = flow === FiximizeFlow.AutoCompleteAddress ? result.data.createRehab : result.data.createRehabNoArv;
         const itemsMap: RehabItemsPackageMap = result.data.createRehab.rehabItemPackage.rehabItems.reduce((acc, item) => {
           if (!acc[item.category]) {
             acc[item.category] = {
@@ -137,15 +170,14 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         for (let [key, value] of Object.entries(itemsMap)) {
           dataArry.push({ category: key, value: value.cost, selected: value.selected, order: value.order });
         };
-
-        setArv(result.data.createRehab.arv);
+        setArv(rehab.arv);
         setData(sortBy(dataArry, ["order"]));
-        setRehabId(result.data.createRehab.rehabId);
-        setRehabItems(result.data.createRehab.rehabItemPackage.rehabItems.map(item => {
+        setRehabId(rehab.rehabId);
+        setRehabItems(rehab.rehabItemPackage.rehabItems.map(item => {
           return omit(item, ["__typename"]);
         }));
-        setRehabItemPackageId(result.data.createRehab.rehabItemPackage.id);
-        setSubmitted(result.data.createRehab.rehabItemPackage.submitted);
+        setRehabItemPackageId(rehab.rehabItemPackage.id);
+        setSubmitted(rehab.rehabItemPackage.submitted);
       }
     } catch (e) {
       console.log("createRehab e", e)
