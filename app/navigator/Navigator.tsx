@@ -7,6 +7,7 @@ import { createSwitchNavigator, NavigationState, NavigationContainerProps } from
 import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
 
+import ArvEstimateScreen from "../screens/ArvEstimate";
 import AsIsEstimateScreen from "../screens/AsIsEstimate";
 import AutocompleteScreen  from "../screens/FiximizeQuestions/Autocomplete/Autocomplete";
 import FiximizeQuestionsFormScreen, { getPreviousStep as getFiximizeQuestionsPreviousStep } from "../screens/FiximizeQuestions/FiximizeQuestionsForm";
@@ -21,7 +22,29 @@ import TotalDebtsScreen from "../screens/TotalDebts";
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AsIsEstimateScreen, AutocompleteScreen, HomeScreen, PropertyInfoScreen, TotalDebtsScreen,
+  { HomeScreen, AutocompleteScreen, ArvEstimateScreen, AsIsEstimateScreen, TotalDebtsScreen,
+    PropertyInfoScreen: {
+      screen: PropertyInfoScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        const step = navigation.getParam("step");
+        console.log('2')
+        return { 
+          headerRight: step === "summary" ? (props) => {
+            return (
+              <Button 
+                {...props}
+                onPress={() => {
+                  navigation.navigate("PropertyInfoScreen", { step: "edit" });
+                }}
+              >
+                Edit
+              </Button> 
+            )
+          } : null
+        }
+      }
+    },
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {

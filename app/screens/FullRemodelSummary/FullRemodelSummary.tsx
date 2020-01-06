@@ -6,15 +6,17 @@ import { Card, ListItem, Text } from 'react-native-elements'
 import { Button } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import NumberFormat from 'react-number-format';
+import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
 
 import { useMutation } from '@apollo/react-hooks';
 
 import styles from './styles';
 
 type Params = {
-  arv?: number;
+  flow: FiximizeFlow;
   asIs?: number;
   createRehabInput?: object;
+  createRehabNoArvInput?: object;
   submitted?: boolean;
   totalDebts?: number;
   vacant?: boolean;
@@ -41,10 +43,31 @@ const CREATE_REHAB = gql`
   }
 `;
 
+const CREATE_REHAB_NO_ARV = gql`
+  mutation CreateRehabNoArv($input: CreateRehabNoArvInput!) {
+    createRehabNoArv(input: $input) {
+      arv
+      rehabId
+      rehabItemPackage {
+        id
+        rehabItems {
+          category
+          cost
+          name
+          selected
+        }
+        submitted
+      }
+    }
+  }
+`;
+
 const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const [createRehab] = useMutation(CREATE_REHAB);
+  const [createRehabNoArv] = useMutation(CREATE_REHAB_NO_ARV);
   const createRehabInput = navigation.getParam("createRehabInput", null);
+  const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
   const [arv, setArv] = React.useState();
   const [asIs, setAsIs] = React.useState(createRehabInput.asIs);
   const [data, setData] = React.useState();
@@ -59,12 +82,20 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const updatedVacant = navigation.getParam("vacant", null);
   const totalDebts = navigation.getParam("totalDebts", null);
   const vacant = navigation.getParam("vacant", null);
+  const flow = navigation.getParam("flow", null);
 
   const bootstrapAsync = async () => {
     try {
-      const result = await createRehab({ variables: { input: createRehabInput } });
+      let result;
+      if (flow === FiximizeFlow.AutoCompleteAddress) {
+        result = await createRehab({ variables: { input: createRehabInput } });
+      } else {
+        console.log(createRehabNoArvInput)
+        result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }})
+      }
       if (result) {
-        const itemsMap = result.data.createRehab.rehabItemPackage.rehabItems.reduce((acc, item) => {
+        let rehab = flow === FiximizeFlow.AutoCompleteAddress ? result.data.createRehab : result.data.createRehabNoArv;
+        const itemsMap = rehab.rehabItemPackage.rehabItems.reduce((acc, item) => {
           if (!acc[item.category]) {
             acc[item.category] = {
               cost: item.cost,
@@ -88,14 +119,14 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         for (let [key, value] of Object.entries(itemsMap)) {
           dataArry.push({ category: key, value: value.cost, selected: value.selected, order: orderMapForData[key] });
         };
-        setArv(result.data.createRehab.arv);
+        setArv(rehab.arv);
         setData(sortBy(dataArry, ["order"]));
-        setRehabId(result.data.createRehab.rehabId);
-        setRehabItems(result.data.createRehab.rehabItemPackage.rehabItems.map(item => {
+        setRehabId(rehab.rehabId);
+        setRehabItems(rehab.rehabItemPackage.rehabItems.map(item => {
           return omit(item, ["__typename"]);
         }));
-        setRehabItemPackageId(result.data.createRehab.rehabItemPackage.id);
-        setSubmitted(result.data.createRehab.rehabItemPackage.submitted);
+        setRehabItemPackageId(rehab.rehabItemPackage.id);
+        setSubmitted(rehab.rehabItemPackage.submitted);
       }
     } catch (e) {
       console.log("createRehab e", e)

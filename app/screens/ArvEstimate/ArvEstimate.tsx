@@ -2,42 +2,40 @@ import React from 'react';
 import { ButtonProps, TextInputProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
-import AsIsEstimateView from './AsIsEstimateView';
+import ArvEstimateView from './ArvEstimateView';
 import  { LoadingComponent } from '../InitialLoading';
 
 type Params = {
-  flow: string;
   address: string;
-  postalCode?: string;
-  arvEstimate?: string;
+  postalCode: string;
+  flow: string;
 };
 
 type ScreenProps = {};
 
-const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
+const ArvEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const flow = navigation.getParam('flow')
   const address = navigation.getParam("address", null);
   const postalCode = navigation.getParam("postalCode", null);
-  const arvEstimate = navigation.getParam("arvEstimate", null);
-  const [loading, setLoading] = React.useState(false);
-  const [asIsEstimate, setAsIsEstimate] = React.useState("1");
+  const flow = navigation.getParam("flow", null);
+  const [loading] = React.useState(false);
+  const [arvEstimate, setArvEstimate] = React.useState("1");
 
   const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
-    setAsIsEstimate(text);
+    setArvEstimate(text);
   };
 
   const handleOnPress: ButtonProps['onPress'] = () => {
-    if (asIsEstimate.length < 1 || +asIsEstimate < 0) {
+    if (arvEstimate.length < 1 || +arvEstimate < 0) {
       return;
     };
-    navigation.navigate("TotalDebtsScreen", { flow, address, postalCode, asIsEstimate: +asIsEstimate, arvEstimate: +arvEstimate });
+    navigation.navigate("AsIsEstimateScreen", { address, postalCode, flow, arvEstimate: +arvEstimate });
   };
 
   React.useEffect(() => {
-    console.log("AsIsEstimate Mount");
+    console.log("ArvEstimate Mount");
     return () => {
-      console.log("AsIsEstimate UnMount");
+      console.log("ArvEstimate UnMount");
     }
   }, []);
 
@@ -48,12 +46,12 @@ const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
 
   return (
-    <AsIsEstimateView 
+    <ArvEstimateView 
       handleOnChangeText={handleOnChangeText}
       handleOnPress={handleOnPress}
-      asIsEstimate={asIsEstimate}
+      arvEstimate={arvEstimate}
     />
   )
 };
 
-export default React.memo(AsIsEstimate);
+export default React.memo(ArvEstimate);

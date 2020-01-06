@@ -13,6 +13,8 @@ import FiximizeQuestionsFormik from '../../../components/FiximizeQuestions/Fixim
 import ThreeQuarterBathSize from '../ThreeQuarterBathSize';
 import VacantProperty from '../VacantProperty';
 
+import { FiximizeFlow } from '../../FiximizeQuestions/Autocomplete';
+
 type FiximizeQuestionsStepForBeds = "beds1" | "beds2" | "beds3" |"beds4" |"beds5";
 type FiximizeQuestionsStepForFullBaths = "fullBaths1" | "fullBaths2" | "fullBaths3" |"fullBaths4" |"fullBaths5";
 type FiximizeQuestionsStepForThreeQuarterBaths = "threeQuarterBaths1" | "threeQuarterBaths2" | "threeQuarterBaths3" |"threeQuarterBaths4" |"threeQuarterBaths5";
@@ -22,10 +24,13 @@ type FiximizeQuestionsStep = FiximizeQuestionsStepForBeds | FiximizeQuestionsSte
   "halfBathSize" | "kitchenWallCabinetSize" | "kitchenBaseCabinetSize" | "kitchenIslandCabinetSize" | "vacant";
 
 type Params = {
+  arvEstimate?: number;
   asIsEstimate: number;
   totalDebts: number;
   step: FiximizeQuestionsStep;
+  flow?: FiximizeFlow;
   address?: string;
+  postalCode?: string;
   backFrom?: FiximizeQuestionsStep;
   initialValues?: object;
   previousStep?: FiximizeQuestionsStep;
@@ -101,11 +106,14 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   const { navigation } = props;
   const backFrom = navigation.getParam("backFrom", null);
   const address = navigation.getParam("address", "");
+  const postalCode = navigation.getParam("postalCode", null);
+  const arvEstimate = navigation.getParam("arvEstimate", null);
   const asIsEstimate = navigation.getParam("asIsEstimate", null);
   const totalDebts = navigation.getParam("totalDebts", null);
   const formInitialValues = navigation.getParam("initialValues", {});
   const propertyInfo = navigation.getParam("propertyInfo", {});
   const step = navigation.getParam("step", "beds1");
+  const flow = navigation.getParam("flow");
 
   const initialValues = React.useMemo(() => {
     return ({
@@ -165,7 +173,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
         threeQuarterBathsInfo,
       }
     };
-    navigation.navigate("FullRemodelSummaryScreen", { createRehabInput, totalDebts, vacant: !!vacant });
+    navigation.navigate("FullRemodelSummaryScreen", { flow, createRehabInput, createRehabNoArvInput: { ...createRehabInput, ...propertyInfo, postalCode, arv: arvEstimate}, totalDebts, vacant: !!vacant });
   }, []);
 
   const kitchenCabinetSizefields = React.useMemo(() => {

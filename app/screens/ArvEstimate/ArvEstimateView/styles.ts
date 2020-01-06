@@ -2,33 +2,36 @@ import { StyleSheet } from 'react-native';
 import { screenWidth } from '../../../styles';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  autocompleteTextInput: {
+    backgroundColor: 'white',
+    fontSize: 20,
+    marginBottom: 10,
+    marginTop: 10,
+    padding: 10,
   },
-  modalContainer: {
+  container: {
     alignItems: "center",
     flex: 1,
     justifyContent: "flex-start",
   },
-  modalButton: {
+  keyBoardContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    width: screenWidth,
+  },
+  nextButton: {
     alignSelf: "center",
     borderRadius: 20,
     width: "75%",
-    marginBottom: 10
-  },
-  keyBoardContainer: {
-    width: screenWidth,
-    flex: 1,
-    justifyContent: "flex-start",
   },
   viewBox1: {
     flex: 1,
   },
   viewBox2: {
-    flex: 3,
+    flex: 2,
   },
   viewBox3: {
-    flex: 10,
+    flex: 5,
   },
 });
 
