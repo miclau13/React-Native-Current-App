@@ -58,8 +58,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const fullBaths = navigation.getParam("fullBaths", 1);
   const threeQuarterBaths = navigation.getParam("threeQuarterBaths", 0);
   const halfBaths = navigation.getParam("halfBaths", 0);
-  const [style, setStyle] = React.useState(null);
-  let arr: { name: string, value: any}[] = [];
+  const [style, setStyle] = React.useState(null)
   let inputValues = {};
 
   const prepareFiximizeQuestionsFormInitialValues = (arr: any[]) => {
@@ -81,7 +80,8 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     setFiximizeQuestionsFormInitialValues({...inputValues});
   }
 
-  const [getPropertyInfo, { called, data, error, loading }] = useLazyQuery(PROPERTY_INFO, { onCompleted: (data) => {
+  const [getPropertyInfo, { data, error, loading }] = useLazyQuery(PROPERTY_INFO, { onCompleted: (data) => {
+    const arr = [];
     if (!error && data && data.propertyInfo) {
       for (let [key, value] of Object.entries(data.propertyInfo)) {
         if (key !== "__typename") {
@@ -93,15 +93,9 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     setDataArray(arr);
     prepareFiximizeQuestionsFormInitialValues(arr);
   }});
-
-  if (flow === FiximizeFlow.AutoCompleteAddress && !called && !data) {
-    getPropertyInfo({
-      variables: { query: { address: address }}
-    })
-  }
   const step = navigation.getParam("step", 'summary');
-
   const bootstrapAsync = () => {
+    let arr: { name: string, value: any}[] = [];
     if (beds) arr.push({ name: 'beds', value: beds })
     if (sqft) arr.push({ name: 'sqft', value: sqft })
     if (fullBaths) arr.push({ name: 'fullBaths', value: fullBaths})
@@ -136,6 +130,14 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const handleStepNavigation = React.useCallback((nextStep, options={}) => {
     navigation.navigate("PropertyInfoScreen", { step: nextStep, ...options });
   }, [step]);
+
+  React.useEffect(() => {
+    if (flow === FiximizeFlow.AutoCompleteAddress && !data) {
+      getPropertyInfo({
+        variables: { query: { address: address }}
+      })
+    }
+  }, [data]);
 
   React.useEffect(() => {
     console.log("PropertyInfo Mount");

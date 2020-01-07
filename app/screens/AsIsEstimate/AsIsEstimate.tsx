@@ -26,7 +26,6 @@ const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
     setAsIsEstimate(text);
   };
-
   const handleOnPress: ButtonProps['onPress'] = () => {
     if (asIsEstimate.length < 1 || +asIsEstimate < 0) {
       return;

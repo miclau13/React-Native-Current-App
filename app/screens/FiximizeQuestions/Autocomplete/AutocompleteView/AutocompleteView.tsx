@@ -64,7 +64,7 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
           onPress={handleOnPress}
           style={styles.nextButton}
         >
-          Next Amigo3
+          Next
         </Button>
           
         <View style={styles.viewBox3}/>

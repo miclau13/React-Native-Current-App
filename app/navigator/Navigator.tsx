@@ -24,7 +24,7 @@ import TotalDebtsScreen from "../screens/TotalDebts";
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { AsIsEstimateScreen, AutocompleteScreen, HomeScreen, RehabRecordsScreen, RehabRecordsDetailScreen, TotalDebtsScreen,
+  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, HomeScreen, RehabRecordsScreen, RehabRecordsDetailScreen, TotalDebtsScreen,
     PropertyInfoScreen: {
       screen: PropertyInfoScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
