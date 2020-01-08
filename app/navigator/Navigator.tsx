@@ -30,7 +30,6 @@ const HomeStack = createStackNavigator(
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         const { navigation } = props;
         const step = navigation.getParam("step");
-        console.log('2')
         return { 
           headerRight: step === "summary" ? (props) => {
             return (
