@@ -1,7 +1,6 @@
 import { gql } from 'apollo-boost';
 import * as SecureStore from 'expo-secure-store';
 import React from 'react';
-import { StackActions, NavigationActions } from 'react-navigation';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useQuery } from '@apollo/react-hooks';
 
