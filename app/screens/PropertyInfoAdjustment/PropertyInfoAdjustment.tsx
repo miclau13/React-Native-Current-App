@@ -45,7 +45,7 @@ const PropertyInfoAdjustment: React.ComponentType<PropertyInfoAdjustmentViewProp
   };
 
   const handleOnPress: ButtonProps['onPress'] = () => {
-    if (_beds.length < 1 || _sqft.length < 1) {
+    if (+_beds < 1 || +_sqft < 1 || +_fullBaths < 1) {
       return;
     };
     handleStepNavigation("summary", { beds: +_beds, sqft: +_sqft, fullBaths: +_fullBaths, threeQuarterBaths: +_threeQuarterBaths, halfBaths: +_halfBaths });
