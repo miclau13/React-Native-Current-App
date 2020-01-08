@@ -19,7 +19,7 @@ const ArvEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   const postalCode = navigation.getParam("postalCode", null);
   const flow = navigation.getParam("flow", null);
   const [loading] = React.useState(false);
-  const [arvEstimate, setArvEstimate] = React.useState("0");
+  const [arvEstimate, setArvEstimate] = React.useState("");
 
   const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
     setArvEstimate(text);

@@ -62,7 +62,7 @@ const PropertyInfoAdjustment: React.ComponentType<PropertyInfoAdjustmentViewProp
         style={styles.keyBoardContainer}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <Headline>beds:</Headline>
+        <Headline>No. Of Beds:</Headline>
         <TextInput
           error={+_beds < 1}
           keyboardType="number-pad"
@@ -75,7 +75,7 @@ const PropertyInfoAdjustment: React.ComponentType<PropertyInfoAdjustmentViewProp
           {"This field is required"}
         </HelperText>
 
-        <Headline>Sqft:</Headline>
+        <Headline>Sq. ft.:</Headline>
         <TextInput
           error={_sqft.length < 1}
           keyboardType="number-pad"
@@ -88,7 +88,7 @@ const PropertyInfoAdjustment: React.ComponentType<PropertyInfoAdjustmentViewProp
           {"This field is required"}
         </HelperText>
 
-        <Headline>Full Baths:</Headline>
+        <Headline>No. Of Full Baths:</Headline>
         <TextInput
           error={_fullBaths.length < 1}
           keyboardType="number-pad"
@@ -101,7 +101,7 @@ const PropertyInfoAdjustment: React.ComponentType<PropertyInfoAdjustmentViewProp
           {"This field is required"}
         </HelperText>
 
-        <Headline>Three Quarter Baths:</Headline>
+        <Headline>No. Of Three Quarter Baths:</Headline>
         <TextInput
           error={!!_threeQuarterBaths && _threeQuarterBaths.length < 0}
           keyboardType="number-pad"
@@ -114,7 +114,7 @@ const PropertyInfoAdjustment: React.ComponentType<PropertyInfoAdjustmentViewProp
           {"This field is required"}
         </HelperText>
 
-        <Headline>Half Baths:</Headline>
+        <Headline>No. Of Half Baths:</Headline>
         <TextInput
           error={!!_halfBaths && _halfBaths.length < 0}
           keyboardType="number-pad"
