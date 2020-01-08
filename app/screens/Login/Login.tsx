@@ -44,7 +44,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       }
     });
     const responseURI = await response.json();
-    console.log("responseURI", responseURI)
+    // console.log("responseURI", responseURI)
     try {
       const result = await WebBrowser.openAuthSessionAsync(responseURI, responseURI);
       const accessToken = queryString.parseUrl(result["url"]).query.accessToken;
