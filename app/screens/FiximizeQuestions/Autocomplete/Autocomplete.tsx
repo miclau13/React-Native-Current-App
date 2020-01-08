@@ -32,7 +32,7 @@ const IBUYER_AUTOCOMPLETE = gql`
 const VALIDATE_ADDRESS_BY_GOOGLE = gql`
 mutation ValidateAddress($input: String!) {
   validateAddress(input: $input) {
-    isValidateAddress
+    isValidAddress
     fullAddress
     streetNumber
     streetName
@@ -62,7 +62,8 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const [options, setOptions] = React.useState([]);
   const [optionsListHeight, setOptionsListHeight] = React.useState(200);
   const [value, setValue] = React.useState('');
-  const [isValidAddress, setIsValidAddress] = React.useState(false);
+  const [googleAddress, setGoogleAddress] = React.useState('');
+  const [isValidTrudeedAddress, setIsValidTrudeedAddress] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [postalCode, setPostalCode] = React.useState('');
@@ -72,9 +73,8 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
   let keyboardHeight = 0;
 
   const handleChangeText = async (value) => {
-    console.log(value)
     setValue(value);
-    setIsValidAddress(false);
+    setIsValidTrudeedAddress(false);
     setError(false);
     await updateOptions(value);
   };
@@ -95,19 +95,18 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   const handleOptionPress = (value) => {
     setValue(value);
-    setIsValidAddress(true);
+    setIsValidTrudeedAddress(true);
   };
 
   const handleOnPress = async () => {
     const { navigation } = props;
     setModalVisible(false);
-    if (isValidAddress) {
+    if (isValidTrudeedAddress) {
       navigation.navigate("AsIsEstimateScreen", { address: value, flow: FiximizeFlow.AutoCompleteAddress  });
     } else {
       const result = await validateAddressByGoogle({ variables: { input: value } });
-      console.log(result);
-      if (result?.data?.validateAddress?.isValidateAddress) {
-        setValue(result?.data?.validateAddress?.fullAddress)
+      if (result?.data?.validateAddress?.isValidAddress) {
+        setGoogleAddress(result?.data?.validateAddress?.fullAddress)
         setPostalCode(result?.data?.validateAddress?.postalCode)
         setModalVisible(true);
       } else {
@@ -120,7 +119,7 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const handleButtonConfirm = async () => {
     const { navigation } = props;
     setModalVisible(false);
-    navigation.navigate("ArvEstimateScreen", { postalCode, address: value, flow: FiximizeFlow.SelfInputAddress })
+    navigation.navigate("ArvEstimateScreen", { postalCode, address: googleAddress, flow: FiximizeFlow.SelfInputAddress })
   }
 
   const handleButtonEdit = async () => {
@@ -201,7 +200,7 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
               <TextInput
                 label="Address"
                 mode="outlined"
-                value={value}
+                value={googleAddress}
                 textContentType="none"
                 disabled={true}
                 style={{ marginBottom: 100, color: 'white' }}
@@ -219,7 +218,7 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
       </Modal>
       <AutocompleteView
         handleOnPress={handleOnPress}
-        isValidAddress={isValidAddress}
+        isValidAddress={isValidTrudeedAddress}
         onChangeText={handleChangeText}
         onOptionPress={handleOptionPress}
         options={options}
