@@ -14,7 +14,8 @@ interface VacantPropertyProps {
 
 const VacantProperty: React.ComponentType<VacantPropertyProps> = (props) => {
   const form = useFormikContext<FiximizeQuestionsFormValues>();
-  const { errors, setFieldValue, submitForm, values } = form;
+  const { errors, setFieldValue, values } = form;
+  const { handleStepNavigation } = props;
 
   const handleOnPress: ButtonGroupProps['onPress'] = (index) => {
     setFieldValue("vacant", index);
@@ -24,7 +25,7 @@ const VacantProperty: React.ComponentType<VacantPropertyProps> = (props) => {
     if(errors && errors["vacant"]) {
       return;
     };
-    submitForm();
+    handleStepNavigation("contactPhoneNumber");
   };
 
   const buttons = ['NO', 'YES'];
