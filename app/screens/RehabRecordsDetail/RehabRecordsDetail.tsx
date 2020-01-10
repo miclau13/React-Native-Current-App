@@ -67,7 +67,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     };
     if (key === "rehabItemsPackage") {
       const { arv, asIs } = detail;
-      const remodellingCost = CalculateRemodelingCost(value.rehabItems);
+      const remodellingCost = CalculateRemodelingCost(value?.rehabItems);
       const { name: nameForRemodelingCost, order: orderForRemodelingCost } = GetItemAttributes("remodelingCost");
       result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: remodellingCost });
       const profit = arv - asIs - remodellingCost;

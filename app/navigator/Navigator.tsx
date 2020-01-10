@@ -5,7 +5,7 @@ import { Icon } from "react-native-elements";
 import { Button } from "react-native-paper";
 import { createSwitchNavigator, NavigationState, NavigationContainerProps } from "react-navigation"; 
 import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
-import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
+import { BottomTabBar, createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
 
 import ArvEstimateScreen from "../screens/ArvEstimate";
 import AsIsEstimateScreen from "../screens/AsIsEstimate";
@@ -24,28 +24,7 @@ import TotalDebtsScreen from "../screens/TotalDebts";
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, HomeScreen, RehabRecordsScreen, RehabRecordsDetailScreen, TotalDebtsScreen,
-    PropertyInfoScreen: {
-      screen: PropertyInfoScreen,
-      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
-        const { navigation } = props;
-        const step = navigation.getParam("step");
-        return { 
-          headerRight: step === "summary" ? (props) => {
-            return (
-              <Button 
-                {...props}
-                onPress={() => {
-                  navigation.navigate("PropertyInfoScreen", { step: "edit" });
-                }}
-              >
-                Edit
-              </Button> 
-            )
-          } : null
-        }
-      }
-    },
+  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, HomeScreen, TotalDebtsScreen,
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -118,6 +97,27 @@ const HomeStack = createStackNavigator(
         }
       }
     },
+    PropertyInfoScreen: {
+      screen: PropertyInfoScreen,
+      navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        const step = navigation.getParam("step");
+        return { 
+          headerRight: step === "summary" ? (props) => {
+            return (
+              <Button 
+                {...props}
+                onPress={() => {
+                  navigation.navigate("PropertyInfoScreen", { step: "edit" });
+                }}
+              >
+                Edit
+              </Button> 
+            )
+          } : null
+        }
+      }
+    },
   },
   { initialRouteName: "HomeScreen" }
 );
@@ -161,7 +161,54 @@ ProfileStack.navigationOptions = {
 // ProfileStack End
 
 // RehabRecordsStack Start
-const RehabRecordsStack = createStackNavigator({ RehabRecordsScreen, RehabRecordsDetailScreen });
+const RehabRecordsStack = createStackNavigator({ 
+  RehabRecordsDetailScreen,
+  RehabRecordsScreen: {
+    screen: RehabRecordsScreen,
+    navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+      const { navigation } = props;
+      const deleteMode = navigation.getParam("deleteMode", false);
+      const lengthOfSelectedRehabRecords = navigation.getParam("lengthOfSelectedRehabRecords", 0);
+      const loading = navigation.getParam("loading", true);
+
+      const handleDeleteOnPress = () => {
+        navigation.setParams({ deleteMode: !deleteMode });
+      };
+      const handleheaderLeftOnPress = () => {
+        navigation.setParams({ openConfirmModal: true });
+      };
+      return { 
+        headerLeft: (props) => {
+          if (!deleteMode) {
+            return null;
+          };
+          return (
+            <Button
+              // disabled={deleteMode}
+              onPress={handleheaderLeftOnPress}
+            >
+              Delete
+            </Button>
+          )
+        },
+        headerRight: (props) => {
+          if (loading) {
+            return null;
+          };
+          return (
+            <Button
+              // disabled={deleteMode}
+              onPress={handleDeleteOnPress}
+            >
+              { !deleteMode ? "Select" : "Done" }
+            </Button>
+          )
+        },
+        headerTitle: deleteMode && 
+          lengthOfSelectedRehabRecords ? `${lengthOfSelectedRehabRecords} Record(s) Selected` : "Select Records" ,
+      }
+    }
+  }}, { initialRouteName: "RehabRecordsScreen" });
 
 RehabRecordsStack.navigationOptions = {
   tabBarLabel: rehabRecordStrings.title,
@@ -171,11 +218,28 @@ RehabRecordsStack.navigationOptions = {
 };
 // RehabRecordsStack End
 
+// RehabRecordsDeleteStack Start
+const RehabRecordsDeleteStack = createStackNavigator({
+  RehabRecordsScreen
+});
+
+RehabRecordsDeleteStack.navigationOptions = {
+  tabBarLabel: " ",
+  tabBarIcon: ({ tintColor }) => <Icon name="delete-outline" type="material-community" color="red" />,
+  tabBarOnPress: ({ navigation }) => {
+    console.log("tabBarOnPress navigation", navigation)
+    navigation.setParams({ openConfirmModal: true });
+  },
+  // drawerLabel: rehabRecordStrings.title,
+  // drawerIcon: ({ tintColor }) => <Icon name="history" color={tintColor} />
+};
+// RehabRecordsStack End
+
 const MainNavigator = Platform.select({
-  ios: createBottomTabNavigator({ HomeStack, RehabRecordsStack, ProfileStack,  }, {
+  ios: createBottomTabNavigator({ HomeStack, RehabRecordsStack, ProfileStack }, {
     resetOnBlur: true,
   }),
-  android: createBottomTabNavigator({ HomeStack, RehabRecordsStack, ProfileStack,  }, {
+  android: createBottomTabNavigator({ HomeStack, RehabRecordsStack, ProfileStack }, {
     lazy: false,
     resetOnBlur: true,
   }),

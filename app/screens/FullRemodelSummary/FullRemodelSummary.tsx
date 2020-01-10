@@ -151,7 +151,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
       }
       if (result) {
         let rehab = flow === FiximizeFlow.AutoCompleteAddress ? result.data.createRehab : result.data.createRehabNoArv;
-        const itemsMap: RehabItemsPackageMap = rehab.rehabItemPackage.rehabItems.reduce((acc, item) => {
+        const itemsMap: RehabItemsPackageMap = (rehab.rehabItemPackage?.rehabItems || []).reduce((acc, item) => {
           if (!acc[item.category]) {
             acc[item.category] = {
               cost: item.cost,

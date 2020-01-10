@@ -7,12 +7,12 @@ import NumberFormat from 'react-number-format';
 import styles from './styles';
 import { RehabRecordsProps } from '../RehabRecords';
 import { CalculateRemodelingCost, FindLabelAttributes } from '../../../common/utils/Calculator';
+import { primaryRed } from '../../../styles/constants';
 
-interface RehabRecordsViewProps extends RehabRecordsProps{
-};
+interface RehabRecordsViewProps extends RehabRecordsProps {};
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {
-  const { handleItemOnPress, rehabRecords } = props;  
+  const { deleteMode, handleItemOnPress, handleItemDeleteOnPress, rehabRecords } = props;  
 
   React.useEffect(() => {
     console.log("RehabRecordsView Mount")
@@ -23,8 +23,8 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
     <SafeAreaView>
       <ScrollView>
         {rehabRecords.map((rehabRecord, i) => {
-          const { arv, asIs, rehabItemsPackage } = rehabRecord;
-          const remodellingCost = CalculateRemodelingCost(rehabItemsPackage.rehabItems);
+          const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
+          const remodellingCost = CalculateRemodelingCost(rehabItemsPackage?.rehabItems);
           const profit = arv - asIs - remodellingCost;
           const profitPercent = profit / remodellingCost * 100;
           const labelColor = FindLabelAttributes(profitPercent).labelColor;
@@ -32,13 +32,20 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
           return (
             <ListItem
               bottomDivider
-              chevron
+              chevron={!deleteMode || 
+                <Icon 
+                  color={primaryRed}
+                  name={checked ? "check-circle" : "checkbox-blank-circle-outline"}
+                  onPress={handleItemDeleteOnPress(i)}
+                  type="material-community"
+                />
+              }
               key={i}
               leftAvatar={
                 <Icon color={labelColor} name="circle" size={32} type="font-awesome" />
               }
-              onPress={handleItemOnPress(i)}
-              rightIcon={rehabItemsPackage.submitted ? 
+              onPress={deleteMode ? null : handleItemOnPress(i)}
+              rightIcon={rehabItemsPackage?.submitted ? 
                 <Chip>
                   Submitted
                 </Chip>

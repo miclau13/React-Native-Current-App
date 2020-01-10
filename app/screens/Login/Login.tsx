@@ -37,7 +37,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     if(!deviceId) {
       await SecureStore.setItemAsync("deviceId", Constants.sessionId);
     };
-    const response = await fetch(LOGINURL_PROD, {
+    const response = await fetch(LOGINURL_LOCALHOST, {
       method: 'get',
       headers: {
         "device-id": deviceId,
