@@ -68,6 +68,10 @@ const CREATE_REHAB = gql`
           cost
           name
           selected
+          unit
+          costPerUnit
+          custom
+          calculationMethod
         }
         submitted
       }
@@ -87,6 +91,10 @@ const CREATE_REHAB_NO_ARV = gql`
           cost
           name
           selected
+          unit
+          costPerUnit
+          custom
+          calculationMethod
         }
         submitted
       }
