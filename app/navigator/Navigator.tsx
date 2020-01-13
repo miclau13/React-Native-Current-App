@@ -171,10 +171,10 @@ const RehabRecordsStack = createStackNavigator({
       const lengthOfSelectedRehabRecords = navigation.getParam("lengthOfSelectedRehabRecords", 0);
       const loading = navigation.getParam("loading", true);
 
-      const handleDeleteOnPress = () => {
+      const handleHeaderRightOnPress = () => {
         navigation.setParams({ deleteMode: !deleteMode });
       };
-      const handleheaderLeftOnPress = () => {
+      const handleHeaderLeftOnPress = () => {
         navigation.setParams({ openConfirmModal: true });
       };
       return { 
@@ -184,8 +184,7 @@ const RehabRecordsStack = createStackNavigator({
           };
           return (
             <Button
-              // disabled={deleteMode}
-              onPress={handleheaderLeftOnPress}
+              onPress={handleHeaderLeftOnPress}
             >
               Delete
             </Button>
@@ -197,15 +196,15 @@ const RehabRecordsStack = createStackNavigator({
           };
           return (
             <Button
-              // disabled={deleteMode}
-              onPress={handleDeleteOnPress}
+              onPress={handleHeaderRightOnPress}
             >
-              { !deleteMode ? "Select" : "Done" }
+              { !deleteMode ? "Select" : "Cancel" }
             </Button>
           )
         },
-        headerTitle: deleteMode && 
-          lengthOfSelectedRehabRecords ? `${lengthOfSelectedRehabRecords} Record(s) Selected` : "Select Records" ,
+        headerTitle: deleteMode ?
+          lengthOfSelectedRehabRecords ? `${lengthOfSelectedRehabRecords} Record(s) Selected` : "Select Records"
+          : null,
       }
     }
   }}, { initialRouteName: "RehabRecordsScreen" });

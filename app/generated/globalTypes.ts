@@ -19,6 +19,7 @@ export interface CreateRehabInput {
   style?: string | null;
   totalDebts?: number | null;
   vacant?: boolean | null;
+  contactPhoneNumber?: string | null;
 }
 
 export interface CreateRehabNoArvInput {
@@ -36,6 +37,11 @@ export interface CreateRehabNoArvInput {
   style?: string | null;
   totalDebts?: number | null;
   vacant?: boolean | null;
+  contactPhoneNumber?: string | null;
+}
+
+export interface DeleteRehabInput {
+  rehabId: string;
 }
 
 export interface DetailInput {

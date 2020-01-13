@@ -1,14 +1,16 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
 import { IconProps, ListItemProps } from 'react-native-elements';
+import { ModalProps } from 'react-native-modal';
 import { ButtonProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import RehabRecordsView from './RehabRecordsView';
 import RehabRecordsDeleteView from './RehabRecordsDeleteView';
 import { LoadingComponent } from '../InitialLoading';
+import { DeleteRehab, DeleteRehabVariables } from '../../generated/DeleteRehab';
 import { MyRehabRequests, MyRehabRequests_myRehabRequests } from '../../generated/MyRehabRequests';
 
 const MY_REHAB_REQUESTS = gql`
@@ -34,6 +36,12 @@ const MY_REHAB_REQUESTS = gql`
   }
 `;
 
+const DELETE_REHAB = gql`
+  mutation DeleteRehab($input: DeleteRehabInput!) {
+    deleteRehab(input: $input)
+  }
+`;
+
 type Params = {
   deleteMode: boolean;
   lengthOfSelectedRehabRecords: number;
@@ -48,6 +56,7 @@ interface RehabRecords extends MyRehabRequests_myRehabRequests {
 };
 
 export type RehabRecordsDeleteProps = {
+  handleBackdropOnPress: ModalProps['onBackdropPress'];
   handleCancelOnPress: ButtonProps['onPress'];
   handleDeleteOnPress: ButtonProps['onPress'];
   lengthOfSelectedRehabRecords: number;
@@ -66,16 +75,34 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const deleteMode = navigation.getParam("deleteMode", false);
   const lengthOfSelectedRehabRecords = navigation.getParam("lengthOfSelectedRehabRecords", 0);
   const openConfirmModal = navigation.getParam("openConfirmModal", false);
-  const { data, loading } = useQuery<MyRehabRequests>(MY_REHAB_REQUESTS);
+  const { data, loading, refetch: myRehabRequestsRefetch } = useQuery<MyRehabRequests>(MY_REHAB_REQUESTS);
+  const [deleteRehab, { loading: deleteRehabLoading }] = useMutation<DeleteRehab, DeleteRehabVariables>(DELETE_REHAB);
+  
   const myRehabRequests = data?.myRehabRequests || [];
   const [rehabRecords, setRehabRecords] = React.useState<RehabRecords[]>([]);
-  const selectedRehabRecords = rehabRecords.filter(record => record.checked);
+  const selectedRehabRecordsIds = rehabRecords.filter(record => record.checked).map(record => record.id);
+
+  const deleteRehabs = async () => {
+    const deleteRehabMutations = selectedRehabRecordsIds.map(id => {
+      const result = deleteRehab({ variables: { input: { rehabId: id } } });
+      return result;
+    });
+    // TODO implement try catch
+    await Promise.all(deleteRehabMutations).then(results => {
+    });
+  };
+
+  const handleBackdropOnPress: RehabRecordsDeleteProps['handleBackdropOnPress'] = () => {
+    navigation.setParams({ openConfirmModal: false });
+  };
 
   const handleCancelOnPress: RehabRecordsDeleteProps['handleCancelOnPress'] = () => {
     navigation.setParams({ openConfirmModal: false });
   };
-  const handleDeleteOnPress: RehabRecordsDeleteProps['handleDeleteOnPress'] = () => {
+  const handleDeleteOnPress: RehabRecordsDeleteProps['handleDeleteOnPress'] = async () => {
     navigation.setParams({ deleteMode: false, openConfirmModal: false });
+    await deleteRehabs();
+    await myRehabRequestsRefetch();
   };
 
   const handleItemOnPress: RehabRecordsProps['handleItemOnPress'] = index => (event) => {
@@ -92,26 +119,20 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
 
   React.useEffect(() => {
-    // console.log("RehabRecords Mount");
-    navigation.setParams({ loading });
-    return () => {
-      // console.log("RehabRecords UnMount");
-    }
-  }, [loading, deleteMode]);
+    navigation.setParams({ loading: loading || deleteRehabLoading });
+    return () => {}
+  }, [loading, deleteRehabLoading]);
 
   React.useEffect(() => {
-    // console.log("RehabRecords Mount");
     setRehabRecords(myRehabRequests.map(item => {
       return ({ ...item, checked: false })
     }));
     return () => {
-      // console.log("RehabRecords UnMount");
     }
-  }, [myRehabRequests]);
+  }, [myRehabRequests, deleteMode]);
 
-  // console.log("openConfirmModal",openConfirmModal)/
 
-  if (loading) {
+  if (loading || deleteRehabLoading) {
     return (
       <LoadingComponent />
     )
@@ -125,7 +146,8 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
         handleItemDeleteOnPress={handleItemDeleteOnPress}
         rehabRecords={rehabRecords}
       />
-      <RehabRecordsDeleteView 
+      <RehabRecordsDeleteView
+        handleBackdropOnPress={handleBackdropOnPress}
         handleCancelOnPress={handleCancelOnPress}
         handleDeleteOnPress={handleDeleteOnPress}
         lengthOfSelectedRehabRecords={lengthOfSelectedRehabRecords}

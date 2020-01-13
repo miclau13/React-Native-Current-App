@@ -9,7 +9,13 @@ import { RehabRecordsDeleteProps } from '../RehabRecords';
 interface RehabRecordsDeleteViewProps extends RehabRecordsDeleteProps {};
 
 const RehabRecordsDeleteView: React.ComponentType<RehabRecordsDeleteViewProps> = (props) => {
-  const { handleCancelOnPress, handleDeleteOnPress, lengthOfSelectedRehabRecords, openConfirmModal } = props;  
+  const { 
+    handleBackdropOnPress, 
+    handleCancelOnPress, 
+    handleDeleteOnPress, 
+    lengthOfSelectedRehabRecords,
+    openConfirmModal
+  } = props;  
 
   React.useEffect(() => {
     console.log("RehabRecordsDeleteView Mount")
@@ -20,7 +26,7 @@ const RehabRecordsDeleteView: React.ComponentType<RehabRecordsDeleteViewProps> =
     <SafeAreaView>
       <Modal
         isVisible={openConfirmModal}
-        onBackdropPress={handleCancelOnPress}
+        onBackdropPress={handleBackdropOnPress}
         style={styles.modalContainer}
       >
         <View style={styles.content}>

@@ -8,8 +8,8 @@
 
 export interface ValidateAddress_validateAddress {
   __typename: "validateAddressOutput";
-  isValidateAddress: boolean | null;
-  fullAddress: string;
+  isValidAddress: boolean;
+  fullAddress: string | null;
   streetNumber: string | null;
   streetName: string | null;
   city: string | null;
