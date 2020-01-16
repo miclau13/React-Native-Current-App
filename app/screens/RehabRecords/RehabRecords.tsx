@@ -30,6 +30,11 @@ const MY_REHAB_REQUESTS = gql`
           cost
           name
         }
+        revisedRehabItems {
+          category
+          cost
+          name
+        }
         submitted
       }
     }
