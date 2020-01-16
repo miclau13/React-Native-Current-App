@@ -11,13 +11,16 @@ import { LoggedInProvider } from './app/common/LoggedInContext';
   const client = new ApolloClient({
     request: async (operation) => {
       const token = await SecureStore.getItemAsync("accessToken", {});
+      const deviceId = await SecureStore.getItemAsync("deviceId", {});
       operation.setContext({
         headers: {
-          authorization: token ? `Bearer ${token}` : ''
+          deviceId,
+          authorization: token ? `Bearer ${token}` : '',
         }
       })
     },
     uri: 'https://agent.trudeed.com/graphql',
+    // uri: 'https://dev-agent.trudeed.com/graphql',
     // uri: 'http://192.168.100.89:3000/graphql',
   });
 

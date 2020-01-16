@@ -1,26 +1,67 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
-import { ActivityIndicator, StatusBar, View } from 'react-native';
+import { BannerAction, ButtonProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import { useMutation } from '@apollo/react-hooks';
 
 import ProfitSummaryView from './ProfitSummaryView';
-import styles from './styles';
+import { CheckIsQualified } from './utils';
+import { LoadingComponent } from '../InitialLoading';
+import { Params as FullRemodelSummaryParams, FullRemodelSummaryProps, FullRemodelSummaryState } from '../FullRemodelSummary';
 import ProfitAdjustment from '../ProfitAdjustment';
+import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
 
-type Params = {
-  arv: number;
-  asIs: number;
-  rehabId: number;
-  // TODO type
-  rehabItemPackage: object;
-  remodellingCost: number;
+export type Params = {
+  arv: FullRemodelSummaryParams['arv'];
+  asIs: FullRemodelSummaryParams['asIs'];
+  rehabId: FullRemodelSummaryState['rehabId'];
+  rehabItemPackage: {
+    id: FullRemodelSummaryState['rehabId'];
+    rehabItems: FullRemodelSummaryState['rehabItems'];
+  };
+  remodellingCost: FullRemodelSummaryProps['totalCost'];
+  // TODO enum
   step: string;
-  submitted: boolean;
+  submitted: FullRemodelSummaryParams['submitted'];
+  totalDebts: FullRemodelSummaryParams['totalDebts'];
+  vacant: FullRemodelSummaryParams['vacant'];
 };
 
 type ScreenProps = {};
+
+export type ProfitSummaryProps = {
+  bannerIcon: {
+    name: string;
+    color: string;
+  };
+  bannerMessages: string;
+  data: {
+    name: string;
+    value?: number;
+    icon?: string;
+    color?: string;
+  }[];
+  handleBannerButtonOnClick: BannerAction['onPress'];
+  handleSaveOnPress: ButtonProps['onPress'];
+  handleSubmitOnPress: ButtonProps['onPress'];
+  handleStepNavigation(nextStep: string, options?: {}): void;
+  hasBanner: ProfitSummaryState['hasBanner'];
+  isQualified: ProfitSummaryState['isQualified'];
+  profit: number;
+  profitPercent: number;
+  submitted: ProfitSummaryState['submitted'];
+  status: ProfitSummaryState['status'];
+};
+
+export type ProfitSummaryState = {
+  bannerMessages: string;
+  isQualified: boolean;
+  hasBanner: boolean;
+  loading: boolean;
+  submitted: boolean;
+  status: string;
+};
 
 const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   mutation UpdateRehabItemsPackage($input: UpdateRehabItemsPackageInput!) {
@@ -43,33 +84,47 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   }
 `;
 
+
 const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
+  const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
+
   const { navigation } = props;
-  const [updateRehabItemsPackage] = useMutation(UPDATE_REHAB_ITEMS_PACKAGE);
-  const rehabId = navigation.getParam("rehabId", null);
-  const rehabItemsPackage = navigation.getParam("rehabItemPackage", {});
-  const remodellingCost = navigation.getParam("remodellingCost", 0);
-  const step = navigation.getParam("step", "summary");
   const arv = navigation.getParam("arv", 0);
   const asIs = navigation.getParam("asIs", 0);
+  const rehabId = navigation.getParam("rehabId", null);
+  const rehabItemsPackage = navigation.getParam("rehabItemPackage", null);
+  const remodellingCost = navigation.getParam("remodellingCost", 0);
+  const step = navigation.getParam("step", "summary");
+  const totalDebts = navigation.getParam("totalDebts", null);
+  const vacant = navigation.getParam("vacant", null);
 
-  const [loading, setLoading] = React.useState(false);
-  const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
-  const [status, setStatus] = React.useState("");
-  const profit = React.useMemo(() => {
-    return +(arv - asIs - remodellingCost);
-  }, [arv, asIs, remodellingCost]);
-  const data = [
+  const [bannerMessages, setBannerMessages] = React.useState<ProfitSummaryState['bannerMessages']>(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
+  const [isQualified, setIsQualified] = React.useState<ProfitSummaryState['isQualified']>(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
+  const [hasBanner, setHasBanner] = React.useState<ProfitSummaryState['hasBanner']>(!navigation.getParam("submitted", false));
+  const [loading, setLoading] = React.useState<ProfitSummaryState['loading']>(false);
+  const [submitted, setSubmitted] = React.useState<ProfitSummaryState['submitted']>(navigation.getParam("submitted", false));
+  const [status, setStatus] = React.useState<ProfitSummaryState['status']>("");
+
+  const bannerIcon: ProfitSummaryProps['bannerIcon'] = {
+    name: isQualified ? "check" : "close", color: isQualified ? '#43a048' : '#e53935'
+  };
+  const data: ProfitSummaryProps['data'] = [
     { name: "Est. ARV", value: arv },
     { name: "As-Is", value: asIs },
     { name: "Remodeling Cost", value: remodellingCost },
+    { name: "Total Debts", value: totalDebts },
+    { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935' },
   ];
+  const profit = React.useMemo<ProfitSummaryProps['profit']>(() => {
+    return +(arv - asIs - remodellingCost);
+  }, [arv, asIs, remodellingCost]);
+  const profitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
+    return profit / remodellingCost * 100;
+  },[profit, remodellingCost]);
 
-  const profitPercent = React.useMemo(() => {
-    return profit / asIs * 100;
-  },[profit, asIs]);
-  // console.log("ProfitSummary submitted",submitted)
-  const handleSaveOnPress = async () => {
+  const handleBannerButtonOnClick = React.useCallback<ProfitSummaryProps['handleBannerButtonOnClick']>(() => setHasBanner(false), [hasBanner]);
+
+  const handleSaveOnPress: ProfitSummaryProps['handleSaveOnPress'] = async () => {
     const updateRehabItemsPackageInput = {
       rehabItemsPackage,
       rehabRequest: {
@@ -78,7 +133,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         id: rehabId,
       }
     };
-    // console.log("ProfitSummary updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     try {
       setLoading(true);
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
@@ -93,7 +147,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     }
   };
 
-  const handleSubmitOnPress = async () => {
+  const handleSubmitOnPress: ProfitSummaryProps['handleSubmitOnPress'] = async () => {
     setLoading(true);
     const updateRehabItemsPackageInput = {
       rehabItemsPackage: { ...rehabItemsPackage, selected: true, submitted: true },
@@ -103,7 +157,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         id: rehabId,
       }
     };
-    // console.log("ProfitSummary updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     try {
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
       if (result) {
@@ -111,6 +164,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         setSubmitted(true);
         navigation.setParams({ submitted: true });
         setLoading(false);
+        setHasBanner(false);
       }
     } catch (e) {
       console.log("ProfitSummary handleSaveOnPress e", e);
@@ -118,8 +172,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     }
   };
 
-  const handleStepNavigation = React.useCallback((nextStep, options = {}) => {
-    // console.log("handleStepNavigation submitted",submitted)
+  const handleStepNavigation = React.useCallback<ProfitSummaryProps['handleStepNavigation']>((nextStep, options = {}) => {
     navigation.navigate("ProfitSummaryScreen", { submitted, step: nextStep, ...options });
     options && navigation.setParams({ submitted, ...options });
   }, [step, submitted]);
@@ -131,12 +184,18 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     }
   }, []);
 
+  React.useEffect(() => {
+    console.log("ProfitSummary useEffect start update banner");
+    setBannerMessages(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
+    setIsQualified(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
+    return () => {
+      console.log("ProfitSummary useEffect delete update banner");
+    }
+  }, [arv, asIs, remodellingCost, totalDebts, vacant]);
+
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator />
-        <StatusBar barStyle="default" />
-      </View>
+      <LoadingComponent />
     )
   };
 
@@ -147,13 +206,19 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
           arv={arv}
           asIs={asIs}
           handleStepNavigation={handleStepNavigation}
+          vacant={vacant}
         />
         :
         <ProfitSummaryView
+          bannerIcon={bannerIcon}
+          bannerMessages={bannerMessages}
           data={data}
+          handleBannerButtonOnClick={handleBannerButtonOnClick}
           handleSaveOnPress={handleSaveOnPress}
           handleSubmitOnPress={handleSubmitOnPress}
           handleStepNavigation={handleStepNavigation}
+          hasBanner={hasBanner}
+          isQualified={isQualified}
           profit={profit}
           profitPercent={profitPercent}
           status={status}

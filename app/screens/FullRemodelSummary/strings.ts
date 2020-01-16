@@ -1,5 +1,5 @@
 const strings = {
-  settingsTitle: "Pricing"
+  title: "Full Remodel Summary"
 }
 
 export default strings;

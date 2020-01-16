@@ -8,4 +8,7 @@ export const primaryBlue = Platform.select({
   android: "#2196f3" // rgb(33, 150, 243)
 });
 export const primaryButtonColor = "#6200ee";
+export const primaryGreen= "#43a048";
+export const primaryRed = "#e53935";
+export const primaryYellow = "#fdd835";
 export const screenWidth = "80%";

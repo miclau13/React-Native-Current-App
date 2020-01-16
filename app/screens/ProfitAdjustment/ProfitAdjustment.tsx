@@ -1,35 +1,59 @@
 import React from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Button, ButtonProps, Headline, HelperText, TextInput, TextInputProps } from 'react-native-paper';
+import { ButtonGroupProps } from 'react-native-elements';
+import { ButtonProps, TextInputProps } from 'react-native-paper';
 
-import styles from './styles';
+import ProfitAdjustmentView from './ProfitAdjustmentView';
+import { Params as ProfitSummaryParams, ProfitSummaryProps } from '../ProfitSummary';
 
-interface ProfitSummaryViewProps {
-  arv: number;
-  asIs: number;
-  // TODO type
-  handleStepNavigation: any;
-}
+export interface ProfitAdjustmentInnerProps {
+  _arv: ProfitAdjustmentState['_arv'];
+  _asIs: ProfitAdjustmentState['_asIs'];
+  _vacant: ProfitAdjustmentState['_vacant'];
+  buttons: ('NO' | 'YES')[];
+  handleOnChangeText(key: string): TextInputProps['onChangeText'];
+  handleOnPress: ButtonProps['onPress'];
+  handleVacantOnPress: ButtonGroupProps['onPress'];
+};
+export interface ProfitAdjustmentOuterProps {
+  arv: ProfitSummaryParams['arv'];
+  asIs: ProfitSummaryParams['asIs'];
+  handleStepNavigation: ProfitSummaryProps['handleStepNavigation'];
+  vacant: ProfitSummaryParams['vacant'];
+};
 
-const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) => {
-  const { arv, asIs, handleStepNavigation } = props;
-  const [ARV, setARV] = React.useState(arv.toString());
-  const [ASIS, setASIS] = React.useState(asIs.toString());
+export type ProfitAdjustmentState = {
+  _arv: string;
+  _asIs: string;
+  _handleStepNavigation: ProfitAdjustmentOuterProps['handleStepNavigation'];
+  _vacant: number;
+};
 
-  const handleOnChangeText: (key: string) => TextInputProps['onChangeText'] =  (key) => (text) => {
+const ProfitAdjustment: React.ComponentType<ProfitAdjustmentOuterProps>  = (props) => {
+  const { arv, asIs, handleStepNavigation, vacant } = props;
+  const [_arv, set_arv] = React.useState<ProfitAdjustmentState['_arv']>(arv.toString());
+  const [_asIs, set_asIs] = React.useState<ProfitAdjustmentState['_asIs']>(asIs.toString());
+  const [_vacant, set_vacant] = React.useState<ProfitAdjustmentState['_vacant']>(vacant ? 1 : 0);
+
+  const handleOnChangeText: ProfitAdjustmentInnerProps['handleOnChangeText'] = (key) => (text) => {
     if (key === "ARV") {
-      setARV(text);
+      set_arv(text);
     } else if (key === "ASIS"){
-      setASIS(text);
+      set_asIs(text);
     }
   };
 
-  const handleOnPress: ButtonProps['onPress'] = () => {
-    if (ARV.length < 1 || ASIS.length < 1) {
+  const handleOnPress: ProfitAdjustmentInnerProps['handleOnPress'] = () => {
+    if (_arv.length < 1 || _asIs.length < 1) {
       return;
     };
-    handleStepNavigation("summary", { arv: +ARV, asIs: +ASIS });
-  }
+    handleStepNavigation("summary", { arv: +_arv, asIs: +_asIs, vacant: !!_vacant });
+  };
+
+  const handleVacantOnPress: ProfitAdjustmentInnerProps['handleVacantOnPress'] = (index) => {
+    set_vacant(index);
+  };
+
+  const buttons: ProfitAdjustmentInnerProps['buttons'] = ['NO', 'YES'];
 
   React.useEffect(() => {
     console.log("ProfitAdjustment Mount")
@@ -37,58 +61,15 @@ const ProfitAdjustment: React.ComponentType<ProfitSummaryViewProps>  = (props) =
   }, []);
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.keyBoardContainer}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <View style={styles.viewBox1}/>
-        <Headline>ARV Estimate:</Headline>
-        <View style={styles.viewBox1}/>
-        <TextInput
-          error={ARV.length < 1}
-          keyboardType="number-pad"
-          label="$"
-          mode="outlined"
-          onChangeText={handleOnChangeText("ARV")}
-          value={ARV}
-          textContentType="none"
-        />
-        <HelperText 
-          type="error"
-          visible={ARV.length < 1}
-        >
-          {"This field is required"}
-        </HelperText>
-        {/* <View style={styles.viewBox2}/> */}
-        <View style={styles.viewBox1}/>
-        <Headline>As-Is :</Headline>
-        <View style={styles.viewBox1}/>
-        <TextInput
-          error={ASIS.length < 1}
-          keyboardType="number-pad"
-          label="$"
-          mode="outlined"
-          onChangeText={handleOnChangeText("ASIS")}
-          value={ASIS}
-          textContentType="none"
-        />
-        <HelperText 
-          type="error"
-          visible={ASIS.length < 1}
-        >
-          {"This field is required"}
-        </HelperText>
-        <Button 
-          mode="contained" 
-          onPress={handleOnPress}
-          style={styles.nextButton}
-        >
-          Confirm
-        </Button>
-        <View style={styles.viewBox3}/>
-      </KeyboardAvoidingView>
-    </View>
+    <ProfitAdjustmentView
+      _arv={_arv}
+      _asIs={_asIs}
+      _vacant={_vacant}
+      buttons={buttons} 
+      handleOnChangeText={handleOnChangeText}
+      handleOnPress={handleOnPress} 
+      handleVacantOnPress={handleVacantOnPress}
+    />
   );
 }
 export default React.memo(ProfitAdjustment);

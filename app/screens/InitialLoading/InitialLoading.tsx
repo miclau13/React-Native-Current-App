@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 

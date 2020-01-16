@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import { Button, ButtonProps, Headline, TextInput, TextInputProps } from 'react-native-paper';
+import { Button, ButtonProps, Headline, TextInput, TextInputProps, HelperText } from 'react-native-paper';
 import AutocompleteOption from './AutocompleteOption';
 import styles from './styles';
 
@@ -12,6 +12,7 @@ interface AutocompleteViewProps {
   options: { key: string; }[];
   optionsListHeight: number;
   value: string;
+  error: boolean;
 }
 
 const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => {
@@ -23,6 +24,7 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
     options,
     optionsListHeight,
     value,
+    error
   } = props;
   return (
     <View style={styles.container}>
@@ -38,8 +40,12 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
           onChangeText={onChangeText}
           value={value}
           textContentType="fullStreetAddress"
+          error={error}
         />
-        <View style={{ height: !isValidAddress ? optionsListHeight : 0 }}>
+        <HelperText type="error" visible={error}>
+          Address is invalid.
+        </HelperText> 
+        <View style={{ height: !isValidAddress && options.length > 0 ? optionsListHeight : 0 }}>
           <FlatList
             data={options}
             keyboardShouldPersistTaps="handled"
@@ -53,16 +59,14 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
           />
         </View>
         <View style={styles.viewBox2}/>
-        { isValidAddress ? 
-            <Button 
-              mode="contained" 
-              onPress={handleOnPress}
-              style={styles.nextButton}
-            >
-              Next
-            </Button>
-          : null
-        }
+        <Button 
+          mode="contained" 
+          onPress={handleOnPress}
+          style={styles.nextButton}
+        >
+          Next
+        </Button>
+          
         <View style={styles.viewBox3}/>
       </View>
     </View>

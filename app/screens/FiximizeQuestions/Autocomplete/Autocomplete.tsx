@@ -1,12 +1,19 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
-import { Dimensions, Keyboard, StatusBar, Platform, View } from 'react-native';
+import { Dimensions, Keyboard, StatusBar, Platform, View, Modal } from 'react-native';
+import { Button } from "react-native-paper";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
+import { Headline, TextInput } from 'react-native-paper';
 
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import AutocompleteView from './AutocompleteView';
 import styles from './styles';
+
+export enum FiximizeFlow {
+  AutoCompleteAddress,
+  SelfInputAddress
+}
 
 const NAVIGATION_HEIGHT_LANDSCAPE = 32;
 const IOS_NAVIGATION_HEIGHT_PORTRAIT = 64;
@@ -22,6 +29,22 @@ const IBUYER_AUTOCOMPLETE = gql`
   }
 `;
 
+const VALIDATE_ADDRESS_BY_GOOGLE = gql`
+mutation ValidateAddress($input: String!) {
+  validateAddress(input: $input) {
+    isValidAddress
+    fullAddress
+    streetNumber
+    streetName
+    city
+    county
+    region
+    country
+    postalCode
+  }
+}
+`;
+
 type Params = {
   returnRoute: string;
   value: string;
@@ -34,10 +57,16 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
     variables: { query: { query: " " } }
   });
 
+  const [validateAddressByGoogle] = useMutation<any, any>(VALIDATE_ADDRESS_BY_GOOGLE);
+
   const [options, setOptions] = React.useState([]);
   const [optionsListHeight, setOptionsListHeight] = React.useState(200);
   const [value, setValue] = React.useState('');
-  const [isValidAddress, setIsValidAddress] = React.useState(false);
+  const [googleAddress, setGoogleAddress] = React.useState('');
+  const [isValidTrudeedAddress, setIsValidTrudeedAddress] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [postalCode, setPostalCode] = React.useState('');
 
   let keyboardDidShowSub = null;
   let keyboardDidHideSub = null;
@@ -45,7 +74,8 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   const handleChangeText = async (value) => {
     setValue(value);
-    setIsValidAddress(false);
+    setIsValidTrudeedAddress(false);
+    setError(false);
     await updateOptions(value);
   };
 
@@ -65,13 +95,36 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   const handleOptionPress = (value) => {
     setValue(value);
-    setIsValidAddress(true);
+    setIsValidTrudeedAddress(true);
   };
 
-  const handleOnPress = () => {
+  const handleOnPress = async () => {
     const { navigation } = props;
-    navigation.navigate("PropertyInfoScreen", { address: value });
+    setModalVisible(false);
+    if (isValidTrudeedAddress) {
+      navigation.navigate("AsIsEstimateScreen", { address: value, flow: FiximizeFlow.AutoCompleteAddress  });
+    } else {
+      const result = await validateAddressByGoogle({ variables: { input: value } });
+      if (result?.data?.validateAddress?.isValidAddress) {
+        setGoogleAddress(result?.data?.validateAddress?.fullAddress)
+        setPostalCode(result?.data?.validateAddress?.postalCode)
+        setModalVisible(true);
+      } else {
+        setError(true);
+        return;
+      }
+    }
   };
+
+  const handleButtonConfirm = async () => {
+    const { navigation } = props;
+    setModalVisible(false);
+    navigation.navigate("ArvEstimateScreen", { postalCode, address: googleAddress, flow: FiximizeFlow.SelfInputAddress })
+  }
+
+  const handleButtonEdit = async () => {
+    setModalVisible(false);
+  }
 
   const updateOptions = async (value) => {
     if (value.length >= 1) {
@@ -81,6 +134,7 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
         optionsList = result.data.iBuyerProjectsAutoComplete.map(item => item.value);
       };
       const options = optionsList.map(option => ({ key: option }));
+      console.log('updateOptions')
       setOptions(options);
     };
   };
@@ -131,14 +185,46 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
       onLayout={handleLayout}
       style={styles.container}
     >
+      <Modal
+          animationType="slide"
+          transparent={false}
+          visible={modalVisible}
+          presentationStyle="formSheet"
+      >
+        <View onLayout={handleLayout} style={styles.modalContainer}>
+          <>
+            <View style={styles.keyBoardContainer}>
+              <View style={styles.viewBox1}/>
+              <Headline>Confirm Your Address</Headline>
+              <View style={styles.viewBox1}/>
+              <TextInput
+                label="Address"
+                mode="outlined"
+                value={googleAddress}
+                textContentType="none"
+                disabled={true}
+                style={{ marginBottom: 100, color: 'white' }}
+              />
+              <Button mode="contained" style={styles.modalButton} onPress={handleButtonConfirm}>
+                Confirm
+              </Button>
+              <Button mode="contained" style={styles.modalButton} onPress={handleButtonEdit}>
+                Edit
+              </Button>
+              <View style={styles.viewBox3}/>
+            </View>
+          </>
+        </View>
+      </Modal>
       <AutocompleteView
         handleOnPress={handleOnPress}
-        isValidAddress={isValidAddress}
+        isValidAddress={isValidTrudeedAddress}
         onChangeText={handleChangeText}
         onOptionPress={handleOptionPress}
         options={options}
         optionsListHeight={optionsListHeight}
         value={value}
+        error={error}
       />
     </View>
   )
