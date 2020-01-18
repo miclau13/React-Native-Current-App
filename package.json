@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "apollo:generate": "mkdir -p app/generated && apollo client:codegen --excludes=node_modules/* --includes=**/*.tsx --endpoint http://localhost:3000/graphql --target typescript --tagName=gql --outputFlat app/generated"
+    "apollo:generate": "mkdir -p app/generated && apollo client:codegen --excludes=node_modules/* --includes=**/*.tsx --endpoint http://localhost:3000/graphql --target typescript --tagName=gql --outputFlat app/generated",
+    "test": "jest"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
@@ -61,12 +62,13 @@
     "yup": "^0.27.0"
   },
   "devDependencies": {
+    "@types/jest": "^24.9.0",
     "@types/react": "^16.9.13",
     "@types/react-native": "^0.57.65",
+    "@types/react-test-renderer": "^16.9.1",
     "babel-plugin-inline-dotenv": "^1.5.0",
     "babel-preset-expo": "^6.0.0",
-    "jest": "^24.9.0",
-    "jest-expo": "^36.0.1",
+    "babel-preset-typescript": "^7.0.0-alpha.19",
     "react-test-renderer": "^16.12.0",
     "typescript": "^3.7.5"
   },
