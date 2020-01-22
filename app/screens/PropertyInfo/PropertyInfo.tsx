@@ -53,15 +53,15 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const arvEstimate = navigation.getParam("arvEstimate", null);
   const asIsEstimate = navigation.getParam("asIsEstimate", null);
   const totalDebts = navigation.getParam("totalDebts", null);
-  const beds = navigation.getParam("beds", 1);
-  const sqft = navigation.getParam("sqft", 1);
-  const fullBaths = navigation.getParam("fullBaths", 1);
-  const threeQuarterBaths = navigation.getParam("threeQuarterBaths", 0);
-  const halfBaths = navigation.getParam("halfBaths", 0);
+  const beds = navigation.getParam("beds", null);
+  const sqft = navigation.getParam("sqft", null);
+  const fullBaths = navigation.getParam("fullBaths", null);
+  const threeQuarterBaths = navigation.getParam("threeQuarterBaths", null);
+  const halfBaths = navigation.getParam("halfBaths", null);
   const [style, setStyle] = React.useState(null)
-  let inputValues = {};
 
   const prepareFiximizeQuestionsFormInitialValues = (arr: any[]) => {
+    const inputValues = {};
     arr.map(item => {
       if (RequiredInput.includes(item.name)) {
         for (let i = 0 ; i < item.value; i++) {
@@ -77,7 +77,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
         }
       }
     });
-    setFiximizeQuestionsFormInitialValues({...inputValues});
+    setFiximizeQuestionsFormInitialValues(inputValues);
   }
 
   const [getPropertyInfo, { data, error, loading }] = useLazyQuery(PROPERTY_INFO, { onCompleted: (data) => {
@@ -116,13 +116,14 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       asIsEstimate, 
       totalDebts, 
       initialValues: fiximizeQuestionsFormInitialValues, 
-      propertyInfo: (data && data.propertyInfo) || 
+      propertyInfo: 
+      // (data && data.propertyInfo) || 
         {
-          beds,
-          sqft,
-          fullBaths,
-          threeQuarterBaths,
-          halfBaths 
+          beds: beds || (data?.propertyInfo?.beds),
+          sqft: sqft || (data?.propertyInfo?.sqft),
+          fullBaths: fullBaths || (data?.propertyInfo?.fullBaths),
+          threeQuarterBaths: threeQuarterBaths || (data?.propertyInfo?.threeQuarterBaths),
+          halfBaths: halfBaths || (data?.propertyInfo?.halfBaths), 
         }, 
       step: "beds1" });
   }, [address, data, fiximizeQuestionsFormInitialValues]);
