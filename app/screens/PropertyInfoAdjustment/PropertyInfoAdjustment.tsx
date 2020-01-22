@@ -16,16 +16,15 @@ interface PropertyInfoAdjustmentViewProps {
 
 const PropertyInfoAdjustment: React.ComponentType<PropertyInfoAdjustmentViewProps>  = (props) => {
   const { beds, sqft, fullBaths, threeQuarterBaths, halfBaths, handleStepNavigation } = props;
-  const [ _beds, set_beds ] = React.useState(beds.toString());
-  const [ _sqft, set_sqft ] = React.useState(sqft.toString());
-  const [ _fullBaths, set_fullBaths ] = React.useState(fullBaths.toString());
-  const [ _threeQuarterBaths, set_threeQuarterBaths ] = React.useState(threeQuarterBaths.toString());
-  const [ _halfBaths, set_halfBaths ] = React.useState(halfBaths.toString());
+  const [ _beds, set_beds ] = React.useState(beds?.toString() || '1');
+  const [ _sqft, set_sqft ] = React.useState(sqft?.toString() || '1');
+  const [ _fullBaths, set_fullBaths ] = React.useState(fullBaths?.toString() || '1');
+  const [ _threeQuarterBaths, set_threeQuarterBaths ] = React.useState(threeQuarterBaths?.toString() || '0');
+  const [ _halfBaths, set_halfBaths ] = React.useState(halfBaths?.toString() || '0');
   
   const handleOnChangeText: (key: string) => TextInputProps['onChangeText'] =  (key) => (text) => {
     switch (key) {
       case "_beds":
-        console.log(`setting beds: ${_beds}`)
         set_beds(text);
         break;
       case "_sqft":

@@ -23,8 +23,9 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
     <SafeAreaView>
       <ScrollView>
         {rehabRecords.map((rehabRecord, i) => {
-          const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
-          const remodellingCost = CalculateRemodelingCost(rehabItemsPackage?.rehabItems);
+          const { arv, asIs, rehabItemsPackage } = rehabRecord;
+          const isRevised = !!rehabItemsPackage.revisedRehabItems;
+          const remodellingCost = isRevised ? CalculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : CalculateRemodelingCost(rehabItemsPackage?.rehabItems);
           const profit = arv - asIs - remodellingCost;
           const profitPercent = profit / remodellingCost * 100;
           const labelColor = FindLabelAttributes(profitPercent).labelColor;
@@ -76,7 +77,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                     decimalScale={0}
                     displayType={'text'} 
                     prefix={'$'}
-                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Cost: ${value}`}</Text>}
+                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Cost${isRevised ? '(Revised)' : ''}: ${value}`}</Text>}
                     thousandSeparator={true} 
                     value={remodellingCost}
                   />
