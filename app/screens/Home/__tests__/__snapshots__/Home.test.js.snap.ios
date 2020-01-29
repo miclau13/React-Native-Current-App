@@ -1,0 +1,226 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home component Matches the snapshot 1`] = `
+<RCTSafeAreaView
+  emulateUnlessSupported={true}
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "flex-start",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "justifyContent": "flex-start",
+          "width": "80%",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+      <Text
+        style={
+          Object {
+            "color": "rgba(0, 0, 0, 0.87)",
+            "fontFamily": "Helvetica Neue",
+            "fontSize": 24,
+            "lineHeight": 32,
+            "marginVertical": 2,
+            "textAlign": "left",
+            "writingDirection": "ltr",
+          }
+        }
+      >
+        What's the address of your property?
+      </Text>
+      <View
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+      <View
+        style={
+          Array [
+            undefined,
+            undefined,
+          ]
+        }
+      >
+        <View
+          pointerEvents="none"
+          style={
+            Object {
+              "borderColor": "rgba(0, 0, 0, 0.54)",
+              "borderRadius": 4,
+              "borderWidth": 1,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 6,
+            }
+          }
+        />
+        <Text
+          numberOfLines={1}
+          pointerEvents="none"
+          style={
+            Object {
+              "backgroundColor": "#f6f6f6",
+              "color": "transparent",
+              "fontFamily": "Helvetica Neue",
+              "fontSize": 12,
+              "left": 8,
+              "opacity": 0,
+              "paddingHorizontal": 4,
+              "position": "absolute",
+              "textAlign": "left",
+              "top": 0,
+              "transform": Array [
+                Object {
+                  "scaleX": 0,
+                },
+              ],
+              "writingDirection": "ltr",
+            }
+          }
+        >
+          Address
+        </Text>
+        <View
+          pointerEvents="none"
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "opacity": 1,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        >
+          <Text
+            numberOfLines={1}
+            onLayout={[Function]}
+            style={
+              Object {
+                "color": "#6200ee",
+                "fontFamily": "Helvetica Neue",
+                "fontSize": 16,
+                "left": 0,
+                "opacity": 0,
+                "paddingHorizontal": 12,
+                "position": "absolute",
+                "textAlign": "left",
+                "top": 25,
+                "transform": Array [
+                  Object {
+                    "translateX": 0,
+                  },
+                  Object {
+                    "translateY": 0,
+                  },
+                  Object {
+                    "scale": 1,
+                  },
+                  Object {
+                    "translateX": 0,
+                  },
+                ],
+                "writingDirection": "ltr",
+              }
+            }
+          >
+            Address
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={
+              Object {
+                "color": "rgba(0, 0, 0, 0.54)",
+                "fontFamily": "Helvetica Neue",
+                "fontSize": 16,
+                "left": 0,
+                "opacity": 1,
+                "paddingHorizontal": 12,
+                "position": "absolute",
+                "textAlign": "left",
+                "top": 25,
+                "transform": Array [
+                  Object {
+                    "translateX": 0,
+                  },
+                  Object {
+                    "translateY": 0,
+                  },
+                  Object {
+                    "scale": 1,
+                  },
+                  Object {
+                    "translateX": 0,
+                  },
+                ],
+                "writingDirection": "ltr",
+              }
+            }
+          >
+            Address
+          </Text>
+        </View>
+        <TextInput
+          allowFontScaling={true}
+          editable={true}
+          keyboardType="default"
+          multiline={false}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          placeholderTextColor="rgba(0, 0, 0, 0.54)"
+          rejectResponderTermination={true}
+          selectionColor="#6200ee"
+          style={
+            Object {
+              "color": "#000000",
+              "flexGrow": 1,
+              "fontFamily": "Helvetica Neue",
+              "fontSize": 16,
+              "margin": 0,
+              "minHeight": 64,
+              "paddingBottom": 16,
+              "paddingHorizontal": 12,
+              "paddingTop": 20,
+              "textAlign": "left",
+              "textAlignVertical": "center",
+              "zIndex": 1,
+            }
+          }
+          textContentType="fullStreetAddress"
+          underlineColorAndroid="transparent"
+        />
+      </View>
+      <View
+        style={
+          Object {
+            "flex": 5,
+          }
+        }
+      />
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;
