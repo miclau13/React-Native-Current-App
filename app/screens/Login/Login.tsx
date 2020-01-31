@@ -14,53 +14,69 @@ type Params = {
 
 type ScreenProps = {};
 
-const LOGINURL_PROD = "https://portal.trudeed.com/auth/fiximize-login";
-const LOGINURL_DEV = "https://dev-agent.trudeed.com/auth/fiximize-login";
-const LOGINURL_LOCALHOST = "http://192.168.100.89:3000/auth/fiximize-login";
+const REDIRECT_URL_LOCALHOST = "http://192.168.100.89:3000/auth/fiximize-login";
+const REDIRECT_URL_LOCALHOST2 = "http://192.168.0.100:3000/auth/fiximize-login";
+const RETURN_URL_LOCALHOST = "exp://192.168.0.100:19000";
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const redirectFrom = navigation.getParam("redirectFrom", null);
   const [loading, setLoading] = React.useState(false);
 
-  const completeLogin = React.useCallback(() => {
+  const completeLogin = () => {
     if (redirectFrom) {
       navigation.navigate(redirectFrom, { authorized: true });
     } else {
       navigation.navigate("MainNavigator");
     }
-  }, [navigation]);
+  };
 
-  const handleLoginOnPress = async () => {
-    setLoading(true);
+  const getDeviceId = async () => {
     const deviceId = await SecureStore.getItemAsync("deviceId", {});
     if(!deviceId) {
       await SecureStore.setItemAsync("deviceId", Constants.sessionId);
     };
-    const response = await fetch(LOGINURL_LOCALHOST, {
+    return deviceId;
+  };
+
+  const getRedirectUri = async (args: { deviceId: string }) => {
+    const response = await fetch(REDIRECT_URL_LOCALHOST2, {
       method: 'get',
       headers: {
-        "device-id": deviceId,
+        "device-id": args.deviceId,
       }
     });
     const responseURI = await response.json();
-    // console.log("responseURI", responseURI)
+    return responseURI;
+  };
+
+  const startLogin = async (args: { redirectUri: string }) => {
+    const result = await WebBrowser.openAuthSessionAsync(args.redirectUri, RETURN_URL_LOCALHOST);
+    const accessToken = queryString.parseUrl(result["url"]).query.accessToken;
+    await SecureStore.setItemAsync("accessToken", accessToken as string);
+    return result.type;
+  };
+
+  const handleLogin = async () => {
+    const deviceId = await getDeviceId();
+    const redirectUri = await getRedirectUri({ deviceId });
+    const loginStatus = await startLogin({ redirectUri });
+    setLoading(false);
+        // Status can also be cancel/dismiss
+    if (loginStatus === 'success') {
+      completeLogin();
+    };
+  };
+
+  const handleLoginOnPress = async () => {
+    setLoading(true);
     try {
-      const result = await WebBrowser.openAuthSessionAsync(responseURI, responseURI);
-      const accessToken = queryString.parseUrl(result["url"]).query.accessToken;
-      await SecureStore.setItemAsync("accessToken", accessToken as string);
-      if (result.type === 'success') {
-        completeLogin();
-      } else if (result.type === 'cancel') {
-        console.log("cancel la")
-        setLoading(false);
-      }
-    }
-    catch(err) {
+      await handleLogin();
+    } catch(err) {
       console.log("err: ");
       console.log(JSON.stringify(err));
+      setLoading(false);
     };
-    setLoading(false);
   };
 
   React.useEffect(() => {

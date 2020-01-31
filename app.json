@@ -28,7 +28,8 @@
       "bundleIdentifier": "com.trudeed.fiximize"
     },
     "android": {
-      "package": "com.trudeed.fiximize"
+      "package": "com.trudeed.fiximize",
+      "versionCode": 1
     }
   }
 }

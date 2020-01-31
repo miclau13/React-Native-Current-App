@@ -88,8 +88,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
       return result;
     });
     // TODO implement try catch
-    await Promise.all(deleteRehabMutations).then(results => {
-    });
+    await Promise.all(deleteRehabMutations).then(results => {});
   };
 
   const handleBackdropOnPress: RehabRecordsDeleteProps['handleBackdropOnPress'] = () => {
@@ -127,8 +126,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
     setRehabRecords(myRehabRequests.map(item => {
       return ({ ...item, checked: false })
     }));
-    return () => {
-    }
+    return () => {}
   }, [myRehabRequests, deleteMode]);
 
 
