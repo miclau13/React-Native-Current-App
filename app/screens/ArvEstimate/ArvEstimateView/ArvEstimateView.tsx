@@ -34,6 +34,7 @@ const ArvEstimateView: React.ComponentType<ArvEstimateViewProps> = (props) => {
           onChangeText={handleOnChangeText}
           value={arvEstimate}
           textContentType="none"
+          autoFocus
         />
         <HelperText 
           type="error"

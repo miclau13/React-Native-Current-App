@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, ScrollView  } from 'react-native';
+import { SafeAreaView, ScrollView, View } from 'react-native';
 import { Card, ListItem, Text } from 'react-native-elements'
 import { Button } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
@@ -11,7 +11,8 @@ interface FullRemodelSummaryViewProps extends FullRemodelSummaryProps {};
 
 const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> = (props) => {
   const { data, handleCheckBoxOnPress, handleOnPress, totalCost } = props;  
-
+  let lowerLimit = Math.ceil(totalCost * 0.6);
+  let upperLimit = Math.ceil(totalCost * 1.6);
   React.useEffect(() => {
     console.log("FullRemodelSummaryView Mount")
     return () => {console.log("FullRemodelSummaryView UnMount")}
@@ -22,13 +23,23 @@ const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> =
       <ScrollView>
           <Card title="Remodeling Costs">
             <>
-              <NumberFormat 
-                displayType={'text'} 
-                prefix={'$'}
-                renderText={value => <Text h3 style={styles.totalCostText}>{value}</Text>}
-                thousandSeparator={true} 
-                value={totalCost}
-              />
+              <Text h3 style={styles.totalCostText}>
+                <NumberFormat 
+                  displayType={'text'} 
+                  prefix={'$'}
+                  renderText={value => <Text>{value}</Text>}
+                  thousandSeparator={true} 
+                  value={lowerLimit}
+                />
+                <Text> to </Text> 
+                <NumberFormat 
+                  displayType={'text'} 
+                  prefix={'$'}
+                  renderText={value => <Text>{value}</Text>}
+                  thousandSeparator={true} 
+                  value={upperLimit}
+                />
+              </Text>
               {data.map((item, i) => (
                 <ListItem
                   bottomDivider
@@ -38,13 +49,13 @@ const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> =
                   }}
                   key={i}
                   title={item.category}
-                  rightTitle={<NumberFormat 
-                    displayType={'text'} 
-                    prefix={'$'}
-                    renderText={value => <Text>{value}</Text>}
-                    thousandSeparator={true} 
-                    value={item.value}
-                  />}
+                  // rightTitle={<NumberFormat 
+                  //   displayType={'text'} 
+                  //   prefix={'$'}
+                  //   renderText={value => <Text>{value}</Text>}
+                  //   thousandSeparator={true} 
+                  //   value={item.value}
+                  // />}
                 />
               ))}
             <Button

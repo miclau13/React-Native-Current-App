@@ -98,11 +98,12 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
     setIsValidTrudeedAddress(true);
   };
 
+  /* arv should be filled to avoid generated arv accurancy issue */
   const handleOnPress = async () => {
     const { navigation } = props;
     setModalVisible(false);
     if (isValidTrudeedAddress) {
-      navigation.navigate("AsIsEstimateScreen", { address: value, flow: FiximizeFlow.AutoCompleteAddress  });
+      navigation.navigate("ArvEstimateScreen", { address: value, flow: FiximizeFlow.AutoCompleteAddress  });
     } else {
       const result = await validateAddressByGoogle({ variables: { input: value } });
       if (result?.data?.validateAddress?.isValidAddress) {

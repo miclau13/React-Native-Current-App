@@ -35,6 +35,7 @@ const AsIsEstimateView: React.ComponentType<AsIsEstimateViewProps> = (props) => 
           onChangeText={handleOnChangeText}
           value={asIsEstimate}
           textContentType="none"
+          autoFocus
         />
         <HelperText 
           type="error"

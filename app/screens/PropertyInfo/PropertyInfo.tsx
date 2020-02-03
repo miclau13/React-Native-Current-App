@@ -125,7 +125,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
           threeQuarterBaths: threeQuarterBaths || (data?.propertyInfo?.threeQuarterBaths),
           halfBaths: halfBaths || (data?.propertyInfo?.halfBaths), 
         }, 
-      step: "beds1" });
+      step: "vacant" });
   }, [address, data, fiximizeQuestionsFormInitialValues]);
 
   const handleStepNavigation = React.useCallback((nextStep, options={}) => {
