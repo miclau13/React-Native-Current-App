@@ -62,6 +62,7 @@
     "react-navigation-tabs": "^2.6.0",
     "react-number-format": "^4.3.1",
     "recharts": "^2.0.0-beta.1",
+    "waait": "^1.0.5",
     "yup": "^0.27.0"
   },
   "devDependencies": {

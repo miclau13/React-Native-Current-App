@@ -1,8 +1,10 @@
 
-import { mount, shallow } from 'enzyme';
 import React from 'react';
-import { MockedProvider } from "@apollo/react-testing";
+import { Text } from 'react-native';
 import { create } from 'react-test-renderer';
+import wait from 'waait';
+
+import { MockedProvider } from "@apollo/react-testing";
 
 import Home, { VIEWER_QUERY } from '../Home';
 
@@ -26,13 +28,28 @@ const mocks = [
 ];
 
 describe('Home component', () => {
-  it("Matches the snapshot", () => {
+  it("should render loading state initially", () => {
     const navigation = { navigate: jest.fn() };
-    const home = create(
+    const component = create(
       <MockedProvider addTypename={false} mocks={mocks}>
         <Home navigation={navigation} />
       </MockedProvider>
     );
-    expect(home.toJSON()).toMatchSnapshot();
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it("should render Home View", async () => {
+    const navigation = { navigate: jest.fn() };
+    const component = create(
+      <MockedProvider addTypename={false} mocks={mocks}>
+        <Home navigation={navigation} />
+      </MockedProvider>
+    );
+
+    await wait(0); 
+
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });
