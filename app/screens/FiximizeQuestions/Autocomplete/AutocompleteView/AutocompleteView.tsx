@@ -12,8 +12,8 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
     handleLayout,
     handleOnPress,
     isValidAddress,
-    onChangeText,
-    onOptionPress,
+    handleOnChangeText,
+    handleOptionPress,
     options,
     optionsListHeight,
     value,
@@ -29,7 +29,7 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
           keyboardType="default"
           label="Address"
           mode="outlined"
-          onChangeText={onChangeText}
+          onChangeText={handleOnChangeText}
           value={value}
           textContentType="fullStreetAddress"
           error={error}
@@ -43,7 +43,7 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
             keyboardShouldPersistTaps="handled"
             renderItem={({ item }) => (
               <AutocompleteOption
-                onOptionPress={onOptionPress}
+                onOptionPress={handleOptionPress}
                 option={item}
               />
             )}
