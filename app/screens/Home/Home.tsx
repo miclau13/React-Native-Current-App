@@ -18,7 +18,7 @@ export interface HomeViewProps {
   handleOnFocus: CardProps['onPress'];
 };
 
-const VIEWER = gql`
+export const VIEWER_QUERY = gql`
   query Viewer {
     viewer {
       id
@@ -34,7 +34,7 @@ const VIEWER = gql`
 
 const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const { data, error, loading } = useQuery(VIEWER);
+  const { data, error, loading } = useQuery(VIEWER_QUERY);
   const handleOnFocus = React.useCallback<CardProps['onPress']>(
     () => navigation.push("AutocompleteScreen"), 
     [navigation.push]

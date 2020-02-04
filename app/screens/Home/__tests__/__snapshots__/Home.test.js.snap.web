@@ -5,282 +5,93 @@ exports[`Home component Matches the snapshot 1`] = `
   className="css-view-1dbjc4n"
   style={
     Object {
-      "paddingBottom": "env(safe-area-inset-bottom)",
-      "paddingLeft": "env(safe-area-inset-left)",
-      "paddingRight": "env(safe-area-inset-right)",
-      "paddingTop": "env(safe-area-inset-top)",
+      "WebkitAlignItems": "center",
+      "WebkitBoxAlign": "center",
+      "WebkitBoxFlex": 1,
+      "WebkitBoxPack": "center",
+      "WebkitFlexBasis": "0%",
+      "WebkitFlexGrow": 1,
+      "WebkitFlexShrink": 1,
+      "WebkitJustifyContent": "center",
+      "alignItems": "center",
+      "flexBasis": "0%",
+      "flexGrow": 1,
+      "flexShrink": 1,
+      "justifyContent": "center",
+      "msFlexAlign": "center",
+      "msFlexNegative": 1,
+      "msFlexPack": "center",
+      "msFlexPositive": 1,
+      "msFlexPreferredSize": "0%",
     }
   }
 >
   <div
+    aria-valuemax="1"
+    aria-valuemin="0"
     className="css-view-1dbjc4n"
+    role="progressbar"
     style={
       Object {
         "WebkitAlignItems": "center",
         "WebkitBoxAlign": "center",
-        "WebkitBoxFlex": 1,
-        "WebkitBoxPack": "start",
-        "WebkitFlexBasis": "0%",
-        "WebkitFlexGrow": 1,
-        "WebkitFlexShrink": 1,
-        "WebkitJustifyContent": "flex-start",
+        "WebkitBoxPack": "center",
+        "WebkitJustifyContent": "center",
         "alignItems": "center",
-        "flexBasis": "0%",
-        "flexGrow": 1,
-        "flexShrink": 1,
-        "justifyContent": "flex-start",
+        "justifyContent": "center",
         "msFlexAlign": "center",
-        "msFlexNegative": 1,
-        "msFlexPack": "start",
-        "msFlexPositive": 1,
-        "msFlexPreferredSize": "0%",
+        "msFlexPack": "center",
       }
     }
   >
     <div
-      className="css-view-1dbjc4n"
+      className="css-view-1dbjc4n r-animationKeyframes-127358a"
       style={
         Object {
-          "WebkitBoxFlex": 1,
-          "WebkitBoxPack": "start",
-          "WebkitFlexBasis": "0%",
-          "WebkitFlexGrow": 1,
-          "WebkitFlexShrink": 1,
-          "WebkitJustifyContent": "flex-start",
-          "flexBasis": "0%",
-          "flexGrow": 1,
-          "flexShrink": 1,
-          "justifyContent": "flex-start",
-          "msFlexNegative": 1,
-          "msFlexPack": "start",
-          "msFlexPositive": 1,
-          "msFlexPreferredSize": "0%",
-          "width": "80%",
+          "WebkitAnimationDuration": "0.75s",
+          "WebkitAnimationIterationCount": "infinite",
+          "WebkitAnimationTimingFunction": "linear",
+          "animationDuration": "0.75s",
+          "animationIterationCount": "infinite",
+          "animationTimingFunction": "linear",
+          "height": "20px",
+          "width": "20px",
         }
       }
     >
-      <div
-        className="css-view-1dbjc4n"
-        style={
-          Object {
-            "WebkitBoxFlex": 1,
-            "WebkitFlexBasis": "0%",
-            "WebkitFlexGrow": 1,
-            "WebkitFlexShrink": 1,
-            "flexBasis": "0%",
-            "flexGrow": 1,
-            "flexShrink": 1,
-            "msFlexNegative": 1,
-            "msFlexPositive": 1,
-            "msFlexPreferredSize": "0%",
-          }
-        }
-      />
-      <div
-        className="css-text-901oao"
-        dir="auto"
-        style={
-          Object {
-            "color": "rgba(0,0,0,0.87)",
-            "direction": "ltr",
-            "fontFamily": "Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
-            "fontSize": "24px",
-            "lineHeight": "32px",
-            "marginBottom": "2px",
-            "marginTop": "2px",
-            "textAlign": "left",
-          }
-        }
+      <svg
+        height="100%"
+        viewBox="0 0 32 32"
+        width="100%"
       >
-        What's the address of your property?
-      </div>
-      <div
-        className="css-view-1dbjc4n"
-        style={
-          Object {
-            "WebkitBoxFlex": 1,
-            "WebkitFlexBasis": "0%",
-            "WebkitFlexGrow": 1,
-            "WebkitFlexShrink": 1,
-            "flexBasis": "0%",
-            "flexGrow": 1,
-            "flexShrink": 1,
-            "msFlexNegative": 1,
-            "msFlexPositive": 1,
-            "msFlexPreferredSize": "0%",
-          }
-        }
-      />
-      <div
-        className="css-view-1dbjc4n"
-      >
-        <div
-          className="css-view-1dbjc4n r-pointerEvents-633pao"
+        <circle
+          cx="16"
+          cy="16"
+          fill="none"
+          r="14"
+          strokeWidth="4"
           style={
             Object {
-              "borderBottomColor": "rgba(0,0,0,0.54)",
-              "borderBottomLeftRadius": "4px",
-              "borderBottomRightRadius": "4px",
-              "borderBottomWidth": "1px",
-              "borderLeftColor": "rgba(0,0,0,0.54)",
-              "borderLeftWidth": "1px",
-              "borderRightColor": "rgba(0,0,0,0.54)",
-              "borderRightWidth": "1px",
-              "borderTopColor": "rgba(0,0,0,0.54)",
-              "borderTopLeftRadius": "4px",
-              "borderTopRightRadius": "4px",
-              "borderTopWidth": "1px",
-              "bottom": "0px",
-              "left": "0px",
-              "position": "absolute",
-              "right": "0px",
-              "top": "6px",
+              "opacity": 0.2,
+              "stroke": "#1976D2",
             }
           }
         />
-        <div
-          className="css-text-901oao css-textOneLine-bfa6kz r-pointerEvents-633pao"
-          dir="auto"
+        <circle
+          cx="16"
+          cy="16"
+          fill="none"
+          r="14"
+          strokeWidth="4"
           style={
             Object {
-              "WebkitTransform": "scaleX(0)",
-              "backgroundColor": "rgba(246,246,246,1.00)",
-              "color": "rgba(0,0,0,0.00)",
-              "direction": "ltr",
-              "fontFamily": "Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
-              "fontSize": "12px",
-              "left": "8px",
-              "opacity": 0,
-              "paddingLeft": "4px",
-              "paddingRight": "4px",
-              "position": "absolute",
-              "textAlign": "left",
-              "top": "0px",
-              "transform": "scaleX(0)",
+              "stroke": "#1976D2",
+              "strokeDasharray": 80,
+              "strokeDashoffset": 60,
             }
           }
-        >
-          Address
-        </div>
-        <div
-          className="css-view-1dbjc4n r-pointerEvents-633pao"
-          style={
-            Object {
-              "bottom": "0px",
-              "left": "0px",
-              "opacity": 1,
-              "position": "absolute",
-              "right": "0px",
-              "top": "0px",
-            }
-          }
-        >
-          <div
-            className="css-text-901oao css-textOneLine-bfa6kz"
-            dir="auto"
-            style={
-              Object {
-                "WebkitTransform": "translateX(0px) translateY(0px) scale(1) translateX(0px)",
-                "color": "rgba(98,0,238,1.00)",
-                "direction": "ltr",
-                "fontFamily": "Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
-                "fontSize": "16px",
-                "left": "0px",
-                "opacity": 0,
-                "paddingLeft": "12px",
-                "paddingRight": "12px",
-                "position": "absolute",
-                "textAlign": "left",
-                "top": "25px",
-                "transform": "translateX(0px) translateY(0px) scale(1) translateX(0px)",
-              }
-            }
-          >
-            Address
-          </div>
-          <div
-            className="css-text-901oao css-textOneLine-bfa6kz"
-            dir="auto"
-            style={
-              Object {
-                "WebkitTransform": "translateX(0px) translateY(0px) scale(1) translateX(0px)",
-                "color": "rgba(0,0,0,0.54)",
-                "direction": "ltr",
-                "fontFamily": "Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
-                "fontSize": "16px",
-                "left": "0px",
-                "opacity": 1,
-                "paddingLeft": "12px",
-                "paddingRight": "12px",
-                "position": "absolute",
-                "textAlign": "left",
-                "top": "25px",
-                "transform": "translateX(0px) translateY(0px) scale(1) translateX(0px)",
-              }
-            }
-          >
-            Address
-          </div>
-        </div>
-        <input
-          autoCapitalize="sentences"
-          autoComplete="on"
-          autoCorrect="on"
-          className="css-textinput-1cwyjr8 r-placeholderTextColor-1qzd3f0"
-          data-focusable={true}
-          dir="auto"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyPress={[Function]}
-          onSelect={[Function]}
-          placeholder=""
-          readOnly={false}
-          spellCheck={true}
-          style={
-            Object {
-              "WebkitBoxFlex": 1,
-              "WebkitFlexGrow": 1,
-              "color": "rgba(0,0,0,1.00)",
-              "flexGrow": 1,
-              "fontFamily": "Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
-              "fontSize": "16px",
-              "marginBottom": "0px",
-              "marginLeft": "0px",
-              "marginRight": "0px",
-              "marginTop": "0px",
-              "minHeight": "64px",
-              "msFlexPositive": 1,
-              "paddingBottom": "16px",
-              "paddingLeft": "12px",
-              "paddingRight": "12px",
-              "paddingTop": "20px",
-              "textAlign": "left",
-              "verticalAlign": "middle",
-              "zIndex": 1,
-            }
-          }
-          type="text"
         />
-      </div>
-      <div
-        className="css-view-1dbjc4n"
-        style={
-          Object {
-            "WebkitBoxFlex": 5,
-            "WebkitFlexBasis": "0%",
-            "WebkitFlexGrow": 5,
-            "WebkitFlexShrink": 1,
-            "flexBasis": "0%",
-            "flexGrow": 5,
-            "flexShrink": 1,
-            "msFlexNegative": 1,
-            "msFlexPositive": 5,
-            "msFlexPreferredSize": "0%",
-          }
-        }
-      />
+      </svg>
     </div>
   </div>
 </div>

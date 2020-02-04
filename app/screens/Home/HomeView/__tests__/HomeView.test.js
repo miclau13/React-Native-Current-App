@@ -1,15 +1,16 @@
 
+import { shallow } from 'enzyme';
 import React from 'react';
-import { create } from 'react-test-renderer';
+// import { create } from 'react-test-renderer';
 
 import HomeView from '../HomeView';
 
-const createTestProps = (props: Object) => ({
-  navigation: {
-    navigate: jest.fn()
-  },
-  ...props
-});
+// const createTestProps = (props) => ({
+//   navigation: {
+//     navigate: jest.fn()
+//   },
+//   ...props
+// });
 
 // describe("LoadingScreen", () => {
 //   describe("rendering", () => {
@@ -27,26 +28,45 @@ const createTestProps = (props: Object) => ({
 //   });
 // });
 
-describe('Home component', () => {
-  const handleOnFocus = { handleOnFocus: jest.fn() };
-  const homeView = create(<HomeView handleOnFocus={handleOnFocus} />);
+// describe('Home component', () => {
+//   const handleOnFocus = { handleOnFocus: jest.fn() };
+//   const homeView = create(<HomeView handleOnFocus={handleOnFocus} />);
 
-  it('fires onFocus handler when user clicks on it', () => {
-    // let component;
-    // act(() => {
-    //   component = create(<Button text="SUBSCRIBE TO BASIC" />);
-    // });
-    // console.log("homeView",homeView)
+//   it('fires onFocus handler when user clicks on it', () => {
+//     // let component;
+//     // act(() => {
+//     //   component = create(<Button text="SUBSCRIBE TO BASIC" />);
+//     // });
+//     // console.log("homeView",homeView)
  
-    const instance = homeView.root;
-    console.log("instance",instance)
-    // const textInput = instance.findByType("TextInput");
-    // const handleOnFocus = textInput.props.onFocus;
-    // console.log("textInput:",textInput)
-    // console.log("textInput.props:",textInput.props)
-    // const wrapper = shallow(<HomeView handleOnFocus={handleOnFocus} />);
-    // console.log("wrapper:", wrapper)
-    // wrapper.find('TextInput').simulate('onFocus');
-    // expect(handleOnFocus).to.have.property('callCount', 1);
+//     // const instance = homeView.root;
+//     // console.log("instance",instance)
+//     // const textInput = instance.findByType("TextInput");
+//     // const handleOnFocus = textInput.props.onFocus;
+//     // console.log("textInput:",textInput)
+//     // console.log("textInput.props:",textInput.props)
+//     // const wrapper = shallow(<HomeView handleOnFocus={handleOnFocus} />);
+//     // console.log("wrapper:", wrapper)
+//     // wrapper.find('TextInput').simulate('onFocus');
+//     // expect(handleOnFocus).to.have.property('callCount', 1);
+//   });
+// });
+
+describe('Home View', () => {
+  describe('onFocusHandler', () => {
+      it('should call onFocus', () => {
+          // Arrange
+          const mockOnFocus = jest.fn();      // 1. mock function
+          const component = shallow(<HomeView handleOnFocus={mockOnFocus} />);
+          console.debug("component", component)
+          // const instance = component.instance();  // 3. getting an instance of component
+
+          // // Act
+          // instance.handleOnFocus();          // 4. manually triggering onPressHandler()
+
+          // // Assert
+          // expect(mockOnFocus).toHaveBeenCalled();
+          // expect(mockOnFocus).toHaveBeenCalledTimes(1);   // 5. checking return values
+      });
   });
 });
