@@ -4,9 +4,7 @@ import Modal from 'react-native-modal';
 import { Button, Headline } from 'react-native-paper';
 
 import styles from './styles';
-import { RehabRecordsDeleteProps } from '../RehabRecords';
-
-interface RehabRecordsDeleteViewProps extends RehabRecordsDeleteProps {};
+import { RehabRecordsDeleteViewProps } from '../RehabRecords';
 
 const RehabRecordsDeleteView: React.ComponentType<RehabRecordsDeleteViewProps> = (props) => {
   const { 

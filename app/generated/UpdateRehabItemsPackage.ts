@@ -11,7 +11,7 @@ import { UpdateRehabItemsPackageInput } from "./globalTypes";
 export interface UpdateRehabItemsPackage_updateRehabItemsPackage_rehabItemsPackage_rehabItems {
   __typename: "RehabItems";
   category: string;
-  cost: number;
+  cost: number | null;
   name: string;
 }
 

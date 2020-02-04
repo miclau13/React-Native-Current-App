@@ -1,33 +1,25 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import { Button, ButtonProps, Headline, TextInput, TextInputProps, HelperText } from 'react-native-paper';
+import { Button, Headline, TextInput, HelperText } from 'react-native-paper';
+
 import AutocompleteOption from './AutocompleteOption';
 import styles from './styles';
-
-interface AutocompleteViewProps {
-  handleOnPress: ButtonProps['onPress'];
-  isValidAddress: boolean;
-  onChangeText: TextInputProps['onChangeText'];
-  onOptionPress(value: string): void;
-  options: { key: string; }[];
-  optionsListHeight: number;
-  value: string;
-  error: boolean;
-}
+import { AutocompleteViewProps } from '../Autocomplete';
 
 const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => {
   const {
+    error,
+    handleLayout,
     handleOnPress,
     isValidAddress,
-    onChangeText,
-    onOptionPress,
+    handleOnChangeText,
+    handleOptionPress,
     options,
     optionsListHeight,
     value,
-    error
   } = props;
   return (
-    <View style={styles.container}>
+    <View onLayout={handleLayout} style={styles.container}>
       <View style={styles.keyBoardContainer}>
         <View style={styles.viewBox1}/>
         <Headline>What's the address of your property?</Headline>
@@ -37,7 +29,7 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
           keyboardType="default"
           label="Address"
           mode="outlined"
-          onChangeText={onChangeText}
+          onChangeText={handleOnChangeText}
           value={value}
           textContentType="fullStreetAddress"
           error={error}
@@ -51,7 +43,7 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
             keyboardShouldPersistTaps="handled"
             renderItem={({ item }) => (
               <AutocompleteOption
-                onOptionPress={onOptionPress}
+                onOptionPress={handleOptionPress}
                 option={item}
               />
             )}

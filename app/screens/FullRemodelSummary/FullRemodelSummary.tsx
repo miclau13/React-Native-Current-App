@@ -154,13 +154,15 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
       let result;
       if (flow === FiximizeFlow.AutoCompleteAddress) {
         console.log('calling createRehab')
-        result = await createRehab({ variables: { input: createRehabInput } });
+        // result = await createRehab({ variables: { input: createRehabInput } });
+        result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }})
       } else {
         console.log('calling createRehabNoArv')
         result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }})
       }
       if (result) {
-        let rehab = flow === FiximizeFlow.AutoCompleteAddress ? result.data.createRehab : result.data.createRehabNoArv;
+        // let rehab = flow === FiximizeFlow.AutoCompleteAddress ? result.data.createRehab : result.data.createRehabNoArv;
+        const rehab = result.data.createRehabNoArv;
         const itemsMap: RehabItemsPackageMap = (rehab.rehabItemPackage?.rehabItems || []).reduce((acc, item) => {
           if (!acc[item.category]) {
             acc[item.category] = {

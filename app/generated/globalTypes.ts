@@ -24,7 +24,7 @@ export interface CreateRehabInput {
 
 export interface CreateRehabNoArvInput {
   address: string;
-  postalCode: string;
+  postalCode?: string | null;
   arv: number;
   asIs: number;
   propertyDetails?: PropertyDetailsInput | null;
@@ -77,6 +77,7 @@ export interface RehabItemsInput {
   custom?: boolean | null;
   calculationMethod?: string | null;
   cost?: number | null;
+  order?: number | null;
 }
 
 export interface RehabItemsPackageInput {
@@ -84,6 +85,7 @@ export interface RehabItemsPackageInput {
   rehabItems?: (RehabItemsInput | null)[] | null;
   selected?: boolean | null;
   id?: string | null;
+  revisedRehabItems?: (RehabItemsInput | null)[] | null;
 }
 
 export interface RehabRequestInput {
@@ -95,6 +97,7 @@ export interface RehabRequestInput {
   arv?: number | null;
   vacant?: boolean | null;
   totalDebts?: number | null;
+  contactPhoneNumber?: string | null;
 }
 
 export interface UpdateRehabItemsPackageInput {

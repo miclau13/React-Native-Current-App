@@ -13,6 +13,12 @@ type Params = {
 
 type ScreenProps = {};
 
+export interface ArvEstimateViewProps {
+  handleOnChangeText: TextInputProps['onChangeText'];
+  handleOnPress: ButtonProps['onPress'];
+  arvEstimate: string;
+};
+
 const ArvEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const address = navigation.getParam("address", null);
@@ -41,7 +47,7 @@ const ArvEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props)
 
   if (loading) {
     return (
-     <LoadingComponent />
+      <LoadingComponent />
     )
   };
 

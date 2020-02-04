@@ -11,9 +11,14 @@ import { CreateRehabInput } from "./globalTypes";
 export interface CreateRehab_createRehab_rehabItemPackage_rehabItems {
   __typename: "RehabItems";
   category: string;
-  cost: number;
+  cost: number | null;
   name: string;
   selected: boolean;
+  unit: number;
+  costPerUnit: number | null;
+  custom: boolean;
+  calculationMethod: string;
+  order: number | null;
 }
 
 export interface CreateRehab_createRehab_rehabItemPackage {

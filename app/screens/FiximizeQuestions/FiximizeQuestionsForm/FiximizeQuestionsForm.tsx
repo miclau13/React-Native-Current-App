@@ -117,7 +117,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   const totalDebts = navigation.getParam("totalDebts", null);
   const formInitialValues = navigation.getParam("initialValues", {});
   const propertyInfo = navigation.getParam("propertyInfo", {});
-  const step = navigation.getParam("step", "beds1");
+  const step = navigation.getParam("step", "vacant");
   const flow = navigation.getParam("flow");
 
   const initialValues = React.useMemo(() => {
@@ -272,7 +272,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
       validationSchema={validationSchema}
     >
       <View style={styles.container}>
-        {bedroomSizefields.map((item) => {
+        {/* {bedroomSizefields.map((item) => {
           return step === item.name ? 
             <BedroomSize backFrom={backFrom} field={item} key={item.name} handleStepNavigation={handleStepNavigation} />
             : null
@@ -296,7 +296,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
           return step === item.name ? 
             <KitchenCabinetSize backFrom={backFrom} field={item} key={item.name} handleStepNavigation={handleStepNavigation} />
             : null
-        })}
+        })} */}
         {step === "vacant" ? 
           <VacantProperty backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
           : null

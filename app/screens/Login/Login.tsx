@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import * as WebBrowser from 'expo-web-browser';
 import queryString from 'query-string';
 import React from 'react';
+import { ButtonProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 import LoginView from './LoginView';
@@ -67,7 +68,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     };
   };
 
-  const handleLoginOnPress = async () => {
+  const handleLoginOnPress: LoginViewProps['handleLoginOnPress'] = async () => {
     setLoading(true);
     try {
       await handleLogin();
@@ -90,7 +91,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   return (
-    <LoginView handleOnPress={handleLoginOnPress}/>
+    <LoginView handleLoginOnPress={handleLoginOnPress}/>
   )
 };
 
