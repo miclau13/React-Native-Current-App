@@ -1,16 +1,11 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
-import { View } from 'react-native';
 import { CardProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
-import { Headline, TextInput } from 'react-native-paper';
 import { useQuery } from '@apollo/react-hooks';
+
+import HomeView from './HomeView';
 import { LoadingComponent } from '../InitialLoading';
-
-import styles from './styles';
-
-import * as SecureStore from 'expo-secure-store';
-import { StackActions, NavigationActions } from 'react-navigation';
 
 type Params = {
   name?: string;
@@ -18,6 +13,10 @@ type Params = {
 };
 
 type ScreenProps = {};
+
+export interface HomeViewProps {
+  handleOnFocus: CardProps['onPress'];
+};
 
 const VIEWER = gql`
   query Viewer {
@@ -37,14 +36,9 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const { data, error, loading } = useQuery(VIEWER);
   const handleOnFocus = React.useCallback<CardProps['onPress']>(
-    // () => navigation.push("FiximizeQuestionsFormScreen", { step: "address", previousStep: "home" })
-    // () => navigation.push("FullRemodelSummaryScreen", { step: "address", previousStep: "home" })
-    // () => navigation.push("PropertyInfoScreen", { step: "address", previousStep: "home" })
-    // () => navigation.push("AutoCompleteAddressScreen", { step: "autoCompleteAddress", previousStep: "home" })
-    // () => navigation.push("ProfitSummaryScreen", { arv: 684171, asIs: 580000, remodellingCost: 71841, step: "summary" })
-    () => navigation.push("AutocompleteScreen")
-    // () => navigation.push("ProfitAdjustmentScreen", { arv: 100000 })
-  , [navigation.push]);
+    () => navigation.push("AutocompleteScreen"), 
+    [navigation.push]
+  );
 
   React.useEffect(() => {
     console.log("Home Mount");
@@ -54,7 +48,6 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   }, []);
 
   React.useEffect(() => {
-    console.log('checking the authetication')
     if (!loading && error) {
       navigation.navigate("AuthTabs");
     }
@@ -67,21 +60,7 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.keyBoardContainer}>
-        <View style={styles.viewBox1}/>
-        <Headline>What's the address of your property?</Headline>
-        <View style={styles.viewBox1}/>
-        <TextInput
-          keyboardType="default"
-          label="Address"
-          mode="outlined"
-          onFocus={handleOnFocus}
-          textContentType="fullStreetAddress"
-        />
-        <View style={styles.viewBox3}/>
-      </View>
-    </View>
+    <HomeView handleOnFocus={handleOnFocus} />
   )
 };
 

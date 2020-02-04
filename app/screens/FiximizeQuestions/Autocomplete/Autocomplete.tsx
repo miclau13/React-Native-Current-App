@@ -1,19 +1,46 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
-import { Dimensions, Keyboard, StatusBar, Platform, View, Modal } from 'react-native';
-import { Button } from "react-native-paper";
+import { Dimensions, Keyboard, StatusBar, Platform } from 'react-native';
+import { ModalProps } from 'react-native-modal';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
-import { Headline, TextInput } from 'react-native-paper';
+import { ButtonProps, TextInputProps } from 'react-native-paper';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import AutocompleteView from './AutocompleteView';
-import styles from './styles';
+import AutocompleteEditView from './AutocompleteEditView';
+import { ValidateAddress,ValidateAddressVariables } from '../../../generated/ValidateAddress';
 
 export enum FiximizeFlow {
   AutoCompleteAddress,
   SelfInputAddress
 }
+
+type Params = {
+  returnRoute: string;
+  value: string;
+};
+
+type ScreenProps = {};
+
+export interface AutocompleteViewProps {
+  error: boolean;
+  handleLayout(): void;
+  handleOnPress: ButtonProps['onPress'];
+  isValidAddress: boolean;
+  handleOnChangeText: TextInputProps['onChangeText'];
+  handleOptionPress(value: string): void;
+  options: { key: string; }[];
+  optionsListHeight: number;
+  value: string;
+};
+export interface AutocompleteEditViewProps {
+  handleBackdropOnPress: ModalProps['onBackdropPress'];
+  handleButtonConfirmOnPress: ButtonProps['onPress'];
+  handleButtonEditOnPress: ButtonProps['onPress'];
+  googleAddress: string;
+  modalVisible: boolean;
+};
 
 const NAVIGATION_HEIGHT_LANDSCAPE = 32;
 const IOS_NAVIGATION_HEIGHT_PORTRAIT = 64;
@@ -30,34 +57,28 @@ const IBUYER_AUTOCOMPLETE = gql`
 `;
 
 const VALIDATE_ADDRESS_BY_GOOGLE = gql`
-mutation ValidateAddress($input: String!) {
-  validateAddress(input: $input) {
-    isValidAddress
-    fullAddress
-    streetNumber
-    streetName
-    city
-    county
-    region
-    country
-    postalCode
+  mutation ValidateAddress($input: String!) {
+    validateAddress(input: $input) {
+      isValidAddress
+      fullAddress
+      streetNumber
+      streetName
+      city
+      county
+      region
+      country
+      postalCode
+    }
   }
-}
 `;
 
-type Params = {
-  returnRoute: string;
-  value: string;
-};
-
-type ScreenProps = {};
-
 const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
+  const { navigation } = props;
   const { refetch } = useQuery(IBUYER_AUTOCOMPLETE, {
     variables: { query: { query: " " } }
   });
 
-  const [validateAddressByGoogle] = useMutation<any, any>(VALIDATE_ADDRESS_BY_GOOGLE);
+  const [validateAddressByGoogle] = useMutation<ValidateAddress, ValidateAddressVariables>(VALIDATE_ADDRESS_BY_GOOGLE);
 
   const [options, setOptions] = React.useState([]);
   const [optionsListHeight, setOptionsListHeight] = React.useState(200);
@@ -72,74 +93,14 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
   let keyboardDidHideSub = null;
   let keyboardHeight = 0;
 
-  const handleChangeText = async (value) => {
-    setValue(value);
-    setIsValidTrudeedAddress(false);
-    setError(false);
-    await updateOptions(value);
-  };
-
   const handleKeyboardDidHide = () => {
     keyboardHeight = 0;
     updateOptionsListHeight();
   };
-
   const handleKeyboardDidShow = ({ endCoordinates: { height } }) => {
     keyboardHeight = height;
     updateOptionsListHeight();
   };
-
-  const handleLayout = () => {
-    updateOptionsListHeight();
-  };
-
-  const handleOptionPress = (value) => {
-    setValue(value);
-    setIsValidTrudeedAddress(true);
-  };
-
-  /* arv should be filled to avoid generated arv accurancy issue */
-  const handleOnPress = async () => {
-    const { navigation } = props;
-    setModalVisible(false);
-    if (isValidTrudeedAddress) {
-      navigation.navigate("ArvEstimateScreen", { address: value, flow: FiximizeFlow.AutoCompleteAddress  });
-    } else {
-      const result = await validateAddressByGoogle({ variables: { input: value } });
-      if (result?.data?.validateAddress?.isValidAddress) {
-        setGoogleAddress(result?.data?.validateAddress?.fullAddress)
-        setPostalCode(result?.data?.validateAddress?.postalCode)
-        setModalVisible(true);
-      } else {
-        setError(true);
-        return;
-      }
-    }
-  };
-
-  const handleButtonConfirm = async () => {
-    const { navigation } = props;
-    setModalVisible(false);
-    navigation.navigate("ArvEstimateScreen", { postalCode, address: googleAddress, flow: FiximizeFlow.SelfInputAddress })
-  }
-
-  const handleButtonEdit = async () => {
-    setModalVisible(false);
-  }
-
-  const updateOptions = async (value) => {
-    if (value.length >= 1) {
-      const result = await refetch({ query: { query: value } });
-      let optionsList = [];
-      if (result && result.data && result.data.iBuyerProjectsAutoComplete) {
-        optionsList = result.data.iBuyerProjectsAutoComplete.map(item => item.value);
-      };
-      const options = optionsList.map(option => ({ key: option }));
-      console.log('updateOptions')
-      setOptions(options);
-    };
-  };
-
   const updateOptionsListHeight = () => {
     const { height: windowHeight, width: windowWidth } = Dimensions.get('window');
     const portrait = windowHeight > windowWidth;
@@ -170,6 +131,63 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
     setOptionsListHeight(optionsListHeight);
   };
 
+  // For AutocompleteEditView
+  const handleBackdropOnPress: AutocompleteEditViewProps['handleBackdropOnPress'] = () => {
+    setModalVisible(false);
+  };
+  const handleButtonConfirmOnPress: AutocompleteEditViewProps['handleButtonConfirmOnPress'] = () => {
+    setModalVisible(false);
+    setValue(googleAddress);
+    navigation.navigate("ArvEstimateScreen", { postalCode, address: googleAddress, flow: FiximizeFlow.SelfInputAddress })
+  };
+  const handleButtonEditOnPress: AutocompleteEditViewProps['handleButtonEditOnPress'] = () => {
+    setModalVisible(false);
+  };
+
+  // For AutocompleteView
+  const handleChangeText: AutocompleteViewProps['handleOnChangeText'] = async (value) => {
+    setValue(value);
+    setIsValidTrudeedAddress(false);
+    setError(false);
+    await updateOptions(value);
+  };
+  const handleLayout: AutocompleteViewProps['handleLayout'] = () => {
+    updateOptionsListHeight();
+  };
+  const handleOptionPress: AutocompleteViewProps['handleOptionPress'] = (value) => {
+    setValue(value);
+    setIsValidTrudeedAddress(true);
+  };
+  /* arv should be filled to avoid generated arv accurancy issue */
+  const handleOnPress: AutocompleteViewProps['handleOnPress'] = async () => {
+    setModalVisible(false);
+    if (isValidTrudeedAddress) {
+      navigation.navigate("ArvEstimateScreen", { address: value, flow: FiximizeFlow.AutoCompleteAddress  });
+    } else {
+      const result = await validateAddressByGoogle({ variables: { input: value } });
+      if (result?.data?.validateAddress?.isValidAddress) {
+        setGoogleAddress(result?.data?.validateAddress?.fullAddress)
+        setPostalCode(result?.data?.validateAddress?.postalCode)
+        setModalVisible(true);
+      } else {
+        setError(true);
+        return;
+      }
+    }
+  };
+
+  const updateOptions = async (value: string) => {
+    if (value.length >= 1) {
+      const result = await refetch({ query: { query: value } });
+      let optionsList = [];
+      if (result && result.data && result.data.iBuyerProjectsAutoComplete) {
+        optionsList = result.data.iBuyerProjectsAutoComplete.map(item => item.value);
+      };
+      const options = optionsList.map(option => ({ key: option }));
+      setOptions(options);
+    };
+  };
+
   React.useEffect(() => {
     console.log("Autocomplete Mount");
     keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', handleKeyboardDidHide);
@@ -182,52 +200,26 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
   }, []);
 
   return (
-    <View
-      onLayout={handleLayout}
-      style={styles.container}
-    >
-      <Modal
-          animationType="slide"
-          transparent={false}
-          visible={modalVisible}
-          presentationStyle="formSheet"
-      >
-        <View onLayout={handleLayout} style={styles.modalContainer}>
-          <>
-            <View style={styles.keyBoardContainer}>
-              <View style={styles.viewBox1}/>
-              <Headline>Confirm Your Address</Headline>
-              <View style={styles.viewBox1}/>
-              <TextInput
-                label="Address"
-                mode="outlined"
-                value={googleAddress}
-                textContentType="none"
-                disabled={true}
-                style={{ marginBottom: 100, color: 'white' }}
-              />
-              <Button mode="contained" style={styles.modalButton} onPress={handleButtonConfirm}>
-                Confirm
-              </Button>
-              <Button mode="contained" style={styles.modalButton} onPress={handleButtonEdit}>
-                Edit
-              </Button>
-              <View style={styles.viewBox3}/>
-            </View>
-          </>
-        </View>
-      </Modal>
+    <>
+      <AutocompleteEditView 
+        handleBackdropOnPress={handleBackdropOnPress}
+        handleButtonConfirmOnPress={handleButtonConfirmOnPress}
+        handleButtonEditOnPress={handleButtonEditOnPress}
+        googleAddress={googleAddress}
+        modalVisible={modalVisible}
+      />
       <AutocompleteView
+        handleLayout={handleLayout}
         handleOnPress={handleOnPress}
         isValidAddress={isValidTrudeedAddress}
-        onChangeText={handleChangeText}
-        onOptionPress={handleOptionPress}
+        handleOnChangeText={handleChangeText}
+        handleOptionPress={handleOptionPress}
         options={options}
         optionsListHeight={optionsListHeight}
         value={value}
         error={error}
       />
-    </View>
+    </>
   )
 };
 

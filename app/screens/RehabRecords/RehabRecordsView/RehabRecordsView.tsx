@@ -5,11 +5,9 @@ import { Chip } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
 import styles from './styles';
-import { RehabRecordsProps } from '../RehabRecords';
+import { RehabRecordsViewProps } from '../RehabRecords';
 import { CalculateRemodelingCost, FindLabelAttributes } from '../../../common/utils/Calculator';
 import { primaryRed } from '../../../styles/constants';
-
-interface RehabRecordsViewProps extends RehabRecordsProps {};
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {
   const { deleteMode, handleItemOnPress, handleItemDeleteOnPress, rehabRecords } = props;  
@@ -23,7 +21,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
     <SafeAreaView>
       <ScrollView>
         {rehabRecords.map((rehabRecord, i) => {
-          const { arv, asIs, rehabItemsPackage } = rehabRecord;
+          const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
           const isRevised = !!rehabItemsPackage.revisedRehabItems;
           const remodellingCost = isRevised ? CalculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : CalculateRemodelingCost(rehabItemsPackage?.rehabItems);
           const profit = arv - asIs - remodellingCost;

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { screenWidth } from '../../styles';
+import { screenWidth } from '../../../styles';
 
 const styles = StyleSheet.create({
   autocompleteTextInput: {

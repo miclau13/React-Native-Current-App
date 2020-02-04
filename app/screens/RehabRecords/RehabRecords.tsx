@@ -60,7 +60,7 @@ interface RehabRecords extends MyRehabRequests_myRehabRequests {
   checked: boolean;
 };
 
-export type RehabRecordsDeleteProps = {
+export type RehabRecordsDeleteViewProps = {
   handleBackdropOnPress: ModalProps['onBackdropPress'];
   handleCancelOnPress: ButtonProps['onPress'];
   handleDeleteOnPress: ButtonProps['onPress'];
@@ -68,7 +68,7 @@ export type RehabRecordsDeleteProps = {
   openConfirmModal: boolean;
 }
 
-export type RehabRecordsProps = {
+export type RehabRecordsViewProps = {
   deleteMode: boolean;
   rehabRecords: RehabRecords[];
   handleItemOnPress(index: number): ListItemProps['onPress'];
@@ -83,7 +83,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const { data, loading, refetch: myRehabRequestsRefetch } = useQuery<MyRehabRequests>(MY_REHAB_REQUESTS);
   const [deleteRehab, { loading: deleteRehabLoading }] = useMutation<DeleteRehab, DeleteRehabVariables>(DELETE_REHAB);
   
-  const myRehabRequests = data?.myRehabRequests || [];
+  const myRehabRequests = data ? data.myRehabRequests : [];
   const [rehabRecords, setRehabRecords] = React.useState<RehabRecords[]>([]);
   const selectedRehabRecordsIds = rehabRecords.filter(record => record.checked).map(record => record.id);
 
@@ -96,24 +96,24 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
     await Promise.all(deleteRehabMutations).then(results => {});
   };
 
-  const handleBackdropOnPress: RehabRecordsDeleteProps['handleBackdropOnPress'] = () => {
+  // For RehabRecordsDeleteView
+  const handleBackdropOnPress: RehabRecordsDeleteViewProps['handleBackdropOnPress'] = () => {
     navigation.setParams({ openConfirmModal: false });
   };
-
-  const handleCancelOnPress: RehabRecordsDeleteProps['handleCancelOnPress'] = () => {
+  const handleCancelOnPress: RehabRecordsDeleteViewProps['handleCancelOnPress'] = () => {
     navigation.setParams({ openConfirmModal: false });
   };
-  const handleDeleteOnPress: RehabRecordsDeleteProps['handleDeleteOnPress'] = async () => {
+  const handleDeleteOnPress: RehabRecordsDeleteViewProps['handleDeleteOnPress'] = async () => {
     navigation.setParams({ deleteMode: false, openConfirmModal: false });
     await deleteRehabs();
     await myRehabRequestsRefetch();
   };
 
-  const handleItemOnPress: RehabRecordsProps['handleItemOnPress'] = index => (event) => {
+  // For RehabRecordsView
+  const handleItemOnPress: RehabRecordsViewProps['handleItemOnPress'] = index => (event) => {
     navigation.push("RehabRecordsDetailScreen", { detail: myRehabRequests[index]} );
   };
-
-  const handleItemDeleteOnPress: RehabRecordsProps['handleItemDeleteOnPress'] = index => (event) => {
+  const handleItemDeleteOnPress: RehabRecordsViewProps['handleItemDeleteOnPress'] = index => (event) => {
     const updatedRehabRecords = rehabRecords.map((record, _index) => {
       return ({ ...record, checked: _index === index ? !record.checked : record.checked })
     });
@@ -123,18 +123,22 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
 
   React.useEffect(() => {
+    // console.log("useEffect loading, deleteRehabLoading")
     navigation.setParams({ loading: loading || deleteRehabLoading });
     return () => {}
   }, [loading, deleteRehabLoading]);
 
   React.useEffect(() => {
+    // console.log("data",data)
+// console.log("myRehabRequests",myRehabRequests)
+// console.log("useEffect myRehabRequests, deleteMode")
     setRehabRecords(myRehabRequests.map(item => {
       return ({ ...item, checked: false })
     }));
     return () => {}
   }, [myRehabRequests, deleteMode]);
 
-
+  console.log("myRehabRequests",myRehabRequests)
   if (loading || deleteRehabLoading) {
     return (
       <LoadingComponent />

@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import * as WebBrowser from 'expo-web-browser';
 import queryString from 'query-string';
 import React from 'react';
+import { ButtonProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 import LoginView from './LoginView';
@@ -14,8 +15,14 @@ type Params = {
 
 type ScreenProps = {};
 
-const LOGINURL_DEV = "https://dev-agent.trudeed.com/auth/fiximize-login";
-const RETURN_URL_LOCALHOST = "exp://192.168.0.100:19000";
+export interface LoginViewProps {
+  handleLoginOnPress: ButtonProps['onPress'];
+};
+
+const REDIRECT_URL_LOCALHOST = "http://192.168.100.89:3000/auth/fiximize-login";
+const REDIRECT_URL_LOCALHOST2 = "http://192.168.0.100:3000/auth/fiximize-login";
+const RETURN_URL_LOCALHOST = "exp://192.168.100.89:19000";
+const RETURN_URL_LOCALHOST2 = "exp://192.168.0.100:19000";
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
@@ -39,7 +46,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   const getRedirectUri = async (args: { deviceId: string }) => {
-    const response = await fetch(LOGINURL_DEV, {
+    const response = await fetch(REDIRECT_URL_LOCALHOST, {
       method: 'get',
       headers: {
         "device-id": args.deviceId,
@@ -67,7 +74,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     };
   };
 
-  const handleLoginOnPress = async () => {
+  const handleLoginOnPress: LoginViewProps['handleLoginOnPress'] = async () => {
     setLoading(true);
     try {
       await handleLogin();
@@ -90,7 +97,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   return (
-    <LoginView handleOnPress={handleLoginOnPress}/>
+    <LoginView handleLoginOnPress={handleLoginOnPress}/>
   )
 };
 

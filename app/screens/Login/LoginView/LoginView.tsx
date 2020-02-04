@@ -1,17 +1,15 @@
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { Image } from 'react-native-elements';
-import { Button, ButtonProps, Title } from 'react-native-paper';
+import { Button, Title } from 'react-native-paper';
 
-import styles from './styles';
 import FiximizeImage from './fiximizeImage.png';
+import styles from './styles';
+import { LoginViewProps } from '../Login';
 
-interface LoginViewProps {
-  handleOnPress: ButtonProps['onPress'];
-};
 
 const LoginView: React.ComponentType<LoginViewProps> = (props) => {
-  const { handleOnPress } = props;
+  const { handleLoginOnPress } = props;
 
   React.useEffect(() => {
     console.log("LoginView Mount")
@@ -32,7 +30,7 @@ const LoginView: React.ComponentType<LoginViewProps> = (props) => {
       <View style={styles.viewBox1} />
       <Button 
         mode="contained" 
-        onPress={handleOnPress}
+        onPress={handleLoginOnPress}
         style={styles.nextButton}
       >
         {`Sign Up or Login`}
