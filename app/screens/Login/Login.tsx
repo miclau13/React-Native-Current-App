@@ -15,6 +15,10 @@ type Params = {
 
 type ScreenProps = {};
 
+export interface LoginViewProps {
+  handleLoginOnPress: ButtonProps['onPress'];
+};
+
 const LOGINURL_PROD = "https://portal.trudeed.com/auth/fiximize-login";
 const RETURN_URL_PROD = "fiximize://";
 

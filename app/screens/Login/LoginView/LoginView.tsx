@@ -7,14 +7,8 @@ import FiximizeImage from './fiximizeImage.png';
 import styles from './styles';
 import { LoginViewProps } from '../Login';
 
-
 const LoginView: React.ComponentType<LoginViewProps> = (props) => {
   const { handleLoginOnPress } = props;
-
-  React.useEffect(() => {
-    console.log("LoginView Mount")
-    return () => {console.log("LoginView UnMount")}
-  }, []);
 
   return (
     <View style={styles.container}>
