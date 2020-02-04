@@ -1,6 +1,6 @@
 import { Dimensions, Platform } from "react-native";
 
-export const deviceScreenHeight = Math.round(Dimensions.get('window').width);
+export const deviceScreenHeight = Math.round(Dimensions.get('window').height);
 export const deviceScreenWidth = Math.round(Dimensions.get('window').width);
 export const mainColorForProfile = '#01C89E';
 export const primaryBlue = Platform.select({

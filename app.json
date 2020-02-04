@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "4.12.0",
+    "version": "4.14.0",
     "orientation": "portrait",
     "icon": "./assets/favicon3.png",
     "splash": {
@@ -28,7 +28,8 @@
       "bundleIdentifier": "com.trudeed.fiximize"
     },
     "android": {
-      "package": "com.trudeed.fiximize"
+      "package": "com.trudeed.fiximize",
+      "versionCode": 4
     }
   }
 }

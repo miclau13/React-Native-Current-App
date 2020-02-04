@@ -9,7 +9,14 @@
 export interface MyRehabRequests_myRehabRequests_rehabItemsPackage_rehabItems {
   __typename: "RehabItems";
   category: string;
-  cost: number;
+  cost: number | null;
+  name: string;
+}
+
+export interface MyRehabRequests_myRehabRequests_rehabItemsPackage_revisedRehabItems {
+  __typename: "RehabItems";
+  category: string;
+  cost: number | null;
   name: string;
 }
 
@@ -17,6 +24,7 @@ export interface MyRehabRequests_myRehabRequests_rehabItemsPackage {
   __typename: "RehabItemsPackage";
   id: string;
   rehabItems: MyRehabRequests_myRehabRequests_rehabItemsPackage_rehabItems[];
+  revisedRehabItems: MyRehabRequests_myRehabRequests_rehabItemsPackage_revisedRehabItems[] | null;
   submitted: boolean;
 }
 

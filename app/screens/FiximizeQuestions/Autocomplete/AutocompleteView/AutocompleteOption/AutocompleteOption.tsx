@@ -1,11 +1,8 @@
 import React from 'react';
 import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
-import styles from './styles';
 
-interface AutocompleteOptionProps {
-  onOptionPress(value: string): void;
-  option: { key: string; };
-}
+import styles from './styles';
+import { AutocompleteOptionProps } from '../../Autocomplete';
 
 const AutocompleteOption: React.ComponentType<AutocompleteOptionProps> = (props) => {
 

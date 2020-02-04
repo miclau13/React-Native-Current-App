@@ -5,7 +5,7 @@ import { Icon } from "react-native-elements";
 import { Button } from "react-native-paper";
 import { createSwitchNavigator, NavigationState, NavigationContainerProps } from "react-navigation"; 
 import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
-import { BottomTabBar, createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
+import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navigation-tabs";
 
 import ArvEstimateScreen from "../screens/ArvEstimate";
 import AsIsEstimateScreen from "../screens/AsIsEstimate";
@@ -34,7 +34,7 @@ const HomeStack = createStackNavigator(
         const step = navigation.getParam("step");
 
         const handleOnPress = () => {
-          if(step === "beds1") {
+          if(step === "vacant") {
             navigation.navigate("PropertyInfoScreen")
           } else {
             navigation.navigate("FiximizeQuestionsFormScreen", 
@@ -170,7 +170,7 @@ const RehabRecordsStack = createStackNavigator({
       const deleteMode = navigation.getParam("deleteMode", false);
       const lengthOfSelectedRehabRecords = navigation.getParam("lengthOfSelectedRehabRecords", 0);
       const loading = navigation.getParam("loading", true);
-
+      const myRehabRequests = navigation.getParam("myRehabRequests");
       const handleHeaderRightOnPress = () => {
         navigation.setParams({ deleteMode: !deleteMode });
       };
@@ -196,6 +196,7 @@ const RehabRecordsStack = createStackNavigator({
           };
           return (
             <Button
+              disabled={myRehabRequests.length < 1}
               onPress={handleHeaderRightOnPress}
             >
               { !deleteMode ? "Select" : "Cancel" }
@@ -226,7 +227,6 @@ RehabRecordsDeleteStack.navigationOptions = {
   tabBarLabel: " ",
   tabBarIcon: ({ tintColor }) => <Icon name="delete-outline" type="material-community" color="red" />,
   tabBarOnPress: ({ navigation }) => {
-    console.log("tabBarOnPress navigation", navigation)
     navigation.setParams({ openConfirmModal: true });
   },
   // drawerLabel: rehabRecordStrings.title,
@@ -236,6 +236,7 @@ RehabRecordsDeleteStack.navigationOptions = {
 
 const MainNavigator = Platform.select({
   ios: createBottomTabNavigator({ HomeStack, RehabRecordsStack, ProfileStack }, {
+    lazy: false,
     resetOnBlur: true,
   }),
   android: createBottomTabNavigator({ HomeStack, RehabRecordsStack, ProfileStack }, {

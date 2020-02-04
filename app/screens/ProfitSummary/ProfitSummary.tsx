@@ -41,6 +41,8 @@ export type ProfitSummaryProps = {
     value?: number;
     icon?: string;
     color?: string;
+    lower?: number;
+    upper?: number;
   }[];
   handleBannerButtonOnClick: BannerAction['onPress'];
   handleSaveOnPress: ButtonProps['onPress'];
@@ -49,7 +51,11 @@ export type ProfitSummaryProps = {
   hasBanner: ProfitSummaryState['hasBanner'];
   isQualified: ProfitSummaryState['isQualified'];
   profit: number;
+  upperProfit: number;
+  lowerProfit: number;
   profitPercent: number;
+  upperProfitPercent: number;
+  lowerProfitPercent: number;
   submitted: ProfitSummaryState['submitted'];
   status: ProfitSummaryState['status'];
 };
@@ -108,20 +114,33 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const bannerIcon: ProfitSummaryProps['bannerIcon'] = {
     name: isQualified ? "check" : "close", color: isQualified ? '#43a048' : '#e53935'
   };
+  const upperRemodellingCost = remodellingCost * 1.6;
+  const lowerRemdellingCost = remodellingCost * 0.6
   const data: ProfitSummaryProps['data'] = [
     { name: "Est. ARV", value: arv },
     { name: "As-Is", value: asIs },
-    { name: "Remodeling Cost", value: remodellingCost },
+    { name: "Remodeling Cost", value: remodellingCost, lower: lowerRemdellingCost, upper: upperRemodellingCost },
     { name: "Total Debts", value: totalDebts },
     { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935' },
   ];
   const profit = React.useMemo<ProfitSummaryProps['profit']>(() => {
     return +(arv - asIs - remodellingCost);
   }, [arv, asIs, remodellingCost]);
+  const upperProfit = React.useMemo<ProfitSummaryProps['profit']>(() => {
+    return +(arv - asIs - lowerRemdellingCost);
+  }, [arv, asIs, lowerRemdellingCost]);
+  const lowerProfit = React.useMemo<ProfitSummaryProps['profit']>(() => {
+    return +(arv - asIs - upperRemodellingCost);
+  }, [arv, asIs, upperRemodellingCost]);
   const profitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
     return profit / remodellingCost * 100;
   },[profit, remodellingCost]);
-
+  const upperProfitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
+    return upperProfit / lowerRemdellingCost * 100;
+  },[upperProfit, lowerRemdellingCost]);
+  const lowerProfitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
+    return lowerProfit / upperRemodellingCost * 100;
+  },[lowerProfit, upperRemodellingCost]);
   const handleBannerButtonOnClick = React.useCallback<ProfitSummaryProps['handleBannerButtonOnClick']>(() => setHasBanner(false), [hasBanner]);
 
   const handleSaveOnPress: ProfitSummaryProps['handleSaveOnPress'] = async () => {
@@ -220,7 +239,11 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
           hasBanner={hasBanner}
           isQualified={isQualified}
           profit={profit}
+          upperProfit={upperProfit}
+          lowerProfit={lowerProfit}
           profitPercent={profitPercent}
+          upperProfitPercent={upperProfitPercent}
+          lowerProfitPercent={lowerProfitPercent}
           status={status}
           submitted={submitted}
         />

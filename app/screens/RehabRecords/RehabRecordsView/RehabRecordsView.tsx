@@ -5,11 +5,9 @@ import { Chip } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
 import styles from './styles';
-import { RehabRecordsProps } from '../RehabRecords';
+import { RehabRecordsViewProps } from '../RehabRecords';
 import { CalculateRemodelingCost, FindLabelAttributes } from '../../../common/utils/Calculator';
 import { primaryRed } from '../../../styles/constants';
-
-interface RehabRecordsViewProps extends RehabRecordsProps {};
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {
   const { deleteMode, handleItemOnPress, handleItemDeleteOnPress, rehabRecords } = props;  
@@ -24,7 +22,8 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
       <ScrollView>
         {rehabRecords.map((rehabRecord, i) => {
           const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
-          const remodellingCost = CalculateRemodelingCost(rehabItemsPackage?.rehabItems);
+          const isRevised = !!rehabItemsPackage.revisedRehabItems;
+          const remodellingCost = isRevised ? CalculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : CalculateRemodelingCost(rehabItemsPackage?.rehabItems);
           const profit = arv - asIs - remodellingCost;
           const profitPercent = profit / remodellingCost * 100;
           const labelColor = FindLabelAttributes(profitPercent).labelColor;
@@ -76,7 +75,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                     decimalScale={0}
                     displayType={'text'} 
                     prefix={'$'}
-                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Cost: ${value}`}</Text>}
+                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Cost${isRevised ? '(Revised)' : ''}: ${value}`}</Text>}
                     thousandSeparator={true} 
                     value={remodellingCost}
                   />

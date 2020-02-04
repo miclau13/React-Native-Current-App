@@ -14,6 +14,12 @@ type Params = {
 
 type ScreenProps = {};
 
+export interface AsIsEstimateViewProps {
+  handleOnChangeText: TextInputProps['onChangeText'];
+  handleOnPress: ButtonProps['onPress'];
+  asIsEstimate: string;
+};
+
 const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const flow = navigation.getParam('flow')
