@@ -16,6 +16,12 @@ type Params = {
 
 type ScreenProps = {};
 
+export interface TotalDebtsViewProps {
+  handleOnChangeText: TextInputProps['onChangeText'];
+  handleOnPress: ButtonProps['onPress'];
+  totalDebts: string;
+};
+
 const TotalDebts: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const flow = navigation.getParam("flow", null);
@@ -37,13 +43,6 @@ const TotalDebts: NavigationStackScreenComponent<Params, ScreenProps> = (props) 
     const stepDefaultValue = flow === FiximizeFlow.AutoCompleteAddress ? 'summary' : 'edit';
     navigation.navigate("PropertyInfoScreen", { flow, address, postalCode, arvEstimate, asIsEstimate, totalDebts: +totalDebts, step: stepDefaultValue });
   };
-
-  React.useEffect(() => {
-    console.log("TotalDebts Mount");
-    return () => {
-      console.log("TotalDebts UnMount");
-    }
-  }, []);
 
   if (loading) {
     return (

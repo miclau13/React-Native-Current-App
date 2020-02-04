@@ -42,6 +42,11 @@ export interface AutocompleteEditViewProps {
   modalVisible: boolean;
 };
 
+export interface AutocompleteOptionProps {
+  onOptionPress(value: string): void;
+  option: { key: string; };
+};
+
 const NAVIGATION_HEIGHT_LANDSCAPE = 32;
 const IOS_NAVIGATION_HEIGHT_PORTRAIT = 64;
 const ANDROID_NAVIGATION_HEIGHT = 81;
@@ -189,13 +194,11 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
 
   React.useEffect(() => {
-    console.log("Autocomplete Mount");
     keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', handleKeyboardDidHide);
     keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
     return () => {
       keyboardDidHideSub.remove();
       keyboardDidShowSub.remove();
-      console.log("Autocomplete UnMount")
     }
   }, []);
 

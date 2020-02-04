@@ -52,6 +52,7 @@ type Params = {
   lengthOfSelectedRehabRecords: number;
   loading: boolean;
   openConfirmModal: boolean;
+  myRehabRequests: MyRehabRequests_myRehabRequests[];
 };
 
 type ScreenProps = {};
@@ -83,7 +84,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const { data, loading, refetch: myRehabRequestsRefetch } = useQuery<MyRehabRequests>(MY_REHAB_REQUESTS);
   const [deleteRehab, { loading: deleteRehabLoading }] = useMutation<DeleteRehab, DeleteRehabVariables>(DELETE_REHAB);
   
-  const myRehabRequests = data ? data.myRehabRequests : [];
+  const myRehabRequests = data?.myRehabRequests || [];
   const [rehabRecords, setRehabRecords] = React.useState<RehabRecords[]>([]);
   const selectedRehabRecordsIds = rehabRecords.filter(record => record.checked).map(record => record.id);
 
@@ -111,7 +112,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   // For RehabRecordsView
   const handleItemOnPress: RehabRecordsViewProps['handleItemOnPress'] = index => (event) => {
-    navigation.push("RehabRecordsDetailScreen", { detail: myRehabRequests[index]} );
+    navigation.push("RehabRecordsDetailScreen", { detail: rehabRecords[index]} );
   };
   const handleItemDeleteOnPress: RehabRecordsViewProps['handleItemDeleteOnPress'] = index => (event) => {
     const updatedRehabRecords = rehabRecords.map((record, _index) => {
@@ -123,22 +124,29 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
 
   React.useEffect(() => {
-    // console.log("useEffect loading, deleteRehabLoading")
     navigation.setParams({ loading: loading || deleteRehabLoading });
     return () => {}
   }, [loading, deleteRehabLoading]);
 
   React.useEffect(() => {
-    // console.log("data",data)
-// console.log("myRehabRequests",myRehabRequests)
-// console.log("useEffect myRehabRequests, deleteMode")
     setRehabRecords(myRehabRequests.map(item => {
       return ({ ...item, checked: false })
     }));
+    navigation.setParams({ myRehabRequests });
     return () => {}
-  }, [myRehabRequests, deleteMode]);
+  }, [data, deleteMode]);
 
-  console.log("myRehabRequests",myRehabRequests)
+
+
+  React.useEffect(() => {
+    const didFoucsSubscription =navigation.addListener('didFocus', async payload => {
+      await myRehabRequestsRefetch();
+    });
+    return () => {
+      didFoucsSubscription.remove();
+    }
+  }, []);
+
   if (loading || deleteRehabLoading) {
     return (
       <LoadingComponent />

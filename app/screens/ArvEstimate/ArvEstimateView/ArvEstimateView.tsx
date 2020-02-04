@@ -1,14 +1,9 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Button, ButtonProps, Headline, HelperText, TextInput, TextInputProps } from 'react-native-paper';
+import { Button, Headline, HelperText, TextInput } from 'react-native-paper';
 
 import styles from './styles';
-
-interface ArvEstimateViewProps {
-  handleOnChangeText: TextInputProps['onChangeText'];
-  handleOnPress: ButtonProps['onPress'];
-  arvEstimate: string;
-};
+import { ArvEstimateViewProps } from '../ArvEstimate';
 
 const ArvEstimateView: React.ComponentType<ArvEstimateViewProps> = (props) => {
   const { handleOnChangeText, handleOnPress, arvEstimate } = props;

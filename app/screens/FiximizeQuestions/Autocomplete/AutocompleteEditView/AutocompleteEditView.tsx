@@ -30,7 +30,7 @@ const AutocompleteEditView: React.ComponentType<AutocompleteEditViewProps> = (pr
             value={googleAddress}
             textContentType="none"
             disabled={true}
-            style={{ height: 100 }}
+            style={styles.addressTextInput}
           />
           <View style={styles.viewBox1}/>
           <Button mode="contained" style={styles.modalButton} onPress={handleButtonConfirmOnPress}>
