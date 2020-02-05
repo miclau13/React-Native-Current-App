@@ -1,0 +1,247 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login component should render Login View 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flex": 1,
+      "justifyContent": "flex-start",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 5,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "flex": 0.5,
+      }
+    }
+  />
+  <Text
+    style={
+      Object {
+        "color": "rgba(0, 0, 0, 0.87)",
+        "fontFamily": "sans-serif-medium",
+        "fontSize": 20,
+        "lineHeight": 30,
+        "marginVertical": 2,
+        "textAlign": "left",
+        "writingDirection": "ltr",
+      }
+    }
+  >
+    Ready to Fiximize?
+  </Text>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "alignSelf": "center",
+        "backgroundColor": "#6200ee",
+        "borderColor": "transparent",
+        "borderRadius": 20,
+        "borderStyle": "solid",
+        "borderWidth": 0,
+        "elevation": 2,
+        "minWidth": 64,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0.75,
+          "width": 0,
+        },
+        "shadowOpacity": 0.24,
+        "shadowRadius": 1.5,
+        "width": "75%",
+      }
+    }
+  >
+    <View
+      accessibilityRole="button"
+      accessible={true}
+      isTVSelectable={true}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "borderRadius": 4,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          numberOfLines={1}
+          style={
+            Object {
+              "color": "#ffffff",
+              "fontFamily": "sans-serif-medium",
+              "letterSpacing": 1,
+              "marginHorizontal": 16,
+              "marginVertical": 9,
+              "textAlign": "center",
+              "writingDirection": "ltr",
+            }
+          }
+        >
+          SIGN UP OR LOGIN
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 5,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`Login component should render loading state initially 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flex": 1,
+      "justifyContent": "flex-start",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 5,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "flex": 0.5,
+      }
+    }
+  />
+  <Text
+    style={
+      Object {
+        "color": "rgba(0, 0, 0, 0.87)",
+        "fontFamily": "sans-serif-medium",
+        "fontSize": 20,
+        "lineHeight": 30,
+        "marginVertical": 2,
+        "textAlign": "left",
+        "writingDirection": "ltr",
+      }
+    }
+  >
+    Ready to Fiximize?
+  </Text>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "alignSelf": "center",
+        "backgroundColor": "#6200ee",
+        "borderColor": "transparent",
+        "borderRadius": 20,
+        "borderStyle": "solid",
+        "borderWidth": 0,
+        "elevation": 2,
+        "minWidth": 64,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0.75,
+          "width": 0,
+        },
+        "shadowOpacity": 0.24,
+        "shadowRadius": 1.5,
+        "width": "75%",
+      }
+    }
+  >
+    <View
+      accessibilityRole="button"
+      accessible={true}
+      isTVSelectable={true}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "borderRadius": 4,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          numberOfLines={1}
+          style={
+            Object {
+              "color": "#ffffff",
+              "fontFamily": "sans-serif-medium",
+              "letterSpacing": 1,
+              "marginHorizontal": 16,
+              "marginVertical": 9,
+              "textAlign": "center",
+              "writingDirection": "ltr",
+            }
+          }
+        >
+          SIGN UP OR LOGIN
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 5,
+      }
+    }
+  />
+</View>
+`;

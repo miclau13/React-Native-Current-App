@@ -1,0 +1,435 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login component should render Login View 1`] = `
+<div
+  className="css-view-1dbjc4n"
+  style={
+    Object {
+      "WebkitAlignItems": "center",
+      "WebkitBoxAlign": "center",
+      "WebkitBoxFlex": 1,
+      "WebkitBoxPack": "start",
+      "WebkitFlexBasis": "0%",
+      "WebkitFlexGrow": 1,
+      "WebkitFlexShrink": 1,
+      "WebkitJustifyContent": "flex-start",
+      "alignItems": "center",
+      "flexBasis": "0%",
+      "flexGrow": 1,
+      "flexShrink": 1,
+      "justifyContent": "flex-start",
+      "msFlexAlign": "center",
+      "msFlexNegative": 1,
+      "msFlexPack": "start",
+      "msFlexPositive": 1,
+      "msFlexPreferredSize": "0%",
+    }
+  }
+>
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitBoxFlex": 5,
+        "WebkitFlexBasis": "0%",
+        "WebkitFlexGrow": 5,
+        "WebkitFlexShrink": 1,
+        "flexBasis": "0%",
+        "flexGrow": 5,
+        "flexShrink": 1,
+        "msFlexNegative": 1,
+        "msFlexPositive": 5,
+        "msFlexPreferredSize": "0%",
+      }
+    }
+  />
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitBoxFlex": 0.5,
+        "WebkitFlexBasis": "0%",
+        "WebkitFlexGrow": 0.5,
+        "WebkitFlexShrink": 1,
+        "flexBasis": "0%",
+        "flexGrow": 0.5,
+        "flexShrink": 1,
+        "msFlexNegative": 1,
+        "msFlexPositive": 0.5,
+        "msFlexPreferredSize": "0%",
+      }
+    }
+  />
+  <div
+    className="css-text-901oao"
+    dir="auto"
+    style={
+      Object {
+        "color": "rgba(0,0,0,0.87)",
+        "direction": "ltr",
+        "fontFamily": "Roboto-Medium, Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
+        "fontSize": "20px",
+        "lineHeight": "30px",
+        "marginBottom": "2px",
+        "marginTop": "2px",
+        "textAlign": "left",
+      }
+    }
+  >
+    Ready to Fiximize?
+  </div>
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitBoxFlex": 1,
+        "WebkitFlexBasis": "0%",
+        "WebkitFlexGrow": 1,
+        "WebkitFlexShrink": 1,
+        "flexBasis": "0%",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "msFlexNegative": 1,
+        "msFlexPositive": 1,
+        "msFlexPreferredSize": "0%",
+      }
+    }
+  />
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitAlignSelf": "center",
+        "alignSelf": "center",
+        "backgroundColor": "rgba(98,0,238,1.00)",
+        "borderBottomColor": "rgba(0,0,0,0.00)",
+        "borderBottomLeftRadius": "20px",
+        "borderBottomRightRadius": "20px",
+        "borderBottomStyle": "solid",
+        "borderBottomWidth": "0px",
+        "borderLeftColor": "rgba(0,0,0,0.00)",
+        "borderLeftStyle": "solid",
+        "borderLeftWidth": "0px",
+        "borderRightColor": "rgba(0,0,0,0.00)",
+        "borderRightStyle": "solid",
+        "borderRightWidth": "0px",
+        "borderTopColor": "rgba(0,0,0,0.00)",
+        "borderTopLeftRadius": "20px",
+        "borderTopRightRadius": "20px",
+        "borderTopStyle": "solid",
+        "borderTopWidth": "0px",
+        "boxShadow": "0px 0.75px 1.5px rgba(0,0,0,0.24)",
+        "minWidth": "64px",
+        "msFlexItemAlign": "center",
+        "width": "75%",
+      }
+    }
+  >
+    <div
+      className="css-cursor-18t94o4 css-view-1dbjc4n"
+      data-focusable={true}
+      disabled={false}
+      onKeyDown={[Function]}
+      onKeyPress={[Function]}
+      onKeyUp={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      role="button"
+      style={
+        Object {
+          "borderBottomLeftRadius": "4px",
+          "borderBottomRightRadius": "4px",
+          "borderTopLeftRadius": "4px",
+          "borderTopRightRadius": "4px",
+          "cursor": "pointer",
+          "msTouchAction": "manipulation",
+          "overflowX": "hidden",
+          "overflowY": "hidden",
+          "position": "relative",
+          "touchAction": "manipulation",
+        }
+      }
+      tabIndex="0"
+    >
+      <div
+        className="css-view-1dbjc4n"
+        style={
+          Object {
+            "WebkitAlignItems": "center",
+            "WebkitBoxAlign": "center",
+            "WebkitBoxDirection": "normal",
+            "WebkitBoxOrient": "horizontal",
+            "WebkitBoxPack": "center",
+            "WebkitFlexDirection": "row",
+            "WebkitJustifyContent": "center",
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "msFlexAlign": "center",
+            "msFlexDirection": "row",
+            "msFlexPack": "center",
+          }
+        }
+      >
+        <div
+          className="css-text-901oao css-textOneLine-bfa6kz"
+          dir="auto"
+          style={
+            Object {
+              "color": "rgba(255,255,255,1.00)",
+              "direction": "ltr",
+              "fontFamily": "Roboto-Medium, Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
+              "letterSpacing": "1px",
+              "marginBottom": "9px",
+              "marginLeft": "16px",
+              "marginRight": "16px",
+              "marginTop": "9px",
+              "textAlign": "center",
+            }
+          }
+        >
+          SIGN UP OR LOGIN
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitBoxFlex": 5,
+        "WebkitFlexBasis": "0%",
+        "WebkitFlexGrow": 5,
+        "WebkitFlexShrink": 1,
+        "flexBasis": "0%",
+        "flexGrow": 5,
+        "flexShrink": 1,
+        "msFlexNegative": 1,
+        "msFlexPositive": 5,
+        "msFlexPreferredSize": "0%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`Login component should render loading state initially 1`] = `
+<div
+  className="css-view-1dbjc4n"
+  style={
+    Object {
+      "WebkitAlignItems": "center",
+      "WebkitBoxAlign": "center",
+      "WebkitBoxFlex": 1,
+      "WebkitBoxPack": "start",
+      "WebkitFlexBasis": "0%",
+      "WebkitFlexGrow": 1,
+      "WebkitFlexShrink": 1,
+      "WebkitJustifyContent": "flex-start",
+      "alignItems": "center",
+      "flexBasis": "0%",
+      "flexGrow": 1,
+      "flexShrink": 1,
+      "justifyContent": "flex-start",
+      "msFlexAlign": "center",
+      "msFlexNegative": 1,
+      "msFlexPack": "start",
+      "msFlexPositive": 1,
+      "msFlexPreferredSize": "0%",
+    }
+  }
+>
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitBoxFlex": 5,
+        "WebkitFlexBasis": "0%",
+        "WebkitFlexGrow": 5,
+        "WebkitFlexShrink": 1,
+        "flexBasis": "0%",
+        "flexGrow": 5,
+        "flexShrink": 1,
+        "msFlexNegative": 1,
+        "msFlexPositive": 5,
+        "msFlexPreferredSize": "0%",
+      }
+    }
+  />
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitBoxFlex": 0.5,
+        "WebkitFlexBasis": "0%",
+        "WebkitFlexGrow": 0.5,
+        "WebkitFlexShrink": 1,
+        "flexBasis": "0%",
+        "flexGrow": 0.5,
+        "flexShrink": 1,
+        "msFlexNegative": 1,
+        "msFlexPositive": 0.5,
+        "msFlexPreferredSize": "0%",
+      }
+    }
+  />
+  <div
+    className="css-text-901oao"
+    dir="auto"
+    style={
+      Object {
+        "color": "rgba(0,0,0,0.87)",
+        "direction": "ltr",
+        "fontFamily": "Roboto-Medium, Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
+        "fontSize": "20px",
+        "lineHeight": "30px",
+        "marginBottom": "2px",
+        "marginTop": "2px",
+        "textAlign": "left",
+      }
+    }
+  >
+    Ready to Fiximize?
+  </div>
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitBoxFlex": 1,
+        "WebkitFlexBasis": "0%",
+        "WebkitFlexGrow": 1,
+        "WebkitFlexShrink": 1,
+        "flexBasis": "0%",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "msFlexNegative": 1,
+        "msFlexPositive": 1,
+        "msFlexPreferredSize": "0%",
+      }
+    }
+  />
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitAlignSelf": "center",
+        "alignSelf": "center",
+        "backgroundColor": "rgba(98,0,238,1.00)",
+        "borderBottomColor": "rgba(0,0,0,0.00)",
+        "borderBottomLeftRadius": "20px",
+        "borderBottomRightRadius": "20px",
+        "borderBottomStyle": "solid",
+        "borderBottomWidth": "0px",
+        "borderLeftColor": "rgba(0,0,0,0.00)",
+        "borderLeftStyle": "solid",
+        "borderLeftWidth": "0px",
+        "borderRightColor": "rgba(0,0,0,0.00)",
+        "borderRightStyle": "solid",
+        "borderRightWidth": "0px",
+        "borderTopColor": "rgba(0,0,0,0.00)",
+        "borderTopLeftRadius": "20px",
+        "borderTopRightRadius": "20px",
+        "borderTopStyle": "solid",
+        "borderTopWidth": "0px",
+        "boxShadow": "0px 0.75px 1.5px rgba(0,0,0,0.24)",
+        "minWidth": "64px",
+        "msFlexItemAlign": "center",
+        "width": "75%",
+      }
+    }
+  >
+    <div
+      className="css-cursor-18t94o4 css-view-1dbjc4n"
+      data-focusable={true}
+      disabled={false}
+      onKeyDown={[Function]}
+      onKeyPress={[Function]}
+      onKeyUp={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      role="button"
+      style={
+        Object {
+          "borderBottomLeftRadius": "4px",
+          "borderBottomRightRadius": "4px",
+          "borderTopLeftRadius": "4px",
+          "borderTopRightRadius": "4px",
+          "cursor": "pointer",
+          "msTouchAction": "manipulation",
+          "overflowX": "hidden",
+          "overflowY": "hidden",
+          "position": "relative",
+          "touchAction": "manipulation",
+        }
+      }
+      tabIndex="0"
+    >
+      <div
+        className="css-view-1dbjc4n"
+        style={
+          Object {
+            "WebkitAlignItems": "center",
+            "WebkitBoxAlign": "center",
+            "WebkitBoxDirection": "normal",
+            "WebkitBoxOrient": "horizontal",
+            "WebkitBoxPack": "center",
+            "WebkitFlexDirection": "row",
+            "WebkitJustifyContent": "center",
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "msFlexAlign": "center",
+            "msFlexDirection": "row",
+            "msFlexPack": "center",
+          }
+        }
+      >
+        <div
+          className="css-text-901oao css-textOneLine-bfa6kz"
+          dir="auto"
+          style={
+            Object {
+              "color": "rgba(255,255,255,1.00)",
+              "direction": "ltr",
+              "fontFamily": "Roboto-Medium, Roboto, \\"Helvetica Neue\\", Helvetica, Arial, sans-serif",
+              "letterSpacing": "1px",
+              "marginBottom": "9px",
+              "marginLeft": "16px",
+              "marginRight": "16px",
+              "marginTop": "9px",
+              "textAlign": "center",
+            }
+          }
+        >
+          SIGN UP OR LOGIN
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="css-view-1dbjc4n"
+    style={
+      Object {
+        "WebkitBoxFlex": 5,
+        "WebkitFlexBasis": "0%",
+        "WebkitFlexGrow": 5,
+        "WebkitFlexShrink": 1,
+        "flexBasis": "0%",
+        "flexGrow": 5,
+        "flexShrink": 1,
+        "msFlexNegative": 1,
+        "msFlexPositive": 5,
+        "msFlexPreferredSize": "0%",
+      }
+    }
+  />
+</div>
+`;
