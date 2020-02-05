@@ -25,7 +25,7 @@ const ArvEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   const postalCode = navigation.getParam("postalCode", null);
   const flow = navigation.getParam("flow", null);
   const [loading] = React.useState(false);
-  const [arvEstimate, setArvEstimate] = React.useState("");
+  const [arvEstimate, setArvEstimate] = React.useState("999");
 
   const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
     setArvEstimate(text);
@@ -37,13 +37,6 @@ const ArvEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props)
     };
     navigation.navigate("AsIsEstimateScreen", { address, postalCode, flow, arvEstimate: +arvEstimate });
   };
-
-  React.useEffect(() => {
-    console.log("ArvEstimate Mount");
-    return () => {
-      console.log("ArvEstimate UnMount");
-    }
-  }, []);
 
   if (loading) {
     return (
