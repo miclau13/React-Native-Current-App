@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Text } from 'react-native';
 import { create } from 'react-test-renderer';
 import wait from 'waait';
 
