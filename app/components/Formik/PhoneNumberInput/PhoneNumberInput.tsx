@@ -34,8 +34,8 @@ const PhoneNumberInput = (props: TextInputProps) => {
   return (
     <NumberFormat 
       displayType={'text'}
-      format="+1 (###) ###-####" 
-      mask="_"
+      // format="+1 (###) ###-####" 
+      // mask="_"
       // onValueChange={values => {
       //   console.log("PhoneNumberInput  onValueChange value : ", values)
       //   const {formattedValue, value} = values;

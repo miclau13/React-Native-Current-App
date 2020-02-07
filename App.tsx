@@ -19,8 +19,8 @@ import { LoggedInProvider } from './app/common/LoggedInContext';
         }
       })
     },
-    uri: 'http://192.168.100.89:3000/graphql',
-    // uri: 'http://192.168.0.100:3000/graphql',
+    // uri: 'http://192.168.100.89:3000/graphql',
+    uri: 'http://192.168.0.108:3000/graphql',
     // uri: 'http://192.168.103.42:3000/graphql',
   });
 

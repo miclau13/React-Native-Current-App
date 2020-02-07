@@ -8,11 +8,6 @@ import { AsIsEstimateViewProps } from '../AsIsEstimate';
 const AsIsEstimateView: React.ComponentType<AsIsEstimateViewProps> = (props) => {
   const { handleOnChangeText, handleOnPress, asIsEstimate } = props;
 
-  React.useEffect(() => {
-    console.log("AsIsEstimateView Mount")
-    return () => {console.log("AsIsEstimateView UnMount")}
-  }, []);
-
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
