@@ -1,19 +1,19 @@
 {
   "expo": {
-    "name": "Fiximize",
-    "slug": "Fiximize",
+    "name": "React-Native-Current-App",
+    "slug": "React-Native-Current-App",
     "privacy": "public",
     "sdkVersion": "35.0.0",
-    "scheme": "fiximize",
+    "scheme": "React-Native-Current-App",
     "platforms": [
       "ios",
       "android"
     ],
     "version": "4.14.0",
     "orientation": "portrait",
-    "icon": "./assets/favicon3.png",
+    "icon": "./assets/splashCompany.png",
     "splash": {
-      "image": "./assets/fiximize.png",
+      "image": "./assets/splashCompany.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -25,10 +25,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.trudeed.fiximize"
+      "bundleIdentifier": "com.demo.React-Native-Current-App"
     },
     "android": {
-      "package": "com.trudeed.fiximize",
+      "package": "com.demo.React-Native-Current-App",
       "versionCode": 4
     }
   }

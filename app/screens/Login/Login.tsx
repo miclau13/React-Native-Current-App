@@ -19,8 +19,8 @@ export interface LoginViewProps {
   handleLoginOnPress: ButtonProps['onPress'];
 };
 
-const LOGINURL_PROD = "https://portal.trudeed.com/auth/fiximize-login";
-const RETURN_URL_PROD = "fiximize://";
+const LOGINURL_PROD = "https://demo";
+const RETURN_URL_PROD = "demo://";
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
