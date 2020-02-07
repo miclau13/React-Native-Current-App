@@ -9,6 +9,7 @@ import PhoneNumberInput from '../../../components/PhoneNumberInput';
 const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> = (props) => {
   const { 
     contactPhoneNumber, 
+    contactPhoneNumberIsValid,
     handleButtonOnPress,
     handleOnChangeText, 
   } = props;
@@ -25,7 +26,7 @@ const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> =
         <PhoneNumberInput
           autoFocus
           countryCode="US"
-          // error={false} 
+          error={!contactPhoneNumberIsValid} 
           keyboardType="number-pad"
           label="Phone Number"
           maxLength={17}
@@ -35,15 +36,14 @@ const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> =
           textContentType="telephoneNumber"
           value={contactPhoneNumber}
         />
-        {/* <HelperText           
+        <HelperText           
           type="error"
-          // visible={true}
+          visible={!contactPhoneNumberIsValid} 
         >
-          Error
-        </HelperText> */}
+          {`Invalid Phone Number. \nValid Phone Number : +1 XXX XXX XXXX`}
+        </HelperText>
         <View style={styles.viewBox1}/>
         <Button
-          // disabled={!!!values[`${"contactPhoneNumber"}`]}
           mode="contained" 
           onPress={handleButtonOnPress}
           style={styles.buttonContainer}
