@@ -1,5 +1,5 @@
 import React from 'react';
-import { KeyboardAvoidingView, SafeAreaView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, SafeAreaView, View } from 'react-native';
 import { Button, Headline, HelperText } from 'react-native-paper';
 
 import styles from './styles';
@@ -18,7 +18,7 @@ const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> =
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyBoardContainer}
-        behavior={"padding"}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View style={styles.viewBox1}/>
         <Headline>{`Enter your phone number for us to contact you: `}</Headline>

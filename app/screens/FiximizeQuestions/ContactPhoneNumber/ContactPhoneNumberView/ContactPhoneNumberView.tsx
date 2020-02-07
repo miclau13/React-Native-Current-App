@@ -1,5 +1,5 @@
 import React from 'react';
-import { KeyboardAvoidingView, SafeAreaView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, SafeAreaView, View } from 'react-native';
 import { Button, Headline } from 'react-native-paper';
 
 import styles from './styles';
@@ -10,11 +10,11 @@ import PhoneNumberInput from '../../../../components/Formik/PhoneNumberInput';
 const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> = (props) => {
 
   const { errors, handleButtonOnPress, values } = props;
-  console.log("ContactPhoneNumberView values[contactPhoneNumber]",values["contactPhoneNumber"])
+  // console.log("ContactPhoneNumberView values[contactPhoneNumber]",values["contactPhoneNumber"])
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={"padding"}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View style={styles.viewBox1}/>
         <Headline>{`Enter your phone number for us to contact you: `}</Headline>
