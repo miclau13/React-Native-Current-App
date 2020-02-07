@@ -18,12 +18,51 @@ type ScreenProps = {};
 export interface ContactPhoneNumberViewProps {
   contactPhoneNumber: string;
   handleButtonOnPress: ButtonProps['onPress'];
-  handleOnChange: TextInputProps['onChange'];
   handleOnChangeText: TextInputProps['onChangeText'];
-  handleOnKeyPress: TextInputProps['onKeyPress'];
-  handleOnSelectionChange: TextInputProps['onSelectionChange'];
-  _selection: TextInputProps['selection'];
 };
+
+const checkIfPrefixIntlCodeExists = (value: string) => {
+  // The input must contain intlCode = '+1 ' as prefix;
+  if (value.length < 3) {
+    return false;
+  };
+  return true;
+};
+
+const validateFormat = (value: string) => {
+  const intlCode = "+1 ";
+  const matchExtraOpenBracket = value.match(/^(\+1 )\($/);
+  if (matchExtraOpenBracket) {
+    const _value = intlCode;
+    return _value;
+  };
+
+  const matchMissingClosingBracket = value.match(/^(\+1 )\((\d{4})$/);
+  if (matchMissingClosingBracket) {
+    const _value = [intlCode, '(', matchMissingClosingBracket[2].slice(0,3), ') ', matchMissingClosingBracket[2].slice(-1)].join('');
+    return _value;
+  };
+
+  const matchMissingSpace = value.match(/^(\+1 )\((\d{3})\)(\d{1})$/);
+  if (matchMissingSpace) {
+    const _value = [intlCode, '(', matchMissingSpace[2], ') ', matchMissingSpace[3]].join('');
+    return _value;
+  };
+
+  const matchMissingHyphen = value.match(/^(\+1 )\((\d{3})\) (\d{4})$/);
+  if (matchMissingHyphen) {
+    const _value = [intlCode, '(', matchMissingHyphen[2], ') ', matchMissingHyphen[3].slice(0,3), '-', matchMissingHyphen[3].slice(-1)].join('');
+    return _value;
+  };
+
+  const matchValidFormat = value.match(/^(\+1 )(\d{3})(\d{3})(\d{4})$/);
+  if (matchValidFormat) {
+    const _value = [intlCode, '(', matchValidFormat[2], ') ', matchValidFormat[3], '-', matchValidFormat[4]].join('');
+    return _value;
+  };
+
+  return value;
+}
 
 // } else if (key === "contactPhoneNumber") {
 //   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -35,54 +74,27 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
   const createRehabInput = navigation.getParam("createRehabInput", null);
   const flow = navigation.getParam("flow", null);
+  const intlCode = "+1 ";
   
-  const [contactPhoneNumber, setContactPhoneNumber] = React.useState("+1 (___) ___-____");
+  const [contactPhoneNumber, setContactPhoneNumber] = React.useState(intlCode);
   const [_selection, set_Selection] = React.useState({ start: 0, end: 0 });
   const [_key, set_Key] = React.useState("");
 
   const handleButtonOnPress: ContactPhoneNumberViewProps['handleButtonOnPress'] = () => {
   };
-  const handleOnChange: ContactPhoneNumberViewProps['handleOnChange'] = (e) => {
-    // console.log("ContactPhoneNumber handleOnChange e : ", e)
-    // setContactPhoneNumber(value);
-  };
   const handleOnChangeText: ContactPhoneNumberViewProps['handleOnChangeText'] = (value) => {
-    console.log("ContactPhoneNumber handleOnChangeText value : ", value)
-    setContactPhoneNumber(value);
-  };
-  const handleOnKeyPress: ContactPhoneNumberViewProps['handleOnKeyPress'] = (e) => {
-    console.log("ContactPhoneNumber handleOnKeyPress e : ", e.nativeEvent);
-    const { nativeEvent: { key } } = e;
-    set_Key(key);
-  };
-  const handleOnSelectionChange: ContactPhoneNumberViewProps['handleOnSelectionChange'] = (e) => {
-    console.log("ContactPhoneNumber handleOnSelectionChange e.nativeEvent : ", e.nativeEvent)
-    console.log("ContactPhoneNumber handleOnSelectionChange _selection : ",_selection)
-    console.log("ContactPhoneNumber handleOnSelectionChange _key : ",_key)
-    const decreaseSelection = () => {
-      set_Selection({ start: _selection.start - 1, end: _selection.end - 1 });
-    };
-    const increaseSelection = () => {
-      set_Selection({ start: _selection.start + 1, end: _selection.end + 1 });
-    };
-    switch (_key) {
-      case "Backspace":
-        decreaseSelection();
-        break;
-      default:
-        increaseSelection();
-    };
+    const prefixIntlCode = checkIfPrefixIntlCodeExists(value);
+    if (!prefixIntlCode) return;
+
+    const validValue = validateFormat(value);
+    setContactPhoneNumber(validValue);
   };
 
   return (
     <ContactPhoneNumberView 
       handleButtonOnPress={handleButtonOnPress}
       contactPhoneNumber={contactPhoneNumber}
-      handleOnChange={handleOnChange}
       handleOnChangeText={handleOnChangeText}
-      handleOnKeyPress={handleOnKeyPress}
-      handleOnSelectionChange={handleOnSelectionChange}
-      _selection={_selection}
     />
   );
 }

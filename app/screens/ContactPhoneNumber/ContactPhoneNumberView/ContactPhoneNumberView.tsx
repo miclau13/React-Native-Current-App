@@ -9,12 +9,8 @@ import PhoneNumberInput from '../../../components/PhoneNumberInput';
 const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> = (props) => {
   const { 
     contactPhoneNumber, 
-    handleButtonOnPress, 
-    handleOnChange, 
+    handleButtonOnPress,
     handleOnChangeText, 
-    handleOnKeyPress,
-    handleOnSelectionChange, 
-    _selection 
   } = props;
 
   return (
@@ -32,13 +28,10 @@ const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> =
           // error={false} 
           keyboardType="number-pad"
           label="Phone Number"
+          maxLength={17}
           mode="outlined"
-          onChange={handleOnChange}
           onChangeText={handleOnChangeText}
-          onKeyPress={handleOnKeyPress}
-          onSelectionChange={handleOnSelectionChange}
           placeholder={contactPhoneNumber}
-          selection={_selection}
           textContentType="telephoneNumber"
           value={contactPhoneNumber}
         />
