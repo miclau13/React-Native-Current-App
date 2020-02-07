@@ -137,11 +137,11 @@ HomeStack.navigationOptions = (props: NavigationContainerProps<NavigationState>)
   return {
     tabBarVisible,
     drawerLockMode,
-    drawerLabel: homeStrings.homeTitle,
+    drawerLabel: homeStrings.title,
     drawerIcon: ({ tintColor }) => (
       <Icon name="md-home" type="ionicon" color={tintColor} />
     )as NavigationBottomTabOptions["tabBarIcon"],
-    tabBarLabel: homeStrings.homeTitle,
+    tabBarLabel: homeStrings.title,
     tabBarIcon: ({ tintColor }) => (
       <Icon name="ios-home" type="ionicon" color={tintColor} />
     ) as NavigationBottomTabOptions["tabBarIcon"],

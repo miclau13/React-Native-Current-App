@@ -1,4 +1,5 @@
 const strings = {
-  title: "Login View"
+  title: "Home View"
 }
+
 export default strings;

@@ -1,5 +1,5 @@
 const strings = {
-  title: "ZipCodeInput",
+  title: "Number Input",
 }
 
 export default strings;

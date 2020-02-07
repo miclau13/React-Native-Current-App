@@ -83,11 +83,6 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     };
   };
 
-  React.useEffect(() => {
-    console.log("Login Mount");
-    return () => {console.log("Login UnMount");};
-  }, []);
-
   if (loading) {
     return (
       <LoadingComponent />

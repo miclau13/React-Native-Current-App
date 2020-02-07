@@ -1,5 +1,5 @@
 const strings = {
-  homeTitle: "Home"
+  title: "Home"
 }
 
 export default strings;

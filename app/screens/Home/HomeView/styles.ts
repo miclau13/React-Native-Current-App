@@ -2,13 +2,6 @@ import { StyleSheet } from 'react-native';
 import { screenWidth } from '../../../styles';
 
 const styles = StyleSheet.create({
-  autocompleteTextInput: {
-    backgroundColor: 'white',
-    fontSize: 20,
-    marginBottom: 10,
-    marginTop: 10,
-    padding: 10,
-  },
   container: {
     alignItems: "center",
     flex: 1,
@@ -18,11 +11,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     width: screenWidth,
-  },
-  nextButton: {
-    alignSelf: "center",
-    borderRadius: 20,
-    width: "75%",
   },
   viewBox1: {
     flex: 1,

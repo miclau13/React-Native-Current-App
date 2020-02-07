@@ -15,7 +15,7 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
 
   // const loggedIn = React.useContext(LoggedInContext);
 
-  const bootstrapAsync = async() => {
+  const bootstrapAsync = async () => {
     const accessToken = await SecureStore.getItemAsync("accessToken", {});
     if (accessToken) {
       navigation.navigate("MainNavigator");
@@ -25,10 +25,8 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
   }
 
   useEffect(() => {
-    // TODO dont use setTImeout
-    console.log("InitialLoading Mount");
-    bootstrapAsync()
-    return () => {console.log("InitialLoading UnMount");}
+    bootstrapAsync();
+    return () => {}
   }, []);
 
   return (

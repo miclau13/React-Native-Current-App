@@ -27,7 +27,7 @@ const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const postalCode = navigation.getParam("postalCode", null);
   const arvEstimate = navigation.getParam("arvEstimate", null);
   const [loading, setLoading] = React.useState(false);
-  const [asIsEstimate, setAsIsEstimate] = React.useState("");
+  const [asIsEstimate, setAsIsEstimate] = React.useState("999");
 
   const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
     setAsIsEstimate(text);
