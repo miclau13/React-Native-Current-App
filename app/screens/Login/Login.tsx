@@ -21,7 +21,7 @@ export interface LoginViewProps {
 
 const LOGINURL_DEV = "https://dev-agent.trudeed.com/auth/fiximize-login";
 const RETURN_URL_LOCALHOST = "exp://192.168.100.89:19000";
-const RETURN_URL_LOCALHOST2 = "exp://192.168.0.100:19000";
+const RETURN_URL_LOCALHOST2 = "exp://192.168.0.103:19000";
 const RETURN_URL_LOCALHOST3 = "exp://192.168.103.42:19000";
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
@@ -57,7 +57,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   const startLogin = async (args: { redirectUri: string }) => {
-    const result = await WebBrowser.openAuthSessionAsync(args.redirectUri, RETURN_URL_LOCALHOST);
+    const result = await WebBrowser.openAuthSessionAsync(args.redirectUri, RETURN_URL_LOCALHOST3);
     const accessToken = queryString.parseUrl(result["url"]).query.accessToken;
     await SecureStore.setItemAsync("accessToken", accessToken as string);
     return result.type;

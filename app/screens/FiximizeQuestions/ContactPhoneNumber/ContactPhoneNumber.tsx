@@ -1,16 +1,19 @@
-import { useFormikContext } from 'formik';
+import { FormikErrors, useFormikContext } from 'formik';
 import React from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Button, ButtonProps, Headline } from 'react-native-paper';
+import { ButtonProps } from 'react-native-paper';
 
-import styles from './styles';
 import { FiximizeQuestionsFormProps, FiximizeQuestionsFormValues } from '../FiximizeQuestionsForm';
-import HelperText from '../../../components/Formik/HelperText';
-import NumberInput from '../../../components/NumberInput';
+import ContactPhoneNumberView from './ContactPhoneNumberView';
 
 interface ContactPhoneNumberProps {
   backFrom: FiximizeQuestionsFormProps['backFrom'];
   handleStepNavigation: FiximizeQuestionsFormProps['handleStepNavigation'];
+};
+
+export interface ContactPhoneNumberViewProps {
+  errors: FormikErrors<FiximizeQuestionsFormValues>;
+  handleButtonOnPress: ButtonProps['onPress'];
+  values: FiximizeQuestionsFormValues;
 };
 
 const ContactPhoneNumber: React.ComponentType<ContactPhoneNumberProps> = (props) => {
@@ -18,7 +21,7 @@ const ContactPhoneNumber: React.ComponentType<ContactPhoneNumberProps> = (props)
   const { errors, submitForm, values } = form;
   const { backFrom } = props;
 
-  const handleButtonOnPress: ButtonProps['onPress'] = () => {
+  const handleButtonOnPress: ContactPhoneNumberViewProps['handleButtonOnPress'] = () => {
     if(errors && errors["contactPhoneNumber"]) {
       return;
     };
@@ -34,34 +37,11 @@ const ContactPhoneNumber: React.ComponentType<ContactPhoneNumberProps> = (props)
   }, []);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <View style={styles.viewBox1}/>
-      <Headline>{`Enter your phone number for us to contact you: `}</Headline>
-      <View style={styles.viewBox1}/>
-      <NumberInput
-        autoFocus
-        error={errors && errors["contactPhoneNumber"]} 
-        keyboardType="number-pad"
-        label="Phone Number"
-        // maxLength={8}
-        mode="outlined"
-        name={"contactPhoneNumber"}
-      />
-      <HelperText name={"contactPhoneNumber"}/>
-      <View style={styles.viewBox2}/>
-      <Button
-        disabled={!!!values[`${"contactPhoneNumber"}`]}
-        mode="contained" 
-        onPress={handleButtonOnPress}
-        style={styles.buttonContainer}
-      >
-        Next
-      </Button>
-      <View style={styles.viewBox3}/>
-    </KeyboardAvoidingView>
+    <ContactPhoneNumberView 
+      errors={errors}
+      handleButtonOnPress={handleButtonOnPress}
+      values={values}
+    />
   );
 }
 export default React.memo(ContactPhoneNumber);
