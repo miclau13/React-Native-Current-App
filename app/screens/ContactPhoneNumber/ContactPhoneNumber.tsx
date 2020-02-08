@@ -9,12 +9,9 @@ import { CreateRehabVariables } from '../../generated/CreateRehab';
 import {CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
 export interface Params {
-  arvEstimate: number;
   createRehabInput: CreateRehabVariables['input'];
   createRehabNoArvInput: CreateRehabNoArvVariables['input'];
   flow: FiximizeFlow;
-  postalCode?: string;
-  propertyInfo?: object;
 };
 
 type ScreenProps = {};
@@ -28,20 +25,9 @@ export interface ContactPhoneNumberViewProps {
 
 const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-
-  const arvEstimate = navigation.getParam("arvEstimate", null);
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
   const createRehabInput = navigation.getParam("createRehabInput", null);
   const flow = navigation.getParam("flow", null);
-  const postalCode = navigation.getParam("postalCode", null);
-  const propertyInfo = navigation.getParam("propertyInfo", {});
-
-  console.log("ContactPhoneNumber arvEstimate,",arvEstimate)
-  console.log("ContactPhoneNumber createRehabNoArvInput,",createRehabNoArvInput)
-  console.log("ContactPhoneNumber createRehabInput,",createRehabInput)
-  console.log("ContactPhoneNumber flow,",flow)
-  console.log("ContactPhoneNumber postalCode,",postalCode)
-  console.log("ContactPhoneNumber propertyInfo,",propertyInfo)
   
   const [contactPhoneNumber, setContactPhoneNumber] = React.useState("+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
