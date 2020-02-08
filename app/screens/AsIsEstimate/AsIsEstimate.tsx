@@ -4,12 +4,13 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import AsIsEstimateView from './AsIsEstimateView';
 import  { LoadingComponent } from '../InitialLoading';
+import { eraseComma, validateFormat } from '../../components/NumberInput/utils';
 
 type Params = {
   flow: string;
   address: string;
+  arvEstimate: number;
   postalCode?: string;
-  arvEstimate?: string;
 };
 
 type ScreenProps = {};
@@ -26,25 +27,20 @@ const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const address = navigation.getParam("address", null);
   const postalCode = navigation.getParam("postalCode", null);
   const arvEstimate = navigation.getParam("arvEstimate", null);
-  const [loading, setLoading] = React.useState(false);
-  const [asIsEstimate, setAsIsEstimate] = React.useState("999");
+  const [loading] = React.useState(false);
+  const [asIsEstimate, setAsIsEstimate] = React.useState<AsIsEstimateViewProps['asIsEstimate']>("0");
 
-  const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
-    setAsIsEstimate(text);
+  const handleOnChangeText: TextInputProps['onChangeText'] = (value) => {
+    const validValue = validateFormat(value);
+    setAsIsEstimate(validValue);
   };
   const handleOnPress: ButtonProps['onPress'] = () => {
-    if (asIsEstimate.length < 1 || +asIsEstimate < 0) {
+    const _asIsEstimate = +eraseComma(asIsEstimate);
+    if (_asIsEstimate < 0) {
       return;
     };
-    navigation.navigate("TotalDebtsScreen", { flow, address, postalCode, asIsEstimate: +asIsEstimate, arvEstimate: +arvEstimate });
+    navigation.navigate("TotalDebtsScreen", { arvEstimate, flow, address, postalCode, asIsEstimate: +asIsEstimate });
   };
-
-  React.useEffect(() => {
-    console.log("AsIsEstimate Mount");
-    return () => {
-      console.log("AsIsEstimate UnMount");
-    }
-  }, []);
 
   if (loading) {
     return (

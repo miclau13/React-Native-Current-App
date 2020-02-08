@@ -1,19 +1,23 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, View } from 'react-native';
-import { Button, Headline } from 'react-native-paper';
+import { Button, Headline, HelperText } from 'react-native-paper';
 
 import styles from './styles';
 import { ContactPhoneNumberViewProps } from '../ContactPhoneNumber';
-import HelperText from '../../../../components/Formik/HelperText';
-import PhoneNumberInput from '../../../../components/Formik/PhoneNumberInput';
+import PhoneNumberInput from '../../../components/PhoneNumberInput';
 
 const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> = (props) => {
+  const { 
+    contactPhoneNumber, 
+    contactPhoneNumberIsValid,
+    handleButtonOnPress,
+    handleOnChangeText, 
+  } = props;
 
-  const { errors, handleButtonOnPress, values } = props;
-  // console.log("ContactPhoneNumberView values[contactPhoneNumber]",values["contactPhoneNumber"])
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
+        style={styles.keyBoardContainer}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View style={styles.viewBox1}/>
@@ -22,25 +26,30 @@ const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> =
         <PhoneNumberInput
           autoFocus
           countryCode="US"
-          error={errors && errors["contactPhoneNumber"]} 
+          error={!contactPhoneNumberIsValid} 
           keyboardType="number-pad"
           label="Phone Number"
+          maxLength={17}
           mode="outlined"
-          name={"contactPhoneNumber"}
-          // textContentType="none"
-          value={values["contactPhoneNumber"]}
+          onChangeText={handleOnChangeText}
+          textContentType="telephoneNumber"
+          value={contactPhoneNumber}
         />
-        <HelperText name={"contactPhoneNumber"}/>
-        <View style={styles.viewBox2}/>
+        <HelperText           
+          type="error"
+          visible={!contactPhoneNumberIsValid} 
+        >
+          {`Invalid Phone Number. \nValid Phone Number : +1 XXX XXX XXXX`}
+        </HelperText>
+        <View style={styles.viewBox1}/>
         <Button
-          disabled={!!!values[`${"contactPhoneNumber"}`]}
           mode="contained" 
           onPress={handleButtonOnPress}
           style={styles.buttonContainer}
         >
           Submit
         </Button>
-        <View style={styles.viewBox2}/>
+        <View style={styles.viewBox3}/>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

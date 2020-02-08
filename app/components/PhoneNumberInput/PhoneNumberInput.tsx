@@ -1,7 +1,7 @@
 import React from 'react';
-// import NumberFormat from 'react-number-format';
+import { TextInput, TextInputProps } from 'react-native-paper';
 
-import NumberInput, { TextInputProps } from '../Formik/NumberInput';
+import PhoneNumberInputWithNumberFormat from '../NumberFormat/PhoneNumberInput';
 
 interface PhoneNumberInputProps extends TextInputProps {
   countryCode: "US",
@@ -11,7 +11,7 @@ interface PhoneNumberInputProps extends TextInputProps {
 const PhoneNumberInput = (props: PhoneNumberInputProps) => {
   const { countryCode, ...inputProps } = props;
 
-  return <NumberInput {...props} />;
+  return <TextInput {...inputProps} />;
 };
 
 export default PhoneNumberInput;

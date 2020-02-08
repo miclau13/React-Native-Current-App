@@ -10,6 +10,7 @@ import { createBottomTabNavigator, NavigationBottomTabOptions } from "react-navi
 import ArvEstimateScreen from "../screens/ArvEstimate";
 import AsIsEstimateScreen from "../screens/AsIsEstimate";
 import AutocompleteScreen  from "../screens/FiximizeQuestions/Autocomplete/Autocomplete";
+import ContactPhoneNumberScreen from "../screens/ContactPhoneNumber";
 import FiximizeQuestionsFormScreen, { getPreviousStep as getFiximizeQuestionsPreviousStep } from "../screens/FiximizeQuestions/FiximizeQuestionsForm";
 import FullRemodelSummaryScreen from "../screens/FullRemodelSummary";
 import HomeScreen, { strings as homeStrings } from "../screens/Home";
@@ -24,7 +25,7 @@ import TotalDebtsScreen from "../screens/TotalDebts";
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, HomeScreen, TotalDebtsScreen,
+  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, ContactPhoneNumberScreen, HomeScreen, TotalDebtsScreen,
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {

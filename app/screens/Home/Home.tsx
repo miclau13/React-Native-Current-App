@@ -36,8 +36,20 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const { data, error, loading } = useQuery(VIEWER_QUERY);
   const handleOnFocus = React.useCallback<CardProps['onPress']>(
-    () => navigation.push("AutocompleteScreen"), 
-    [navigation.push]
+    () => navigation.push("AutocompleteScreen")
+    // () => navigation.push("ContactPhoneNumberScreen")
+    // () => navigation.push("ArvEstimateScreen")
+    // () => navigation.push("AsIsEstimateScreen")
+    // () => navigation.push("PropertyInfoScreen", { 
+    //   address: "13807 SE Allen Rd, Bellevue, WA, 98006", 
+    //   flow: 0, 
+    //   arvEstimate: 1,
+    //   asIsEstimate: 1,
+    //   totalDebts: 0,
+    //   step: 'summary',
+    //   postalCode: '13807'
+    // })
+    , [navigation.push]
   );
 
   React.useEffect(() => {

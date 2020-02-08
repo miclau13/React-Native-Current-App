@@ -1,8 +1,18 @@
 import React from 'react';
-import TextInput, { TextInputProps } from '../Formik/TextInput';
+import { TextInput, TextInputProps } from 'react-native-paper';
 
-const NumberInput = (props: TextInputProps) => {
-  return <TextInput {...props} />;
+export interface NumberInputProps extends TextInputProps {};
+
+const NumberInput = (props: NumberInputProps) => {
+  return (
+  <TextInput
+    autoFocus
+    keyboardType="number-pad"
+    mode="outlined"
+    textContentType="none"
+    { ...props }
+  />
+  );
 };
 
 export default NumberInput;
