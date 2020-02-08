@@ -1,5 +1,5 @@
 const strings = {
-  title: "Number Input",
+  title: "Phone Number Input",
 }
 
 export default strings;

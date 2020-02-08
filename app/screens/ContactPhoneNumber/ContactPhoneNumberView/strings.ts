@@ -1,5 +1,4 @@
 const strings = {
-  title: "Number Input",
+  title: "Login View"
 }
-
 export default strings;

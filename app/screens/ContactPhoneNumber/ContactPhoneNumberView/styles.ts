@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { primaryButtonColor, screenWidth } from '../../../styles';
+import { screenWidth } from '../../../styles';
 
 const styles = StyleSheet.create({
   buttonContainer: {
@@ -7,26 +7,26 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: "75%",
   },
-  buttonSelectedContainer: {
-    backgroundColor: primaryButtonColor,
-  },
   container: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "flex-start",
+  },
+  keyBoardContainer: {
     flex: 1,
     justifyContent: "flex-start",
     width: screenWidth,
   },
-  inputContainerStyle: {
-    borderBottomColor: primaryButtonColor,
-    borderBottomWidth: 1,
-  },
-  title: {
-    textAlign: "center",
+  nextButton: {
+    alignSelf: "center",
+    borderRadius: 20,
+    width: "75%",
   },
   viewBox1: {
     flex: 1,
   },
   viewBox2: {
-    flex: 10,
+    flex: 2,
   },
   viewBox3: {
     flex: 5,

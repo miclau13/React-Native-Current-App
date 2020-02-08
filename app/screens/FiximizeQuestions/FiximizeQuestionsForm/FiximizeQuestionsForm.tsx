@@ -23,7 +23,7 @@ type FiximizeQuestionsStepForThreeQuarterBaths = "threeQuarterBaths1" | "threeQu
 type FiximizeQuestionsStepForHalfBaths = "halfBaths1" | "halfBaths2" | "halfBaths3" |"halfBaths4" |"halfBaths5";
 
 type FiximizeQuestionsStep = FiximizeQuestionsStepForBeds | FiximizeQuestionsStepForFullBaths | FiximizeQuestionsStepForThreeQuarterBaths | FiximizeQuestionsStepForHalfBaths |
-  "contactPhoneNumber" | "halfBathSize" | "kitchenWallCabinetSize" | "kitchenBaseCabinetSize" | "kitchenIslandCabinetSize" | "vacant";
+  "halfBathSize" | "kitchenWallCabinetSize" | "kitchenBaseCabinetSize" | "kitchenIslandCabinetSize" | "vacant";
 
 type Params = {
   arvEstimate?: number;
@@ -47,7 +47,7 @@ const FiximizeQuestionsPreviousStepMap = {
   "kitchenBaseCabinetSize": "kitchenWallCabinetSize",
   "kitchenIslandCabinetSize": "kitchenBaseCabinetSize",
   "vacant": "kitchenIslandCabinetSize",
-  "contactPhoneNumber": "vacant",
+  // "contactPhoneNumber": "vacant",
 };
 
 export const RequiredInput = ["beds", "fullBaths", "halfBaths", "threeQuarterBaths"];
@@ -98,7 +98,7 @@ export const getPreviousStep = (currentstep: FiximizeQuestionsStep, propertyInfo
 
 export interface FiximizeQuestionsFormValues {
   asIsEstimate: number;
-  contactPhoneNumber: string;
+  // contactPhoneNumber: string;
   vacant: number;
 };
 
@@ -123,7 +123,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   const initialValues = React.useMemo(() => {
     return ({
       asIsEstimate,
-      contactPhoneNumber: "",
+      // contactPhoneNumber: "",
       kitchenWallCabinetSize: "0",
       kitchenBaseCabinetSize: "0",
       kitchenIslandCabinetSize: "0",
@@ -152,7 +152,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
   }, [initialValues]);
 
   const onSubmit = React.useCallback(values => {
-    const { asIsEstimate, beds, contactPhoneNumber, fullBaths, halfBaths, threeQuarterBaths,
+    const { asIsEstimate, beds, fullBaths, halfBaths, threeQuarterBaths,
       kitchenBaseCabinetSize, kitchenIslandCabinetSize, kitchenWallCabinetSize, vacant } = values;
     const bedsInfo = _.map(beds, (value, key) => {
       return { size: +value, order: +key[key.length - 1]};
@@ -168,7 +168,7 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
     });
     const createRehabInput: CreateRehabVariables['input'] = {
       address,
-      contactPhoneNumber,
+      // contactPhoneNumber,
       asIs: +asIsEstimate,
       propertyDetails: {
         bedsInfo,
@@ -182,8 +182,8 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
       totalDebts: +totalDebts,
       vacant: !!vacant,
     };
-    console.log("FiximizeQuestionsForm createRehabInput", createRehabInput);
-    navigation.navigate("FullRemodelSummaryScreen", { flow, createRehabInput, createRehabNoArvInput: { ...createRehabInput, ...propertyInfo, postalCode, arv: arvEstimate} });
+    // navigation.navigate("FullRemodelSummaryScreen", { flow, createRehabInput, createRehabNoArvInput: { ...createRehabInput, ...propertyInfo, postalCode, arv: arvEstimate} });
+    navigation.navigate("ContactPhoneNumberScreen", { flow, createRehabInput, createRehabNoArvInput: { ...createRehabInput, ...propertyInfo, postalCode, arv: arvEstimate} });
   }, []);
 
   const kitchenCabinetSizefields = React.useMemo(() => {
@@ -301,10 +301,10 @@ const FiximizeQuestionsForm: NavigationStackScreenComponent<Params, ScreenProps>
           <VacantProperty backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
           : null
         }
-        {step === "contactPhoneNumber" ? 
+        {/* {step === "contactPhoneNumber" ? 
           <ContactPhoneNumber backFrom={backFrom} handleStepNavigation={handleStepNavigation} />
           : null
-        }
+        } */}
       </View>
     </FiximizeQuestionsFormik>
   )
