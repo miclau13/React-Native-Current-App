@@ -1,11 +1,11 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, View } from 'react-native';
-import { Button, Headline, HelperText, TextInput } from 'react-native-paper';
+import { Button, Headline, HelperText } from 'react-native-paper';
 
 import styles from './styles';
 import { ArvEstimateViewProps } from '../ArvEstimate';
 
-import NumberFormat from 'react-number-format';
+import NumberInput from '../../../components/NumberInput';
 
 const ArvEstimateView: React.ComponentType<ArvEstimateViewProps> = (props) => {
   const { handleOnChangeText, handleOnPress, arvEstimate } = props;
@@ -19,32 +19,12 @@ const ArvEstimateView: React.ComponentType<ArvEstimateViewProps> = (props) => {
         <View style={styles.viewBox1}/>
         <Headline>Estimate ARV:</Headline>
         <View style={styles.viewBox1}/>
-        <NumberFormat 
-          displayType={'text'}
-          renderText={value => {
-            console.log("PhoneNumberInput value", value)
-            return (
-              <TextInput
-                autoFocus
-                error={arvEstimate.length < 1 || +arvEstimate < 0}
-                keyboardType="number-pad"
-                label="$"
-                mode="outlined"
-                onChangeText={handleOnChangeText}
-                value={value}
-                textContentType="none"
-              />
-            )
-          }}
+        <NumberInput
+          error={+arvEstimate < 0}
+          label="$"
+          onChangeText={handleOnChangeText}
           value={arvEstimate}
         />
-
-        <HelperText 
-          type="error"
-          visible={arvEstimate.length < 1}
-        >
-          {"This field is required"}
-        </HelperText>
         <HelperText 
           type="error"
           visible={+arvEstimate < 0}
@@ -53,7 +33,7 @@ const ArvEstimateView: React.ComponentType<ArvEstimateViewProps> = (props) => {
         </HelperText>
         <View style={styles.viewBox1}/>
         <Button 
-          disabled={arvEstimate.length < 1}
+          disabled={+arvEstimate < 0}
           mode="contained" 
           onPress={handleOnPress}
           style={styles.nextButton}

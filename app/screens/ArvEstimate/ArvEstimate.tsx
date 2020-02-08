@@ -3,7 +3,8 @@ import { ButtonProps, TextInputProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import ArvEstimateView from './ArvEstimateView';
-import  { LoadingComponent } from '../InitialLoading';
+import { LoadingComponent } from '../InitialLoading';
+import { eraseComma, validateFormat } from '../../components/NumberInput/utils';
 
 type Params = {
   address: string;
@@ -22,20 +23,24 @@ export interface ArvEstimateViewProps {
 const ArvEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const address = navigation.getParam("address", null);
-  const postalCode = navigation.getParam("postalCode", null);
   const flow = navigation.getParam("flow", null);
-  const [loading] = React.useState(false);
-  const [arvEstimate, setArvEstimate] = React.useState("999");
+  const postalCode = navigation.getParam("postalCode", null);
 
-  const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
-    setArvEstimate(text);
+  const [loading] = React.useState(false);
+  const [arvEstimate, setArvEstimate] = React.useState<ArvEstimateViewProps['arvEstimate']>("0");
+
+  const handleOnChangeText: TextInputProps['onChangeText'] = (value) => {
+    const validValue = validateFormat(value);
+    setArvEstimate(validValue);
   };
 
   const handleOnPress: ButtonProps['onPress'] = () => {
-    if (arvEstimate.length < 1 || +arvEstimate < 0) {
+    const _arvEstimate = +eraseComma(arvEstimate);
+    if (_arvEstimate < 0) {
       return;
     };
-    navigation.navigate("AsIsEstimateScreen", { address, postalCode, flow, arvEstimate: +arvEstimate });
+
+    navigation.navigate("AsIsEstimateScreen", { address, postalCode, flow, arvEstimate: _arvEstimate });
   };
 
   if (loading) {

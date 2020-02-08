@@ -52,7 +52,8 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
       setContactPhoneNumberIsValid(false);
     } else {
       setContactPhoneNumberIsValid(true);
-      navigation.navigate("FullRemodelSummaryScreen", { flow, createRehabInput, createRehabNoArvInput: { ...createRehabInput, ...propertyInfo, postalCode, arv: arvEstimate} });
+      const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
+      navigation.navigate("FullRemodelSummaryScreen", { flow, createRehabInput, createRehabNoArvInput: _createRehabNoArvInput });
     }
   };
   const handleOnChangeText: ContactPhoneNumberViewProps['handleOnChangeText'] = (value) => {

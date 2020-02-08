@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInputProps } from 'react-native-paper';
+import { TextInput, TextInputProps } from 'react-native-paper';
 
 import PhoneNumberInputWithNumberFormat from '../NumberFormat/PhoneNumberInput';
 
@@ -11,7 +11,7 @@ interface PhoneNumberInputProps extends TextInputProps {
 const PhoneNumberInput = (props: PhoneNumberInputProps) => {
   const { countryCode, ...inputProps } = props;
 
-  return <PhoneNumberInputWithNumberFormat {...inputProps} />;
+  return <TextInput {...inputProps} />;
 };
 
 export default PhoneNumberInput;

@@ -32,7 +32,6 @@ const ContactPhoneNumberView: React.ComponentType<ContactPhoneNumberViewProps> =
           maxLength={17}
           mode="outlined"
           onChangeText={handleOnChangeText}
-          placeholder={contactPhoneNumber}
           textContentType="telephoneNumber"
           value={contactPhoneNumber}
         />
