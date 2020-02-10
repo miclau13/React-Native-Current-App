@@ -62,8 +62,29 @@ const HomeStack = createStackNavigator(
     FullRemodelSummaryScreen: {
       screen: FullRemodelSummaryScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        const rehabId = navigation.getParam("rehabId");
+        const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
+        console.log("navigationOptions revisedRehabInfo",revisedRehabInfo)
+        console.log(" navigationOptionsrehab.rehabId, ", rehabId )
+        const flow = 1;
+        const handleOnPress = () => {
+          navigation.navigate("PropertyInfoScreen", { 
+            flow,
+            rehabId,
+            revisedRehabInfo
+          })
+        }
         return { 
-          headerLeft: null,
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                onPress={handleOnPress} 
+                title="Revise"
+              />
+            )
+          }
         }
       }
     },

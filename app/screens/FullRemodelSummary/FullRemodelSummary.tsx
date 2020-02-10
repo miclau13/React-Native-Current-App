@@ -9,12 +9,15 @@ import { useMutation } from '@apollo/react-hooks';
 
 import FullRemodelSummaryView from './FullRemodelSummaryView';
 import { LoadingComponent } from '../InitialLoading';
+import { RevisedRehabInfo } from '../PropertyInfo';
 import { CreateRehabNoArv, CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
 export interface Params {
   arv?: CreateRehabNoArv['createRehabNoArv']['arv'];
   asIs?: number;
   createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
+  rehabId?: string;
+  revisedRehabInfo?: RevisedRehabInfo;
   submitted?: boolean;
   totalDebts?: number;
   vacant?: boolean;
@@ -149,6 +152,20 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         }));
         setRehabItemPackageId(rehab.rehabItemPackage.id);
         setSubmitted(rehab.rehabItemPackage.submitted);
+        // For revise flow
+        const revisedRehabInfo = {
+          asIs,
+          totalDebts,
+          vacant,
+          address: createRehabNoArvInput.address,
+          arv: rehab.arv, 
+          contactPhoneNumber: createRehabNoArvInput.contactPhoneNumber,
+          postalCode: createRehabNoArvInput.postalCode,
+        };
+        navigation.setParams({ 
+          revisedRehabInfo,
+          rehabId: rehab.rehabId, 
+        });
       }
     } catch (e) {
       console.log("createRehab e", e)
