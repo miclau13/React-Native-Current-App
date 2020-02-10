@@ -8,16 +8,13 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useMutation } from '@apollo/react-hooks';
 
 import FullRemodelSummaryView from './FullRemodelSummaryView';
-import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
 import { LoadingComponent } from '../InitialLoading';
-import { CreateRehab, CreateRehab_createRehab_rehabItemPackage_rehabItems, CreateRehabVariables } from '../../generated/CreateRehab';
+import { CreateRehabNoArv, CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
 export interface Params {
-  flow: FiximizeFlow;
-  arv?: CreateRehab['createRehab']['arv'];
+  arv?: CreateRehabNoArv['createRehabNoArv']['arv'];
   asIs?: number;
-  createRehabInput?: CreateRehabVariables['input'];
-  createRehabNoArvInput?: object;
+  createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
   submitted?: boolean;
   totalDebts?: number;
   vacant?: boolean;
@@ -35,9 +32,9 @@ export type FullRemodelSummaryProps = {
 export type FullRemodelSummaryState = {
   arv: Params['arv'];
   data: RehabItemsPackage[];
-  rehabId: CreateRehab['createRehab']['rehabId'];
-  rehabItems: Omit<CreateRehab_createRehab_rehabItemPackage_rehabItems, "__typename">[];
-  rehabItemPackageId: CreateRehab['createRehab']['rehabItemPackage']['id'];
+  rehabId: CreateRehabNoArv['createRehabNoArv']['rehabId'];
+  rehabItems: Omit<CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems, "__typename">[];
+  rehabItemPackageId: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
 };
 
 type RehabItemsPackage = {
@@ -55,30 +52,6 @@ type RehabItemsPackageMap = {
     selected: boolean;
   }
 }
-
-const CREATE_REHAB = gql`
-  mutation CreateRehab($input: CreateRehabInput!) {
-    createRehab(input: $input) {
-      arv
-      rehabId
-      rehabItemPackage {
-        id
-        rehabItems {
-          category
-          cost
-          name
-          selected
-          unit
-          costPerUnit
-          custom
-          calculationMethod
-          order
-        }
-        submitted
-      }
-    }
-  }
-`;
 
 const CREATE_REHAB_NO_ARV = gql`
   mutation CreateRehabNoArv($input: CreateRehabNoArvInput!) {
@@ -125,17 +98,14 @@ const GetOrderForRehabItemsCategory = (key: string) => {
 };
 
 const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
-  const [createRehab] = useMutation<CreateRehab, CreateRehabVariables>(CREATE_REHAB);
   const [createRehabNoArv] = useMutation(CREATE_REHAB_NO_ARV);
 
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
-  const createRehabInput = navigation.getParam("createRehabInput", null);
-  const flow = navigation.getParam("flow", null);
 
-  const totalDebts = createRehabInput.totalDebts;
-  const vacant = createRehabInput.vacant;
-  const asIs = createRehabInput.asIs;
+  const totalDebts = createRehabNoArvInput.totalDebts;
+  const vacant = createRehabNoArvInput.vacant;
+  const asIs = createRehabNoArvInput.asIs;
 
   const [arv, setArv] = React.useState<FullRemodelSummaryState['arv']>();
   const [data, setData] = React.useState<FullRemodelSummaryState['data']>();
@@ -151,17 +121,8 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const bootstrapAsync = async () => {
     try {
-      let result;
-      if (flow === FiximizeFlow.AutoCompleteAddress) {
-        console.log('calling createRehab')
-        // result = await createRehab({ variables: { input: createRehabInput } });
-        result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }})
-      } else {
-        console.log('calling createRehabNoArv')
-        result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }})
-      }
+      const result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
       if (result) {
-        // let rehab = flow === FiximizeFlow.AutoCompleteAddress ? result.data.createRehab : result.data.createRehabNoArv;
         const rehab = result.data.createRehabNoArv;
         const itemsMap: RehabItemsPackageMap = (rehab.rehabItemPackage?.rehabItems || []).reduce((acc, item) => {
           if (!acc[item.category]) {

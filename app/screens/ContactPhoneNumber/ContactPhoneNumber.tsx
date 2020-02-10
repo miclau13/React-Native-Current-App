@@ -4,14 +4,10 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import ContactPhoneNumberView from './ContactPhoneNumberView';
 import { checkIfFormatValid, validateFormat } from './utils';
-import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
-import { CreateRehabVariables } from '../../generated/CreateRehab';
-import {CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
+import { CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
 export interface Params {
-  createRehabInput: CreateRehabVariables['input'];
   createRehabNoArvInput: CreateRehabNoArvVariables['input'];
-  flow: FiximizeFlow;
 };
 
 type ScreenProps = {};
@@ -26,8 +22,6 @@ export interface ContactPhoneNumberViewProps {
 const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
-  const createRehabInput = navigation.getParam("createRehabInput", null);
-  const flow = navigation.getParam("flow", null);
   
   const [contactPhoneNumber, setContactPhoneNumber] = React.useState("+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
@@ -39,7 +33,7 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
     } else {
       setContactPhoneNumberIsValid(true);
       const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
-      navigation.navigate("FullRemodelSummaryScreen", { flow, createRehabInput, createRehabNoArvInput: _createRehabNoArvInput });
+      navigation.navigate("FullRemodelSummaryScreen", { createRehabNoArvInput: _createRehabNoArvInput });
     }
   };
   const handleOnChangeText: ContactPhoneNumberViewProps['handleOnChangeText'] = (value) => {

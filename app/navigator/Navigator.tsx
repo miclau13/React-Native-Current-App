@@ -22,10 +22,11 @@ import PropertyInfoScreen from "../screens/PropertyInfo";
 import RehabRecordsScreen, { strings as rehabRecordStrings } from "../screens/RehabRecords";
 import RehabRecordsDetailScreen from "../screens/RehabRecordsDetail";
 import TotalDebtsScreen from "../screens/TotalDebts";
+import VacantPropertyScreen from "../screens/VacantProperty";
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, ContactPhoneNumberScreen, HomeScreen, TotalDebtsScreen,
+  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, ContactPhoneNumberScreen, HomeScreen, TotalDebtsScreen, VacantPropertyScreen,
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {

@@ -7,17 +7,19 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useLazyQuery } from '@apollo/react-hooks';
 
 import PropertyInfoView from './PropertyInfoView';
+import { getDefaultPropertyDetails } from './utils';
 import { RequiredInput } from '../FiximizeQuestions/FiximizeQuestionsForm';
 import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
 import PropertyInfoAdjustment from '../PropertyInfoAdjustment';
 import { LoadingComponent } from '../InitialLoading';
 import { PropertyInfo as PropertyInfoData, PropertyInfo_propertyInfo } from '../../generated/PropertyInfo';
+import { CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
 type Params = { 
   flow: FiximizeFlow;
   address: string;
   postalCode?: string;
-  arvEstimate?: string;
+  arvEstimate: number;
   asIsEstimate: number;
   totalDebts: number;
   beds?: number;
@@ -114,25 +116,24 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
 
   const handleButtonContinueOnPress = React.useCallback<PropertyInfoViewProps['handleButtonContinueOnPress']>(() => {
-    navigation.navigate("FiximizeQuestionsFormScreen", 
-    { 
-      flow,
+    const propertyInfo = {
+      beds: beds || (data?.propertyInfo?.beds),
+      sqft: sqft || (data?.propertyInfo?.sqft),
+      fullBaths: fullBaths || (data?.propertyInfo?.fullBaths),
+      threeQuarterBaths: threeQuarterBaths || (data?.propertyInfo?.threeQuarterBaths),
+      halfBaths: halfBaths || (data?.propertyInfo?.halfBaths), 
+    };
+    const propertyDetails = getDefaultPropertyDetails(fiximizeQuestionsFormInitialValues);
+    const createRehabNoArvInput: CreateRehabNoArvVariables['input'] = {
       address,
       postalCode,
-      arvEstimate,
-      asIsEstimate, 
-      totalDebts, 
-      initialValues: fiximizeQuestionsFormInitialValues, 
-      propertyInfo: 
-      // (data && data.propertyInfo) || 
-        {
-          beds: beds || (data?.propertyInfo?.beds),
-          sqft: sqft || (data?.propertyInfo?.sqft),
-          fullBaths: fullBaths || (data?.propertyInfo?.fullBaths),
-          threeQuarterBaths: threeQuarterBaths || (data?.propertyInfo?.threeQuarterBaths),
-          halfBaths: halfBaths || (data?.propertyInfo?.halfBaths), 
-        }, 
-      step: "vacant" });
+      propertyDetails,
+      arv: arvEstimate,
+      asIs: asIsEstimate,
+      totalDebts: totalDebts,
+      ...propertyInfo
+    };
+    navigation.navigate("VacantPropertyScreen", { createRehabNoArvInput });
   }, [address, data, fiximizeQuestionsFormInitialValues]);
 
   const handleStepNavigation = React.useCallback((nextStep, options={}) => {
