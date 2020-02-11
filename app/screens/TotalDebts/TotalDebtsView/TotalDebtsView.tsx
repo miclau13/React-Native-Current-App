@@ -1,20 +1,17 @@
 import React from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { Button, Headline, HelperText, TextInput } from 'react-native-paper';
+import { KeyboardAvoidingView, Platform, SafeAreaView, View } from 'react-native';
+import { Button, Headline, HelperText } from 'react-native-paper';
 
 import styles from './styles';
 
 import { TotalDebtsViewProps } from '../TotalDebts';
+import NumberInput from '../../../components/NumberInput';
 
 const TotalDebtsView: React.ComponentType<TotalDebtsViewProps> = (props) => {
   const { handleOnChangeText, handleOnPress, totalDebts } = props;
 
-  React.useEffect(() => {
-    return () => {console.log("TotalDebtsView UnMount")}
-  }, []);
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyBoardContainer}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -22,21 +19,12 @@ const TotalDebtsView: React.ComponentType<TotalDebtsViewProps> = (props) => {
         <View style={styles.viewBox1}/>
         <Headline>Total Debts:</Headline>
         <View style={styles.viewBox1}/>
-        <TextInput
-          error={totalDebts.length < 1 || +totalDebts < 0}
-          keyboardType="number-pad"
+        <NumberInput
+          error={+totalDebts < 0}
           label="$"
-          mode="outlined"
           onChangeText={handleOnChangeText}
           value={totalDebts}
-          textContentType="none"
         />
-        <HelperText 
-          type="error"
-          visible={totalDebts.length < 1}
-        >
-          {"This field is required"}
-        </HelperText>
         <HelperText 
           type="error"
           visible={+totalDebts < 0}
@@ -45,6 +33,7 @@ const TotalDebtsView: React.ComponentType<TotalDebtsViewProps> = (props) => {
         </HelperText>
         <View style={styles.viewBox1}/>
         <Button 
+          disabled={+totalDebts < 0}
           mode="contained" 
           onPress={handleOnPress}
           style={styles.nextButton}
@@ -53,7 +42,7 @@ const TotalDebtsView: React.ComponentType<TotalDebtsViewProps> = (props) => {
         </Button>
         <View style={styles.viewBox3}/>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }
 export default React.memo(TotalDebtsView);

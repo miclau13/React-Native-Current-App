@@ -1,7 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { screenWidth } from '../../../styles';
+import { primaryButtonColor, screenWidth } from '../../../styles';
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    alignSelf: "center",
+    borderRadius: 20,
+    width: "75%",
+  },
+  buttonSelectedContainer: {
+    backgroundColor: primaryButtonColor,
+  },
   container: {
     alignItems: "center",
     flex: 1,
@@ -16,6 +24,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 20,
     width: "75%",
+  },
+  title: {
+    textAlign: "center",
   },
   viewBox1: {
     flex: 1,

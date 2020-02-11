@@ -7,17 +7,29 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useLazyQuery } from '@apollo/react-hooks';
 
 import PropertyInfoView from './PropertyInfoView';
+import { getDefaultPropertyDetails } from './utils';
 import { RequiredInput } from '../FiximizeQuestions/FiximizeQuestionsForm';
 import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
 import PropertyInfoAdjustment from '../PropertyInfoAdjustment';
 import { LoadingComponent } from '../InitialLoading';
 import { PropertyInfo as PropertyInfoData, PropertyInfo_propertyInfo } from '../../generated/PropertyInfo';
+import { CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
+
+export type RevisedRehabInfo = {
+  address: string;
+  arv: number;
+  asIs: number;
+  contactPhoneNumber: string;
+  postalCode: string;
+  totalDebts: number;
+  vacant: boolean;
+} | {};
 
 type Params = { 
   flow: FiximizeFlow;
   address: string;
   postalCode?: string;
-  arvEstimate?: string;
+  arvEstimate: number;
   asIsEstimate: number;
   totalDebts: number;
   beds?: number;
@@ -25,6 +37,8 @@ type Params = {
   fullBaths?: number;
   threeQuarterBaths?: number;
   halfBaths?: number;
+  rehabId?: string;
+  revisedRehabInfo?: RevisedRehabInfo
   step?: string;
 };
 
@@ -66,10 +80,13 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const flow = navigation.getParam("flow");
   const fullBaths = navigation.getParam("fullBaths", null);
   const postalCode = navigation.getParam("postalCode", null);
+  const rehabId = navigation.getParam("rehabId", null);
+  const [revisedRehabInfo] = React.useState(navigation.getParam("revisedRehabInfo", {}));
   const sqft = navigation.getParam("sqft", null);
   const step = navigation.getParam("step", 'summary');
   const threeQuarterBaths = navigation.getParam("threeQuarterBaths", null);
   const totalDebts = navigation.getParam("totalDebts", null);
+  console.log("PropertyInfo revisedRehabInfo", revisedRehabInfo)
 
   const [getPropertyInfo, { data, error, loading }] = useLazyQuery<PropertyInfoData>(PROPERTY_INFO, { onCompleted: (data) => {
     let arr: PropertyData[] = [];
@@ -113,26 +130,34 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     prepareFiximizeQuestionsFormInitialValues(arr);
   };
 
+  const getRehabPropertyInfo = () => {
+    const propertyInfo = {
+      beds: beds || (data?.propertyInfo?.beds),
+      sqft: sqft || (data?.propertyInfo?.sqft),
+      fullBaths: fullBaths || (data?.propertyInfo?.fullBaths),
+      threeQuarterBaths: threeQuarterBaths || (data?.propertyInfo?.threeQuarterBaths),
+      halfBaths: halfBaths || (data?.propertyInfo?.halfBaths), 
+    };
+    console.log("PropertyInfo getRehabPropertyInfo revisedRehabInfo ",revisedRehabInfo )
+    return revisedRehabInfo || propertyInfo;
+  };
+
   const handleButtonContinueOnPress = React.useCallback<PropertyInfoViewProps['handleButtonContinueOnPress']>(() => {
-    navigation.navigate("FiximizeQuestionsFormScreen", 
-    { 
-      flow,
+    console.log("PropertyInfo handleButtonContinueOnPress revisedRehabInfo", revisedRehabInfo)
+    const propertyInfo = getRehabPropertyInfo();
+    const propertyDetails = getDefaultPropertyDetails(fiximizeQuestionsFormInitialValues);
+    const createRehabNoArvInput: CreateRehabNoArvVariables['input'] = {
       address,
       postalCode,
-      arvEstimate,
-      asIsEstimate, 
-      totalDebts, 
-      initialValues: fiximizeQuestionsFormInitialValues, 
-      propertyInfo: 
-      // (data && data.propertyInfo) || 
-        {
-          beds: beds || (data?.propertyInfo?.beds),
-          sqft: sqft || (data?.propertyInfo?.sqft),
-          fullBaths: fullBaths || (data?.propertyInfo?.fullBaths),
-          threeQuarterBaths: threeQuarterBaths || (data?.propertyInfo?.threeQuarterBaths),
-          halfBaths: halfBaths || (data?.propertyInfo?.halfBaths), 
-        }, 
-      step: "vacant" });
+      propertyDetails,
+      totalDebts,
+      arv: arvEstimate,
+      asIs: asIsEstimate,
+      ...propertyInfo
+    };
+    console.log("PropertyInfo handleButtonContinueOnPress createRehabNoArvInput", createRehabNoArvInput)
+    console.log("PropertyInfo handleButtonContinueOnPress propertyInfo ",propertyInfo )
+    navigation.navigate("VacantPropertyScreen", { createRehabNoArvInput, rehabId });
   }, [address, data, fiximizeQuestionsFormInitialValues]);
 
   const handleStepNavigation = React.useCallback((nextStep, options={}) => {
