@@ -5,13 +5,14 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import TotalDebtsView from './TotalDebtsView';
 import  { LoadingComponent } from '../InitialLoading';
 import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
+import { eraseComma, validateFormat } from '../../components/NumberInput/utils';
 
 type Params = {
-  flow: FiximizeFlow;
   address: string;
-  postalCode?: string;
-  arvEstimate?: string;
+  arvEstimate: number;
   asIsEstimate: number;
+  flow: FiximizeFlow;
+  postalCode?: string;
 };
 
 type ScreenProps = {};
@@ -29,19 +30,20 @@ const TotalDebts: NavigationStackScreenComponent<Params, ScreenProps> = (props) 
   const postalCode = navigation.getParam("postalCode", null);
   const arvEstimate = navigation.getParam("arvEstimate");
   const asIsEstimate = navigation.getParam("asIsEstimate", null);
-  const [loading, setLoading] = React.useState(false);
-  const [totalDebts, setTotalDebts] = React.useState("0");
+  const [loading] = React.useState(false);
+  const [totalDebts, setTotalDebts] = React.useState<TotalDebtsViewProps['totalDebts']>("0");
 
-  const handleOnChangeText: TextInputProps['onChangeText'] = (text) => {
-    setTotalDebts(text);
+  const handleOnChangeText: TextInputProps['onChangeText'] = (value) => {
+    const validValue = validateFormat(value);
+    setTotalDebts(validValue);
   };
-
   const handleOnPress: ButtonProps['onPress'] = () => {
-    if (totalDebts.length < 1 || +totalDebts < 0) {
+    const _totalDebts = +eraseComma(totalDebts);
+    if (_totalDebts < 0) {
       return;
     };
     const stepDefaultValue = flow === FiximizeFlow.AutoCompleteAddress ? 'summary' : 'edit';
-    navigation.navigate("PropertyInfoScreen", { flow, address, postalCode, arvEstimate, asIsEstimate, totalDebts: +totalDebts, step: stepDefaultValue });
+    navigation.navigate("PropertyInfoScreen", { flow, address, postalCode, arvEstimate, asIsEstimate, totalDebts: _totalDebts, step: stepDefaultValue });
   };
 
   if (loading) {

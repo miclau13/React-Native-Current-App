@@ -22,10 +22,11 @@ import PropertyInfoScreen from "../screens/PropertyInfo";
 import RehabRecordsScreen, { strings as rehabRecordStrings } from "../screens/RehabRecords";
 import RehabRecordsDetailScreen from "../screens/RehabRecordsDetail";
 import TotalDebtsScreen from "../screens/TotalDebts";
+import VacantPropertyScreen from "../screens/VacantProperty";
 
 // HomeStack Start
 const HomeStack = createStackNavigator(
-  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, ContactPhoneNumberScreen, HomeScreen, TotalDebtsScreen,
+  { ArvEstimateScreen, AsIsEstimateScreen, AutocompleteScreen, ContactPhoneNumberScreen, HomeScreen, TotalDebtsScreen, VacantPropertyScreen,
     FiximizeQuestionsFormScreen: {
       screen: FiximizeQuestionsFormScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -61,8 +62,29 @@ const HomeStack = createStackNavigator(
     FullRemodelSummaryScreen: {
       screen: FullRemodelSummaryScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+        const { navigation } = props;
+        const rehabId = navigation.getParam("rehabId");
+        const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
+        console.log("navigationOptions revisedRehabInfo",revisedRehabInfo)
+        console.log(" navigationOptionsrehab.rehabId, ", rehabId )
+        const flow = 1;
+        const handleOnPress = () => {
+          navigation.navigate("PropertyInfoScreen", { 
+            flow,
+            rehabId,
+            revisedRehabInfo
+          })
+        }
         return { 
-          headerLeft: null,
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                onPress={handleOnPress} 
+                title="Revise"
+              />
+            )
+          }
         }
       }
     },

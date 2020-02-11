@@ -39,7 +39,7 @@ const AsIsEstimate: NavigationStackScreenComponent<Params, ScreenProps> = (props
     if (_asIsEstimate < 0) {
       return;
     };
-    navigation.navigate("TotalDebtsScreen", { arvEstimate, flow, address, postalCode, asIsEstimate: +asIsEstimate });
+    navigation.navigate("TotalDebtsScreen", { arvEstimate, flow, address, postalCode, asIsEstimate: _asIsEstimate });
   };
 
   if (loading) {

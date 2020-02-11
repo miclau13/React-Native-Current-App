@@ -57,7 +57,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   const startLogin = async (args: { redirectUri: string }) => {
-    const result = await WebBrowser.openAuthSessionAsync(args.redirectUri, RETURN_URL_LOCALHOST3);
+    const result = await WebBrowser.openAuthSessionAsync(args.redirectUri, RETURN_URL_LOCALHOST2);
     const accessToken = queryString.parseUrl(result["url"]).query.accessToken;
     await SecureStore.setItemAsync("accessToken", accessToken as string);
     return result.type;
