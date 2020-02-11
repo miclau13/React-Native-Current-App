@@ -6,22 +6,6 @@
 // START Enums and Input Objects
 //==============================================================
 
-export interface CreateRehabInput {
-  address: string;
-  asIs: number;
-  propertyDetails?: PropertyDetailsInput | null;
-  images?: (string | null)[] | null;
-  sqft?: number | null;
-  beds?: number | null;
-  fullBaths?: number | null;
-  threeQuarterBaths?: number | null;
-  halfBaths?: number | null;
-  style?: string | null;
-  totalDebts?: number | null;
-  vacant?: boolean | null;
-  contactPhoneNumber?: string | null;
-}
-
 export interface CreateRehabNoArvInput {
   address: string;
   postalCode?: string | null;

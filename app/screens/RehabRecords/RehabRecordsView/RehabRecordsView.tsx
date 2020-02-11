@@ -11,11 +11,6 @@ import { primaryRed } from '../../../styles/constants';
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {
   const { deleteMode, handleItemOnPress, handleItemDeleteOnPress, rehabRecords } = props;  
-
-  React.useEffect(() => {
-    console.log("RehabRecordsView Mount")
-    return () => {console.log("RehabRecordsView UnMount")}
-  }, []);
   
   return (
     <SafeAreaView>

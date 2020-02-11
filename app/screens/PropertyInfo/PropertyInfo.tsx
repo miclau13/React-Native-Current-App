@@ -81,12 +81,12 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const fullBaths = navigation.getParam("fullBaths", null);
   const postalCode = navigation.getParam("postalCode", null);
   const rehabId = navigation.getParam("rehabId", null);
-  const [revisedRehabInfo] = React.useState(navigation.getParam("revisedRehabInfo", {}));
+  const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
   const sqft = navigation.getParam("sqft", null);
   const step = navigation.getParam("step", 'summary');
   const threeQuarterBaths = navigation.getParam("threeQuarterBaths", null);
   const totalDebts = navigation.getParam("totalDebts", null);
-  console.log("PropertyInfo revisedRehabInfo", revisedRehabInfo)
+  // console.log("PropertyInfo revisedRehabInfo", revisedRehabInfo)
 
   const [getPropertyInfo, { data, error, loading }] = useLazyQuery<PropertyInfoData>(PROPERTY_INFO, { onCompleted: (data) => {
     let arr: PropertyData[] = [];
@@ -126,6 +126,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     if (fullBaths) arr.push({ name: 'fullBaths', value: fullBaths})
     if (!isNil(threeQuarterBaths)) arr.push({ name: 'threeQuarterBaths', value: threeQuarterBaths })
     if (!isNil(halfBaths)) arr.push({ name: 'halfBaths', value: halfBaths })
+    // console.log("bootstrapAsync arr",arr)
     setDataArray(arr);
     prepareFiximizeQuestionsFormInitialValues(arr);
   };
@@ -138,12 +139,12 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       threeQuarterBaths: threeQuarterBaths || (data?.propertyInfo?.threeQuarterBaths),
       halfBaths: halfBaths || (data?.propertyInfo?.halfBaths), 
     };
-    console.log("PropertyInfo getRehabPropertyInfo revisedRehabInfo ",revisedRehabInfo )
+    // console.log("PropertyInfo getRehabPropertyInfo revisedRehabInfo ",revisedRehabInfo )
     return revisedRehabInfo || propertyInfo;
   };
 
   const handleButtonContinueOnPress = React.useCallback<PropertyInfoViewProps['handleButtonContinueOnPress']>(() => {
-    console.log("PropertyInfo handleButtonContinueOnPress revisedRehabInfo", revisedRehabInfo)
+    // console.log("PropertyInfo handleButtonContinueOnPress revisedRehabInfo", revisedRehabInfo)
     const propertyInfo = getRehabPropertyInfo();
     const propertyDetails = getDefaultPropertyDetails(fiximizeQuestionsFormInitialValues);
     const createRehabNoArvInput: CreateRehabNoArvVariables['input'] = {
@@ -153,29 +154,48 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       totalDebts,
       arv: arvEstimate,
       asIs: asIsEstimate,
+      vacant: true,
       ...propertyInfo
     };
-    console.log("PropertyInfo handleButtonContinueOnPress createRehabNoArvInput", createRehabNoArvInput)
-    console.log("PropertyInfo handleButtonContinueOnPress propertyInfo ",propertyInfo )
+    // console.log("PropertyInfo handleButtonContinueOnPress createRehabNoArvInput", createRehabNoArvInput)
+    // console.log("PropertyInfo handleButtonContinueOnPress propertyInfo ",propertyInfo )
     navigation.navigate("VacantPropertyScreen", { createRehabNoArvInput, rehabId });
-  }, [address, data, fiximizeQuestionsFormInitialValues]);
+  }, [address, data, fiximizeQuestionsFormInitialValues, rehabId]);
 
   const handleStepNavigation = React.useCallback((nextStep, options={}) => {
     navigation.navigate("PropertyInfoScreen", { step: nextStep, ...options });
   }, [step]);
 
   React.useEffect(() => {
+    // console.log("PropertyInfoScreen useEffect getPropertyInfo Mount")
+    // console.log("PropertyInfoScreen useEffect getPropertyInfo Mount flow + data", flow, "   +   ", data)
     if (flow === FiximizeFlow.AutoCompleteAddress && !data) {
       getPropertyInfo({
         variables: { query: { address: address }}
       })
+    };
+    return () => { 
+      // console.log("PropertyInfoScreen useEffect getPropertyInfo UnMount")
     }
   }, [data]);
 
   React.useEffect(() => {
     bootstrapAsync();
-    return () => {}
-  }, [beds, sqft, fullBaths, threeQuarterBaths, halfBaths]);
+    // console.log("PropertyInfoScreen useEffect bootstrapAsync Mount")
+    return () => {
+      // console.log("PropertyInfoScreen useEffect bootstrapAsync UnMount")
+    }
+  }, [beds, halfBaths, fullBaths, sqft, threeQuarterBaths]);
+
+  React.useEffect(() => {
+    // console.log("PropertyInfoScreen useEffect rehabId Mount")
+    return () => {
+      // console.log("PropertyInfoScreen useEffect rehabId UnMount")
+    }
+  }, [rehabId]);
+
+  // console.log("PropertyInfoScreen  dataarr",dataArray)
+  // console.log("PropertyInfoScreen  fiximizeQuestionsFormInitialValues",fiximizeQuestionsFormInitialValues)
 
   if (loading) {
     return (<LoadingComponent />)

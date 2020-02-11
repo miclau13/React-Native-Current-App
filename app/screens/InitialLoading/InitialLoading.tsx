@@ -26,9 +26,11 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
 
   useEffect(() => {
     // TODO dont use setTImeout
-    console.log("InitialLoading Mount");
+    // console.log("InitialLoading Mount");
     bootstrapAsync()
-    return () => {console.log("InitialLoading UnMount");}
+    return () => {
+      // console.log("InitialLoading UnMount");
+    }
   }, []);
 
   return (

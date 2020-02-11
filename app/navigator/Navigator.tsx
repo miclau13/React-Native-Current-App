@@ -65,8 +65,6 @@ const HomeStack = createStackNavigator(
         const { navigation } = props;
         const rehabId = navigation.getParam("rehabId");
         const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
-        console.log("navigationOptions revisedRehabInfo",revisedRehabInfo)
-        console.log(" navigationOptionsrehab.rehabId, ", rehabId )
         const flow = 1;
         const handleOnPress = () => {
           navigation.navigate("PropertyInfoScreen", { 
@@ -124,8 +122,28 @@ const HomeStack = createStackNavigator(
       screen: PropertyInfoScreen,
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         const { navigation } = props;
+        const rehabId = navigation.getParam("rehabId");
         const step = navigation.getParam("step");
+        const handleHeaderLeftOnPress = () => {
+          navigation.navigate("HomeScreen");
+        };
         return { 
+          headerLeft: (props) => {
+            if (rehabId) {
+              return (
+                <HeaderBackButton 
+                  {...props} 
+                  onPress={handleHeaderLeftOnPress} 
+                  title="Home"
+                />
+              )
+            };
+            return (
+              <HeaderBackButton 
+                {...props}
+              />
+            )
+          },
           headerRight: step === "summary" ? (props) => {
             return (
               <Button 

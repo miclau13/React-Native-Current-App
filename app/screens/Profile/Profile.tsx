@@ -64,10 +64,7 @@ const Profile: NavigationStackScreenComponent<Params, ScreenProps> = (props) => 
   const handleRefetch = async () => {
     await refetch();
   }
-  React.useEffect(() => {
-    console.log("Profile Mount");
-    return () => {console.log("Profile UnMount");}
-  });
+
   React.useEffect(() => {
     console.log("Profile refetch mount");
     handleRefetch();

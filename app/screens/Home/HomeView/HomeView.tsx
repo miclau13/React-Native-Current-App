@@ -7,12 +7,7 @@ import styles from './styles';
 
 const HomeView: React.ComponentType<HomeViewProps> = (props) => {
   const { handleOnFocus } = props;
-
-  React.useEffect(() => {
-    console.log("HomeView Mount")
-    return () => {console.log("HomeView UnMount")}
-  }, []);
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.keyBoardContainer}>

@@ -19,12 +19,6 @@ interface ProfileHeaderViewProps {
 const ProfileHeaderView: React.ComponentType<ProfileHeaderViewProps> = (props) => {
   const { address, avatar, avatarBackground, name } = props; 
 
-
-  React.useEffect(() => {
-    console.log("ProfileHeaderView Mount")
-    return () => {console.log("ProfileHeaderView UnMount")}
-  }, []);
-
   return (
     <View style={styles.headerContainer}>
     <ImageBackground

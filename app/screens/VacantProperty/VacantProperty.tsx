@@ -31,7 +31,7 @@ const VacantProperty: NavigationStackScreenComponent<Params, ScreenProps> = (pro
   const rehabId = navigation.getParam("rehabId", null);
 
   const [loading] = React.useState(false);
-  const [vacantPropertyIndex, setVacantPropertyIndex] = React.useState<VacantPropertyViewProps['vacantPropertyIndex']>(Number(createRehabNoArvInput.vacant) || 1);
+  const [vacantPropertyIndex, setVacantPropertyIndex] = React.useState<VacantPropertyViewProps['vacantPropertyIndex']>(Number(createRehabNoArvInput.vacant) ?? 1);
 
   const handleButtonOnPress: VacantPropertyViewProps['handleButtonOnPress'] = () => { 
     const _createRehabNoArvInput = { ...createRehabNoArvInput, vacant: !!vacantPropertyIndex };
