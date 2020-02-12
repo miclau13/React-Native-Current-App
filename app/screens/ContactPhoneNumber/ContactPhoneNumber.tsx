@@ -27,7 +27,6 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   
   const [contactPhoneNumber, setContactPhoneNumber] = React.useState((createRehabNoArvInput.contactPhoneNumber) || "+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
-  console.log(" rehabId + createRehabNoArvInput", rehabId, " + ",createRehabNoArvInput)
 
   const handleButtonOnPress: ContactPhoneNumberViewProps['handleButtonOnPress'] = () => {
     const valueIsValid = checkIfFormatValid(contactPhoneNumber);
