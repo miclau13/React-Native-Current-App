@@ -66,6 +66,7 @@ const HomeStack = createStackNavigator(
         const rehabId = navigation.getParam("rehabId");
         const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
         const flow = 1;
+        console.log("navigationOptions rehabId", rehabId)
         const handleOnPress = () => {
           navigation.navigate("PropertyInfoScreen", { 
             flow,
@@ -203,7 +204,6 @@ ProfileStack.navigationOptions = {
 
 // RehabRecordsStack Start
 const RehabRecordsStack = createStackNavigator({ 
-  RehabRecordsDetailScreen,
   RehabRecordsScreen: {
     screen: RehabRecordsScreen,
     navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
@@ -249,7 +249,35 @@ const RehabRecordsStack = createStackNavigator({
           : null,
       }
     }
-  }}, { initialRouteName: "RehabRecordsScreen" });
+  },
+  RehabRecordsDetailScreen: {
+    screen: RehabRecordsDetailScreen,
+    navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
+      const { navigation } = props;
+      const rehabId = navigation.getParam("rehabId");
+      const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
+      const flow = 2;
+      const handleHeaderRightOnPress = () => {
+        navigation.navigate("PropertyInfoScreen", { 
+          flow,
+          rehabId,
+          revisedRehabInfo
+        })
+      };
+      return { 
+        headerRight: (props) => {
+          return (
+            <Button
+              onPress={handleHeaderRightOnPress}
+            >
+              { "Revise" }
+            </Button>
+          )
+        }
+      }
+    }
+  },
+}, { initialRouteName: "RehabRecordsScreen" });
 
 RehabRecordsStack.navigationOptions = {
   tabBarLabel: rehabRecordStrings.title,

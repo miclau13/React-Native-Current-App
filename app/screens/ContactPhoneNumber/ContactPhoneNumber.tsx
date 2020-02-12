@@ -27,7 +27,6 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   
   const [contactPhoneNumber, setContactPhoneNumber] = React.useState((createRehabNoArvInput.contactPhoneNumber) || "+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
-  console.log(" rehabId + createRehabNoArvInput", rehabId, " + ",createRehabNoArvInput)
 
   const handleButtonOnPress: ContactPhoneNumberViewProps['handleButtonOnPress'] = () => {
     const valueIsValid = checkIfFormatValid(contactPhoneNumber);
@@ -36,7 +35,7 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
     } else {
       setContactPhoneNumberIsValid(true);
       const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
-      navigation.navigate("FullRemodelSummaryScreen", { rehabId, createRehabNoArvInput: _createRehabNoArvInput });
+      navigation.navigate("FullRemodelSummaryScreen", { createRehabNoArvInput: _createRehabNoArvInput, revisedRehabId: rehabId  });
     }
   };
   const handleOnChangeText: ContactPhoneNumberViewProps['handleOnChangeText'] = (value) => {

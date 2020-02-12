@@ -35,3 +35,18 @@ export const getDefaultPropertyDetails = (props) => {
   }
   return propertyDetails;
 };
+
+export const getValuesFromEditMode = (props) => {
+  const {
+    bedsInfo,
+    fullBathsInfo,
+    halfBathsInfo,
+    threeQuarterBathsInfo,
+  } = props.propertyDetails;
+  let result = [];
+  if (bedsInfo) result.push({ name: 'beds', value: bedsInfo.length })
+  if (fullBathsInfo) result.push({ name: 'fullBaths', value: fullBathsInfo.length})
+  if (halfBathsInfo) result.push({ name: 'halfBaths', value: halfBathsInfo.length})
+  if (threeQuarterBathsInfo) result.push({ name: 'threeQuarterBaths', value: threeQuarterBathsInfo.length})
+  return result;
+}

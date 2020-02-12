@@ -7,7 +7,7 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useLazyQuery } from '@apollo/react-hooks';
 
 import PropertyInfoView from './PropertyInfoView';
-import { getDefaultPropertyDetails } from './utils';
+import { getDefaultPropertyDetails, getValuesFromEditMode } from './utils';
 import { RequiredInput } from '../FiximizeQuestions/FiximizeQuestionsForm';
 import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
 import PropertyInfoAdjustment from '../PropertyInfoAdjustment';
@@ -23,6 +23,7 @@ export type RevisedRehabInfo = {
   postalCode: string;
   totalDebts: number;
   vacant: boolean;
+  propertyDetails?: object
 } | {};
 
 type Params = { 
@@ -166,6 +167,12 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     navigation.navigate("PropertyInfoScreen", { step: nextStep, ...options });
   }, [step]);
 
+  const prepareValuesFromEditMode = React.useCallback((revisedRehabInfo: RevisedRehabInfo) => {      
+    const arr = [...dataArray, ...getValuesFromEditMode(revisedRehabInfo)];
+    setDataArray(arr);
+    prepareFiximizeQuestionsFormInitialValues(arr);
+  }, [flow]);
+
   React.useEffect(() => {
     // console.log("PropertyInfoScreen useEffect getPropertyInfo Mount")
     // console.log("PropertyInfoScreen useEffect getPropertyInfo Mount flow + data", flow, "   +   ", data)
@@ -188,11 +195,18 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   }, [beds, halfBaths, fullBaths, sqft, threeQuarterBaths]);
 
   React.useEffect(() => {
+    if (flow == 2) {
+      getPropertyInfo({
+        variables: { query: { address: revisedRehabInfo.address }}
+      });
+      prepareValuesFromEditMode(revisedRehabInfo);
+    }
     // console.log("PropertyInfoScreen useEffect rehabId Mount")
     return () => {
       // console.log("PropertyInfoScreen useEffect rehabId UnMount")
     }
   }, [rehabId]);
+  console.log("PropertyInfoScreen rehabId", rehabId)
 
   // console.log("PropertyInfoScreen  dataarr",dataArray)
   // console.log("PropertyInfoScreen  fiximizeQuestionsFormInitialValues",fiximizeQuestionsFormInitialValues)

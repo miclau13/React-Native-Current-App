@@ -18,6 +18,7 @@ export interface Params {
   asIs?: number;
   createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
   rehabId?: string;
+  revisedRehabId?: string;
   revisedRehabInfo?: RevisedRehabInfo;
   submitted?: boolean;
   totalDebts?: number;
@@ -133,6 +134,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  const revisedRehabId = navigation.getParam("revisedRehabId", null);
 
   const totalDebts = createRehabNoArvInput.totalDebts;
   const vacant = createRehabNoArvInput.vacant;
@@ -154,6 +156,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
     const result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
     if (result) {
       const rehab = result.data.createRehabNoArv;
+      console.log("rehab.rehabId,",rehab.rehabId)
       const itemsMap: RehabItemsPackageMap = (rehab.rehabItemPackage?.rehabItems || []).reduce((acc, item) => {
         if (!acc[item.category]) {
           acc[item.category] = {
@@ -187,15 +190,19 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   };
 
   const updateRehab = async () => {
+    // console.log("createRehabNoArvInput",createRehabNoArvInput)
+    const { postalCode, ...createRehabNoArvInputWithoutPostalCode} = createRehabNoArvInput;
     const updateRehabItemsPackageInput = {
       rehabRequest: {
-        id: rehabId,
-        ...createRehabNoArvInput
+        id: revisedRehabId,
+        ...createRehabNoArvInputWithoutPostalCode
       }
     };
+    // console.log("updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
     if (result) {
       const rehab = result.data.updateRehabItemsPackage;
+      console.log("rehab",rehab)
       const itemsMap: RehabItemsPackageMap = (rehab.rehabItemsPackage?.rehabItems || []).reduce((acc, item) => {
         if (!acc[item.category]) {
           acc[item.category] = {
@@ -229,13 +236,15 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   };
 
   const bootstrapAsync = async () => {
+    console.log("revisedRehabId",revisedRehabId)
     try {
-      const result = !rehabId ? await createRehab() : await updateRehab();
+      const result = !revisedRehabId ? await createRehab() : await updateRehab();
       if (result) {
-        const { arv, dataArry, rehabId, rehabItems, rehabItemPackageId, submitted } = result;
+        const { arv, dataArry, rehabId: _rehabId, rehabItems, rehabItemPackageId, submitted } = result;
+        console.log("_rehabId",_rehabId)
         setArv(arv);
         setData(dataArry);
-        setRehabId(rehabId);
+        setRehabId(_rehabId);
         setRehabItems(rehabItems);
         setRehabItemPackageId(rehabItemPackageId);
         setSubmitted(submitted);
@@ -250,8 +259,8 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
           postalCode: createRehabNoArvInput.postalCode,
         };
         navigation.setParams({ 
-          rehabId,
           revisedRehabInfo,
+          rehabId: _rehabId
         });
       }
     } catch (e) {

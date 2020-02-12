@@ -20,9 +20,11 @@ const MY_REHAB_REQUESTS = gql`
       address
       arv
       asIs
+      contactPhoneNumber
+      postalCode
       propertyDetails
-      vacant
       totalDebts
+      vacant
       rehabItemsPackage {
         id
         rehabItems {

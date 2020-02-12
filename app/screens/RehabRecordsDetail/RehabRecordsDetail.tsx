@@ -39,8 +39,9 @@ export type RehabRecordsDetailState = {
 const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const detail = navigation.getParam("detail", null);
+  // console.log("detail",detail)
 
-  const [loading, setLoading] = React.useState<RehabRecordsDetailState['loading']>(false);
+  const [loading] = React.useState<RehabRecordsDetailState['loading']>(false);
   const [expandPropertyDetails, setExpandPropertyDetails] = React.useState<RehabRecordsDetailState['expandPropertyDetails']>(true);
 
   const items = React.useMemo(() => sortBy(reduce(detail, (result, value, key) => {
@@ -82,9 +83,28 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     setExpandPropertyDetails(!expandPropertyDetails);
   }, [expandPropertyDetails]);
 
+  const bootstrapAsync = async () => {
+    // For revise flow
+    const { address, arv, asIs, contactPhoneNumber="+1 ", id, propertyDetails, postalCode, totalDebts, vacant } = detail;
+    const revisedRehabInfo = {
+      address,
+      arv,
+      asIs,
+      contactPhoneNumber,
+      propertyDetails,
+      postalCode,
+      totalDebts,
+      vacant,
+    };
+    navigation.setParams({ 
+      revisedRehabInfo,
+      rehabId: id,
+    });
+  };
 
   React.useEffect(() => {
     console.log("RehabRecordsDetail Mount");
+    bootstrapAsync();
     return () => {
       console.log("RehabRecordsDetail UnMount");
     }
