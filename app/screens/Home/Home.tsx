@@ -38,7 +38,10 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const handleOnFocus = React.useCallback<CardProps['onPress']>(
     () => navigation.push("AutocompleteScreen")
     // () => navigation.push("ContactPhoneNumberScreen")
-    // () => navigation.push("ArvEstimateScreen")
+    // () => navigation.push("ArvEstimateScreen", { 
+    //   address: "13807 SE Allen Rd, Bellevue, WA, 98006", 
+    //   flow: 0, 
+    // })
     // () => navigation.push("AsIsEstimateScreen")
     // () => navigation.push("PropertyInfoScreen", { 
     //   address: "13807 SE Allen Rd, Bellevue, WA, 98006", 

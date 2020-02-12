@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, SafeAreaView, View } from 'react-native';
 import { Button, Headline, TextInput, HelperText } from 'react-native-paper';
 
 import AutocompleteOption from './AutocompleteOption';
@@ -19,8 +19,11 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
     value,
   } = props;
   return (
-    <View onLayout={handleLayout} style={styles.container}>
-      <View style={styles.keyBoardContainer}>
+    <SafeAreaView onLayout={handleLayout} style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.keyBoardContainer}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
         <View style={styles.viewBox1}/>
         <Headline>What's the address of your property?</Headline>
         <View style={styles.viewBox1}/>
@@ -50,7 +53,7 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
             style={{ flex: 1 }}
           />
         </View>
-        <View style={styles.viewBox2}/>
+        <View style={styles.viewBox1}/>
         <Button 
           mode="contained" 
           onPress={handleOnPress}
@@ -60,8 +63,8 @@ const AutocompleteView: React.ComponentType<AutocompleteViewProps> = (props) => 
         </Button>
           
         <View style={styles.viewBox3}/>
-      </View>
-    </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
