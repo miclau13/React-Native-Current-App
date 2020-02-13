@@ -75,15 +75,7 @@ const HomeStack = createStackNavigator(
           })
         }
         return { 
-          headerLeft: (props) => {
-            return (
-              <HeaderBackButton 
-                {...props} 
-                onPress={handleOnPress} 
-                title="Revise"
-              />
-            )
-          }
+          headerLeft: null,
         }
       }
     },

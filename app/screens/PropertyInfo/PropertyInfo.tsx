@@ -1,5 +1,5 @@
 import { gql } from 'apollo-boost';
-import { isNil, omit, transform } from 'lodash';
+import { isEmpty, isNil, omit, transform } from 'lodash';
 import React from 'react';
 import { ButtonProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
@@ -87,7 +87,6 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const step = navigation.getParam("step", 'summary');
   const threeQuarterBaths = navigation.getParam("threeQuarterBaths", null);
   const totalDebts = navigation.getParam("totalDebts", null);
-  // console.log("PropertyInfo revisedRehabInfo", revisedRehabInfo)
 
   const [getPropertyInfo, { data, error, loading }] = useLazyQuery<PropertyInfoData>(PROPERTY_INFO, { onCompleted: (data) => {
     let arr: PropertyData[] = [];
@@ -140,12 +139,13 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       threeQuarterBaths: threeQuarterBaths || (data?.propertyInfo?.threeQuarterBaths),
       halfBaths: halfBaths || (data?.propertyInfo?.halfBaths), 
     };
-    // console.log("PropertyInfo getRehabPropertyInfo revisedRehabInfo ",revisedRehabInfo )
-    return revisedRehabInfo || propertyInfo;
+    if (!isEmpty(revisedRehabInfo)) {
+      return revisedRehabInfo;
+    }
+    return propertyInfo;
   };
 
   const handleButtonContinueOnPress = React.useCallback<PropertyInfoViewProps['handleButtonContinueOnPress']>(() => {
-    // console.log("PropertyInfo handleButtonContinueOnPress revisedRehabInfo", revisedRehabInfo)
     const propertyInfo = getRehabPropertyInfo();
     const propertyDetails = getDefaultPropertyDetails(fiximizeQuestionsFormInitialValues);
     const createRehabNoArvInput: CreateRehabNoArvVariables['input'] = {
@@ -158,8 +158,6 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       vacant: true,
       ...propertyInfo
     };
-    // console.log("PropertyInfo handleButtonContinueOnPress createRehabNoArvInput", createRehabNoArvInput)
-    // console.log("PropertyInfo handleButtonContinueOnPress propertyInfo ",propertyInfo )
     navigation.navigate("VacantPropertyScreen", { createRehabNoArvInput, rehabId });
   }, [address, data, fiximizeQuestionsFormInitialValues, rehabId]);
 

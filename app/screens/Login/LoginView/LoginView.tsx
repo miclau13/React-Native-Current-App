@@ -7,7 +7,6 @@ import FiximizeImage from './fiximizeImage.png';
 import styles from './styles';
 import { LoginViewProps } from '../Login';
 
-
 const LoginView: React.ComponentType<LoginViewProps> = (props) => {
   const { handleLoginOnPress } = props;
 
