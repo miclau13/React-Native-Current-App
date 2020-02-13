@@ -19,8 +19,12 @@ export interface LoginViewProps {
   handleLoginOnPress: ButtonProps['onPress'];
 };
 
-const LOGINURL_PROD = "https://portal.trudeed.com/auth/fiximize-login";
-const RETURN_URL_PROD = "fiximize://";
+const REDIRECT_URL_LOCALHOST = "http://192.168.100.89:3000/auth/fiximize-login";
+const REDIRECT_URL_LOCALHOST2 = "http://192.168.0.103:3000/auth/fiximize-login";
+const REDIRECT_URL_LOCALHOST3 = "http://192.168.103.42:3000/auth/fiximize-login";
+const RETURN_URL_LOCALHOST = "exp://192.168.100.89:19000";
+const RETURN_URL_LOCALHOST2 = "exp://192.168.0.103:19000";
+const RETURN_URL_LOCALHOST3 = "exp://192.168.103.42:19000";
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
@@ -44,7 +48,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   const getRedirectUri = async (args: { deviceId: string }) => {
-    const response = await fetch(LOGINURL_PROD, {
+    const response = await fetch(REDIRECT_URL_LOCALHOST2, {
       method: 'get',
       headers: {
         "device-id": args.deviceId,
@@ -55,7 +59,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   const startLogin = async (args: { redirectUri: string }) => {
-    const result = await WebBrowser.openAuthSessionAsync(args.redirectUri, RETURN_URL_PROD);
+    const result = await WebBrowser.openAuthSessionAsync(args.redirectUri, RETURN_URL_LOCALHOST2);
     const accessToken = queryString.parseUrl(result["url"]).query.accessToken;
     await SecureStore.setItemAsync("accessToken", accessToken as string);
     return result.type;
@@ -82,11 +86,6 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
       setLoading(false);
     };
   };
-
-  React.useEffect(() => {
-    console.log("Login Mount");
-    return () => {console.log("Login UnMount");};
-  }, []);
 
   if (loading) {
     return (
