@@ -9,7 +9,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import AutocompleteView from './AutocompleteView';
 import AutocompleteEditView from './AutocompleteEditView';
-import { ValidateAddress,ValidateAddressVariables } from '../../../generated/ValidateAddress';
+import { ValidateAddress,ValidateAddressVariables } from '../../generated/ValidateAddress';
 
 export enum FiximizeFlow {
   AutoCompleteAddress,

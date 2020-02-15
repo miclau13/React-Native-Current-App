@@ -10,7 +10,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import PropertyInfoView from './PropertyInfoView';
 import { getDefaultPropertyDetails, getDefaultPropertyInfoFields, getValuesInPropertyInfoViewOnlyFieldsFormat, mapPropertyDetailsToPropertyInfo } from './utils';
 // import { RequiredInput } from '../FiximizeQuestions/FiximizeQuestionsForm';
-import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
+import { FiximizeFlow } from '../Autocomplete';
 import PropertyInfoEditView from './PropertyInfoEditView';
 import { LoadingComponent } from '../InitialLoading';
 import { eraseComma, validateFormat } from '../../components/NumberInput/utils';

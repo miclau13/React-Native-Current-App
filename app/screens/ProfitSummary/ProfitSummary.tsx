@@ -9,7 +9,7 @@ import ProfitSummaryView from './ProfitSummaryView';
 import { CheckIsQualified } from './utils';
 import { LoadingComponent } from '../InitialLoading';
 import { Params as FullRemodelSummaryParams, FullRemodelSummaryProps, FullRemodelSummaryState } from '../FullRemodelSummary';
-import ProfitAdjustment from '../ProfitAdjustment';
+import ProfitAdjustment from './ProfitAdjustment';
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
 
 export type Params = {

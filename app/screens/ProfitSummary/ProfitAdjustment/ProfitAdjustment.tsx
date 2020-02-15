@@ -3,7 +3,7 @@ import { ButtonGroupProps } from 'react-native-elements';
 import { ButtonProps, TextInputProps } from 'react-native-paper';
 
 import ProfitAdjustmentView from './ProfitAdjustmentView';
-import { Params as ProfitSummaryParams, ProfitSummaryProps } from '../ProfitSummary';
+import { Params as ProfitSummaryParams, ProfitSummaryProps } from '..';
 
 export interface ProfitAdjustmentInnerProps {
   _arv: ProfitAdjustmentState['_arv'];
