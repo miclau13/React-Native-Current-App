@@ -1,4 +1,4 @@
-export const GetItemAttributes = (key, index = -1) => {
+export const getItemAttributes = (key, index = -1) => {
   switch (key) {
     case "address": 
       return {

@@ -7,12 +7,22 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import RehabRecordsDetailView from './RehabRecordsDetailView';
 import { LoadingComponent } from '../InitialLoading';
-import { GetItemAttributes } from './utils';
+import { getItemAttributes } from './utils';
 import { CalculateRemodelingCost } from '../../common/utils/Calculator';
 import { MyRehabRequests_myRehabRequests } from '../../generated/MyRehabRequests';
+import { RevisedRehabInfo } from '../PropertyInfo';
+
+interface RehabRecordsDetail extends MyRehabRequests_myRehabRequests{
+  contactPhoneNumber: string;
+  postalCode: string;
+};
 
 type Params = {
-  detail: MyRehabRequests_myRehabRequests;
+  detail: RehabRecordsDetail;
+  loading?: boolean;
+  rehabId?: string;
+  revisedRehabInfo?: RevisedRehabInfo;
+  revisedRehabItemPackageId?: string;
 };
 
 type ScreenProps = {};
@@ -39,24 +49,23 @@ export type RehabRecordsDetailState = {
 const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const detail = navigation.getParam("detail", null);
-  // console.log("detail",detail)
 
-  const [loading] = React.useState<RehabRecordsDetailState['loading']>(false);
+  const loading = navigation.getParam("loading", true);
   const [expandPropertyDetails, setExpandPropertyDetails] = React.useState<RehabRecordsDetailState['expandPropertyDetails']>(true);
 
   const items = React.useMemo(() => sortBy(reduce(detail, (result, value, key) => {
-    const { name, order } = GetItemAttributes(key);
+    const { name, order } = getItemAttributes(key);
     if (name) {
       if (key === "propertyDetails") {
         result.push({ name, order, value: "" });
         for (const property in value) {
           if (value[property].length > 0) {
             for (let i = 0 ; i < value[property].length; i++) {
-              const { name, order } = GetItemAttributes(property, value[property][i].order);
+              const { name, order } = getItemAttributes(property, value[property][i].order);
               result.push({ name, order, category: "propertyDetails", value: value[property][i].size, style: { paddingLeft: 16 }, unit: " sq. ft." });
             }
           } else if (isNumber(value[property])) {
-            const { name, order } = GetItemAttributes(property, value[property]);
+            const { name, order } = getItemAttributes(property, value[property]);
             result.push({ name, order, category: "propertyDetails", value: value[property], style: { paddingLeft: 16 }, unit: " linear ft." });
           };
         };
@@ -69,12 +78,12 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     if (key === "rehabItemsPackage") {
       const { arv, asIs } = detail;
       const remodellingCost = CalculateRemodelingCost(value?.rehabItems);
-      const { name: nameForRemodelingCost, order: orderForRemodelingCost } = GetItemAttributes("remodelingCost");
+      const { name: nameForRemodelingCost, order: orderForRemodelingCost } = getItemAttributes("remodelingCost");
       result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: remodellingCost });
       const profit = arv - asIs - remodellingCost;
-      let { name: nameForProfit, order: orderForProfit } = GetItemAttributes("profit");
+      let { name: nameForProfit, order: orderForProfit } = getItemAttributes("profit");
       result.push({ name: nameForProfit, order: orderForProfit, value: profit });
-    }
+    };
 
     return result;
   }, []), ['order']), [detail]);
@@ -98,17 +107,15 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     };
     navigation.setParams({ 
       revisedRehabInfo,
+      loading: false,
       rehabId: id,
       revisedRehabItemPackageId: rehabItemPackageId,
     });
   };
 
   React.useEffect(() => {
-    console.log("RehabRecordsDetail Mount");
     bootstrapAsync();
-    return () => {
-      console.log("RehabRecordsDetail UnMount");
-    }
+    return () => {}
   }, []);
 
   if (loading) {

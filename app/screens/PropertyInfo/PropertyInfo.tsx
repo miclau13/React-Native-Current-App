@@ -23,6 +23,7 @@ type Params = {
   arvEstimate: number;
   asIsEstimate: number;
   totalDebts: number;
+  loading?: boolean;
   postalCode?: string;
   rehabId?: string;
   revisedRehabInfo?: RevisedRehabInfo;
@@ -91,6 +92,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const arvEstimate = navigation.getParam("arvEstimate", null);
   const asIsEstimate = navigation.getParam("asIsEstimate", null);
   const flow = navigation.getParam("flow");
+  const loading = navigation.getParam("loading", false);
   const postalCode = navigation.getParam("postalCode", null);
   const rehabId = navigation.getParam("rehabId", null);
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
@@ -119,7 +121,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     return result;
   }, [propertyInfoFields]);
 
-  const [getPropertyInfo, { error, loading }] = useLazyQuery<PropertyInfoData>(PROPERTY_INFO, { onCompleted: (data) => {
+  const [getPropertyInfo, { error, loading: getPropertyInfoLoading }] = useLazyQuery<PropertyInfoData>(PROPERTY_INFO, { onCompleted: (data) => {
     if (!error && data && data.propertyInfo) {
       let _propertyInfoFields = omit(data.propertyInfo, ["__typename"]);
       // If comes from flow 2, merge the propertyInfo
@@ -127,6 +129,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
         _propertyInfoFields = { ..._propertyInfoFields, ...getUpdatedPropertyInfo(revisedRehabInfo)};
       };
       setPropertyInfoFields(_propertyInfoFields);
+      // navigation.setParams({ loading: false })
     };
   }});
 
@@ -185,7 +188,6 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
 
   React.useEffect(() => {
-    // console.log("PropertyInfoScreen useEffect getPropertyInfo Mount")
     // Prepare the values if comes from normal flow
     if (flow === FiximizeFlow.AutoCompleteAddress) {
       getPropertyInfo({
@@ -199,12 +201,11 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       });
     };
     // Do not call getPropertyInfo if flow = FiximizeFlow.SelfInputAddress
-    return () => {
-      // console.log("PropertyInfoScreen useEffect getPropertyInfo UnMount")
-    }
+    navigation.setParams({ loading: false })
+    return () => {};
   }, [rehabId]);
 
-  if (loading) {
+  if (getPropertyInfoLoading) {
     return (<LoadingComponent />)
   };
 
