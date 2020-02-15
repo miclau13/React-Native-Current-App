@@ -9,6 +9,7 @@ import { CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 export interface Params {
   createRehabNoArvInput: CreateRehabNoArvVariables['input'];
   rehabId?: string;
+  revisedRehabItemPackageId?: string;
 };
 
 type ScreenProps = {};
@@ -24,6 +25,7 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
   const rehabId = navigation.getParam("rehabId", null);
+  const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId", null);
   
   const [contactPhoneNumber, setContactPhoneNumber] = React.useState((createRehabNoArvInput.contactPhoneNumber) || "+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
@@ -35,7 +37,7 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
     } else {
       setContactPhoneNumberIsValid(true);
       const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
-      navigation.navigate("FullRemodelSummaryScreen", { createRehabNoArvInput: _createRehabNoArvInput, revisedRehabId: rehabId  });
+      navigation.navigate("FullRemodelSummaryScreen", { revisedRehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput, revisedRehabId: rehabId  });
     }
   };
   const handleOnChangeText: ContactPhoneNumberViewProps['handleOnChangeText'] = (value) => {

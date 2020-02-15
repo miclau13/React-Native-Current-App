@@ -1,7 +1,7 @@
 import React from 'react';
 import { KeyboardAvoidingView, SafeAreaView, ScrollView, Platform, View } from 'react-native';
 import Modal from 'react-native-modal';
-import { Button, Headline, HelperText, TextInput, TextInputProps } from 'react-native-paper';
+import { Button, Headline, HelperText, TextInput } from 'react-native-paper';
 
 import styles from './styles';
 import { PropertyInfoAdjustmentViewProps } from '../PropertyInfoAdjustment';

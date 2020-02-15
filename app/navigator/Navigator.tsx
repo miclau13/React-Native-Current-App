@@ -65,18 +65,28 @@ const HomeStack = createStackNavigator(
         const { navigation } = props;
         const rehabId = navigation.getParam("rehabId");
         const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
+        const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId");
         const flow = 1;
-        console.log("navigationOptions rehabId", rehabId)
         const handleOnPress = () => {
           navigation.navigate("PropertyInfoScreen", { 
             flow,
             rehabId,
-            revisedRehabInfo
+            revisedRehabInfo,
+            revisedRehabItemPackageId
           })
         }
         return { 
-          headerLeft: null,
+          headerLeft: (props) => {
+            return (
+              <HeaderBackButton 
+                {...props} 
+                onPress={handleOnPress} 
+                title="Revise"
+              />
+            )
+          }
         }
+        
       }
     },
     ProfitSummaryScreen: {
@@ -116,7 +126,8 @@ const HomeStack = createStackNavigator(
       navigationOptions: (props: NavigationContainerProps<NavigationState>) => {
         const { navigation } = props;
         const rehabId = navigation.getParam("rehabId");
-        const step = navigation.getParam("step");
+        const step = navigation.getParam("step", "summary");
+        console.log(" PropertyInfoScreen navigationOptions step",step)
         const handleHeaderLeftOnPress = () => {
           navigation.navigate("HomeScreen");
         };
@@ -248,12 +259,16 @@ const RehabRecordsStack = createStackNavigator({
       const { navigation } = props;
       const rehabId = navigation.getParam("rehabId");
       const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
+      const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId");
       const flow = 2;
+      const step = "summary";
       const handleHeaderRightOnPress = () => {
         navigation.navigate("PropertyInfoScreen", { 
           flow,
           rehabId,
-          revisedRehabInfo
+          revisedRehabInfo,
+          revisedRehabItemPackageId,
+          step
         })
       };
       return { 

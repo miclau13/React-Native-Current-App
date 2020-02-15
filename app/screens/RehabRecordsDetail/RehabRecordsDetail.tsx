@@ -85,7 +85,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const bootstrapAsync = async () => {
     // For revise flow
-    const { address, arv, asIs, contactPhoneNumber="+1 ", id, propertyDetails, postalCode, totalDebts, vacant } = detail;
+    const { address, arv, asIs, contactPhoneNumber="+1 ", id, propertyDetails, postalCode, totalDebts, vacant, rehabItemsPackage: { id: rehabItemPackageId } } = detail;
     const revisedRehabInfo = {
       address,
       arv,
@@ -99,6 +99,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     navigation.setParams({ 
       revisedRehabInfo,
       rehabId: id,
+      revisedRehabItemPackageId: rehabItemPackageId,
     });
   };
 

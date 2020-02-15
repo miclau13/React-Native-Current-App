@@ -1,25 +1,35 @@
 import { startCase } from 'lodash';
 import React from 'react';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView, Text } from 'react-native';
 import { Card, ListItem } from 'react-native-elements'
 import { Button } from 'react-native-paper';
+import NumberFormat from 'react-number-format';
 
 import styles from './styles';
 import { PropertyInfoViewProps } from '../PropertyInfo';
 
 const PropertyInfoView: React.ComponentType<PropertyInfoViewProps> = (props) => {
-  const { dataArray, handleButtonContinueOnPress } = props;
+  const { fields, handleButtonContinueOnPress } = props;
   
   return (
     <SafeAreaView>
       <ScrollView>
       <Card title="Property Info">
-        {dataArray.map(item => (
+        {fields.map(item => (
           <ListItem
             bottomDivider
             key={item.name}
             title={startCase(item.name)}
-            rightTitle={`${item.value}`}
+            rightTitle={
+              item.name == "style" ? 
+                `${item.value}` :
+                <NumberFormat 
+                  displayType={'text'} 
+                  renderText={value => <Text style={styles.subtitleStyle}>{value}</Text>}
+                  thousandSeparator={true} 
+                  value={item.value}
+                />
+            }
           />
         ))} 
       </Card>
