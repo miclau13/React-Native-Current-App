@@ -22,6 +22,9 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
   };
   return { 
     headerLeft: (props) => {
+      if (submitted) {
+        return null
+      }
       return (
         <HeaderBackButton 
           {...props} 

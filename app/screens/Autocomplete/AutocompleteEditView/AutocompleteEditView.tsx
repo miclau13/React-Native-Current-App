@@ -14,6 +14,7 @@ const AutocompleteEditView: React.ComponentType<AutocompleteEditViewProps> = (pr
     handleButtonEditOnPress,
     modalVisible,
   } = props;
+
   return (
     <SafeAreaView>
       <Modal

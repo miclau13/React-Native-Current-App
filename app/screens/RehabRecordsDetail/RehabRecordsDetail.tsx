@@ -1,5 +1,5 @@
 
-import { isNil, isNumber, reduce, sortBy } from 'lodash';
+import { isNil, isNumber, omit, reduce, sortBy } from 'lodash';
 import React from 'react';
 import { TextStyle } from 'react-native';
 import { ListItemProps } from 'react-native-elements'
@@ -94,15 +94,20 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const bootstrapAsync = async () => {
     // For revise flow
-    const { address, arv, asIs, contactPhoneNumber="+1 ", id, propertyDetails, postalCode, totalDebts, vacant, rehabItemsPackage: { id: rehabItemPackageId } } = detail;
-    console.log("RehabRecordsDetail bootstrapAsync id",id, " \n rehabItemPackageId ", rehabItemPackageId  )
+    const { address, arv, asIs, beds, contactPhoneNumber="+1 ", fullBaths, halfBaths, id, propertyDetails, postalCode, sqft, style, threeQuarterBaths, totalDebts, vacant, rehabItemsPackage: { id: rehabItemPackageId, submitted } } = detail;
     const revisedRehabInfo = {
       address,
       arv,
       asIs,
+      beds,
       contactPhoneNumber,
+      fullBaths, 
+      halfBaths,
       propertyDetails,
       postalCode,
+      sqft, 
+      style, 
+      threeQuarterBaths,
       totalDebts,
       vacant,
     };

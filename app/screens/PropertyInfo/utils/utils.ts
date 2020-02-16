@@ -69,6 +69,11 @@ export const getPropertyInfoViewOnlyFieldsOrder = (name) => {
   return propertyInfoViewOnlyFieldsOrderMap.get(name);
 };
 
+export const getRequiredPropertyInfoFields = (propertyInfo) => {
+  const result = _.pick(propertyInfo, Array.from(propertyInfoViewOnlyFieldsOrderMap.keys()));
+  return result;
+};
+
 export const getValuesInPropertyInfoViewOnlyFieldsFormat = (object) => {
   if (_.isNil(object)) return;
   const result = _.transform(object, (_result, value, key) => {

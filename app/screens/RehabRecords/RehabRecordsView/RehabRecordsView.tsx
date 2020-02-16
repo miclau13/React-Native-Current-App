@@ -17,13 +17,11 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
       <ScrollView>
         {rehabRecords.map((rehabRecord, i) => {
           const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
-          
           const isRevised = !!rehabItemsPackage.revisedRehabItems;
           const remodellingCost = isRevised ? calculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : calculateRemodelingCost(rehabItemsPackage?.rehabItems);
           const profit = arv - asIs - remodellingCost;
           const profitPercent = profit / remodellingCost * 100;
           const labelColor = findLabelAttributes(profitPercent).labelColor;
-          console.log("RehabRecordsView rehabItemsPackage", rehabItemsPackage)
           return (
             <ListItem
               bottomDivider

@@ -99,7 +99,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const myRehabRequests = data?.myRehabRequests || [];
   const [rehabRecords, setRehabRecords] = React.useState<RehabRecords[]>([]);
   const selectedRehabRecordsIds = rehabRecords.filter(record => record.checked).map(record => record.id);
-  // console.log("RehabRecords outside myRehabRequests",myRehabRequests)
+
   const deleteRehabs = async () => {
     const deleteRehabMutations = selectedRehabRecordsIds.map(id => {
       const result = deleteRehab({ variables: { input: { rehabId: id } } });
@@ -124,7 +124,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   // For RehabRecordsView
   const handleItemOnPress: RehabRecordsViewProps['handleItemOnPress'] = index => (event) => {
-    navigation.push("RehabRecordsDetailScreen", { detail: rehabRecords[index]} );
+    navigation.push("RehabRecordsDetailScreen", { detail: rehabRecords[index], submitted: rehabRecords[index].rehabItemsPackage.submitted });
   };
   const handleItemDeleteOnPress: RehabRecordsViewProps['handleItemDeleteOnPress'] = index => (event) => {
     const updatedRehabRecords = rehabRecords.map((record, _index) => {

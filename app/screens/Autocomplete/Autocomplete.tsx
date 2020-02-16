@@ -162,6 +162,7 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const handleOptionPress: AutocompleteViewProps['handleOptionPress'] = (value) => {
     setValue(value);
     setIsValidTrudeedAddress(true);
+    Keyboard.dismiss();
   };
   /* arv should be filled to avoid generated arv accurancy issue */
   const handleOnPress: AutocompleteViewProps['handleOnPress'] = async () => {
@@ -174,8 +175,10 @@ const Autocomplete: NavigationStackScreenComponent<Params, ScreenProps> = (props
         setGoogleAddress(result?.data?.validateAddress?.fullAddress)
         setPostalCode(result?.data?.validateAddress?.postalCode)
         setModalVisible(true);
+        Keyboard.dismiss();
       } else {
         setError(true);
+        Keyboard.dismiss();
         return;
       }
     }

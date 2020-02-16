@@ -11,6 +11,7 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
   const rehabId = navigation.getParam("rehabId");
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
   const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId");
+  const submitted = navigation.getParam("submitted", false);
   const flow = 2;
   const step = "summary";
   const handleHeaderRightOnPress = () => {
@@ -32,7 +33,7 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
       );
     },
     headerRight: (props) => {
-      if (loading) {
+      if (loading || submitted) {
         return null;
       };
       return (

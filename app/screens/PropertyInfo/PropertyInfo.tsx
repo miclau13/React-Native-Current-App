@@ -8,8 +8,7 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useLazyQuery } from '@apollo/react-hooks';
 
 import PropertyInfoView from './PropertyInfoView';
-import { getDefaultPropertyDetails, getDefaultPropertyInfoFields, getValuesInPropertyInfoViewOnlyFieldsFormat, mapPropertyDetailsToPropertyInfo } from './utils';
-// import { RequiredInput } from '../FiximizeQuestions/FiximizeQuestionsForm';
+import { getDefaultPropertyDetails, getDefaultPropertyInfoFields, getRequiredPropertyInfoFields, getValuesInPropertyInfoViewOnlyFieldsFormat } from './utils';
 import { FiximizeFlow } from '../Autocomplete';
 import PropertyInfoEditView from './PropertyInfoEditView';
 import { LoadingComponent } from '../InitialLoading';
@@ -92,7 +91,6 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const arvEstimate = navigation.getParam("arvEstimate", null);
   const asIsEstimate = navigation.getParam("asIsEstimate", null);
   const flow = navigation.getParam("flow");
-  const loading = navigation.getParam("loading", false);
   const postalCode = navigation.getParam("postalCode", null);
   const rehabId = navigation.getParam("rehabId", null);
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
@@ -121,17 +119,18 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     return result;
   }, [propertyInfoFields]);
 
-  const [getPropertyInfo, { error, loading: getPropertyInfoLoading }] = useLazyQuery<PropertyInfoData>(PROPERTY_INFO, { onCompleted: (data) => {
-    if (!error && data && data.propertyInfo) {
-      let _propertyInfoFields = omit(data.propertyInfo, ["__typename"]);
-      // If comes from flow 2, merge the propertyInfo
-      if (revisedRehabInfo) {
-        _propertyInfoFields = { ..._propertyInfoFields, ...getUpdatedPropertyInfo(revisedRehabInfo)};
-      };
-      setPropertyInfoFields(_propertyInfoFields);
-      // navigation.setParams({ loading: false })
-    };
-  }});
+  const [getPropertyInfo, { error, loading: getPropertyInfoLoading }] = useLazyQuery<PropertyInfoData>(PROPERTY_INFO, { 
+    onCompleted: (data) => {
+      if (!error && data && data.propertyInfo) {
+        let _propertyInfoFields = omit(data.propertyInfo, ["__typename"]);
+        // If comes from flow 2, merge the propertyInfo
+        if (revisedRehabInfo) {
+          _propertyInfoFields = { ..._propertyInfoFields, ...getUpdatedPropertyInfo({ revisedRehabInfo })};
+        };
+        setPropertyInfoFields(_propertyInfoFields);
+      } 
+    },
+  });
 
   // For PropertyInfoEditView
   const changeToViewMode = () => {
@@ -161,29 +160,31 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
   const handleButtonContinueOnPress = React.useCallback<PropertyInfoViewProps['handleButtonContinueOnPress']>(() => {
     const propertyDetails = getDefaultPropertyDetails(propertyInfoFields);
-    const _postalCode = revisedRehabInfo?.postalCode || postalCode;
-    const _propertyInfoFields = mapValues(value => {
+    const _propertyInfoFields = mapValues(propertyInfoFields, (value, key) => {
+      if (key == "style") return value;
       const _value = +eraseComma(value);
       return _value;
-    })
-    // console.log("PropertyInfo handleButtonContinueOnPress _propertyInfoFields",_propertyInfoFields)
+    });
     const createRehabNoArvInput: CreateRehabNoArvVariables['input'] = {
+      // Order is important
       address,
-      propertyDetails,
-      totalDebts,
       arv: arvEstimate,
       asIs: asIsEstimate,
-      postalCode: _postalCode,
+      totalDebts,
       vacant: true,
+      postalCode,
+      ...revisedRehabInfo,
+      propertyDetails,
       ..._propertyInfoFields,
-      ...revisedRehabInfo
+  
     };
     navigation.navigate("VacantPropertyScreen", { createRehabNoArvInput, rehabId, revisedRehabItemPackageId });
   }, [address, arvEstimate, asIsEstimate, propertyInfoFields, revisedRehabInfo, revisedRehabItemPackageId, postalCode, totalDebts]);
 
   // Update
   const getUpdatedPropertyInfo = (params: { revisedRehabInfo: RevisedRehabInfo }) => {    
-    const _propertyInfoFields = mapPropertyDetailsToPropertyInfo(revisedRehabInfo.propertyDetails);
+    const _propertyInfoFields = getRequiredPropertyInfoFields(revisedRehabInfo);
+    // const _propertyInfoFields = mapPropertyDetailsToPropertyInfo(revisedRehabInfo.propertyDetails);
     return _propertyInfoFields;
   };
 
@@ -196,9 +197,16 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
     };
     // Prepare the values if comes from rehab record edit flow
     if (flow == 2) {
-      getPropertyInfo({
-        variables: { query: { address: revisedRehabInfo.address }}
-      });
+      const _address = revisedRehabInfo.address;
+      // temp check where manually input address or not
+      if (_address.includes("USA")) {
+        const _propertyInfoFields = getUpdatedPropertyInfo({ revisedRehabInfo });
+        setPropertyInfoFields(_propertyInfoFields);
+      } else {
+        getPropertyInfo({
+          variables: { query: { address: _address }}
+        });
+      }
     };
     // Do not call getPropertyInfo if flow = FiximizeFlow.SelfInputAddress
     navigation.setParams({ loading: false })

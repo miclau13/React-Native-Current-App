@@ -157,6 +157,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const updatedVacant = navigation.getParam("vacant", null);
 
   const createRehab = async () => {
+    console.log("FullRemodelSummary createRehab createRehabNoArvInput", createRehabNoArvInput)
     const result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
     if (result) {
       const rehab = result.data.createRehabNoArv;
@@ -194,10 +195,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   };
 
   const updateRehab = async () => {
-    // console.log("updateRehab createRehabNoArvInput",createRehabNoArvInput)
-    // console.log("updateRehab revisedRehabItemPackageId",revisedRehabItemPackageId)
-    // const { postalCode, ...createRehabNoArvInputWithoutPostalCode } = createRehabNoArvInput;
-    
     const updateRehabItemsPackageInput = {
       rehabRequest: {
         id: revisedRehabId,
@@ -207,12 +204,10 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         id: revisedRehabItemPackageId
       }
     };
-    // console.log("updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     
     const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
     if (result) {
       const rehab = result.data.updateRehabItemsPackage;
-      // console.log("FullRemodelSummary updateRehabItemsPackage rehab.rehabRequest",rehab.rehabRequest)
       const itemsMap: RehabItemsPackageMap = (rehab.rehabItemsPackage?.rehabItems || []).reduce((acc, item) => {
         if (!acc[item.category]) {
           acc[item.category] = {
@@ -247,14 +242,10 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   };
 
   const bootstrapAsync = async () => {
-    // console.log("FullRemodelSummary bootstrapAsync revisedRehabId",revisedRehabId)
     try {
       const result = !revisedRehabId ? await createRehab() : await updateRehab();
       if (result) {
         const { arv, dataArry, postalCode: _postalCode, rehabId: _rehabId, rehabItems, rehabItemPackageId, submitted } = result;
-        // console.log("FullRemodelSummary bootstrapAsync _rehabId",_rehabId)
-        // console.log("FullRemodelSummary bootstrapAsync rehabItemPackageId",rehabItemPackageId)
-        // console.log("FullRemodelSummary bootstrapAsync _postalCode",_postalCode)
         setArv(arv);
         setData(dataArry);
         setRehabId(_rehabId);
