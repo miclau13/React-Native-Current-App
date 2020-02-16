@@ -57,7 +57,7 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   React.useEffect(() => {
     if (!loading && error) {
-      navigation.navigate("AuthTabs");
+      navigation.navigate("AuthNavigator");
     }
   }, [error, data, loading]);
 

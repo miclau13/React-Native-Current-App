@@ -22,11 +22,13 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
   };
   return { 
     headerLeft: (props) => {
-      <HeaderBackButton 
-        {...props} 
-        onPress={handleHeaderLeftOnPress}
-        tintColor={primaryButtonColor}
-      />
+      return (
+        <HeaderBackButton 
+          {...props} 
+          onPress={handleHeaderLeftOnPress}
+          tintColor={primaryButtonColor}
+        />
+      )
     },
     headerRight: (props) => {
       if (step == "summary") {
