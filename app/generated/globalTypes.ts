@@ -82,6 +82,13 @@ export interface RehabRequestInput {
   vacant?: boolean | null;
   totalDebts?: number | null;
   contactPhoneNumber?: string | null;
+  postalCode?: string | null;
+  beds?: number | null;
+  fullBaths?: number | null;
+  halfBaths?: number | null;
+  threeQuarterBaths?: number | null;
+  sqft?: number | null;
+  style?: string | null;
 }
 
 export interface UpdateRehabItemsPackageInput {

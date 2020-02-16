@@ -12,20 +12,20 @@ import { calculateRemodelingCost } from '../../common/utils/Calculator';
 import { MyRehabRequests_myRehabRequests } from '../../generated/MyRehabRequests';
 import { RevisedRehabInfo } from '../PropertyInfo';
 
-interface RehabRecordsDetail extends MyRehabRequests_myRehabRequests{
-  contactPhoneNumber: string;
-  postalCode: string;
-};
-
 type Params = {
   detail: RehabRecordsDetail;
   loading?: boolean;
   rehabId?: string;
+  rehabItemPackageId?: string;
   revisedRehabInfo?: RevisedRehabInfo;
-  revisedRehabItemPackageId?: string;
 };
 
 type ScreenProps = {};
+
+interface RehabRecordsDetail extends MyRehabRequests_myRehabRequests{
+  contactPhoneNumber: string;
+  postalCode: string;
+};
 
 export type RehabRecordsDetailProps = {
   expandPropertyDetails: RehabRecordsDetailState['expandPropertyDetails'];
@@ -94,7 +94,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const bootstrapAsync = async () => {
     // For revise flow
-    const { address, arv, asIs, beds, contactPhoneNumber="+1 ", fullBaths, halfBaths, id, propertyDetails, postalCode, sqft, style, threeQuarterBaths, totalDebts, vacant, rehabItemsPackage: { id: rehabItemPackageId, submitted } } = detail;
+    const { address, arv, asIs, beds, contactPhoneNumber="+1 ", fullBaths, halfBaths, id, propertyDetails, postalCode, sqft, style, threeQuarterBaths, totalDebts, vacant, rehabItemsPackage: { id: rehabItemPackageId } } = detail;
     const revisedRehabInfo = {
       address,
       arv,
@@ -112,16 +112,19 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
       vacant,
     };
     navigation.setParams({ 
+      rehabItemPackageId,
       revisedRehabInfo,
       loading: false,
       rehabId: id,
-      revisedRehabItemPackageId: rehabItemPackageId,
     });
   };
 
   React.useEffect(() => {
+    // console.log("RehabRecordsDetail useEffect bootstrapAsync ")
     bootstrapAsync();
-    return () => {}
+    return () => {
+      // console.log("RehabRecordsDetail useEffect bootstrapAsync ")
+    }
   }, []);
 
   if (loading) {

@@ -11,6 +11,7 @@ export interface MyRehabRequests_myRehabRequests_rehabItemsPackage_rehabItems {
   category: string;
   cost: number | null;
   name: string;
+  selected: boolean;
 }
 
 export interface MyRehabRequests_myRehabRequests_rehabItemsPackage_revisedRehabItems {
@@ -18,6 +19,7 @@ export interface MyRehabRequests_myRehabRequests_rehabItemsPackage_revisedRehabI
   category: string;
   cost: number | null;
   name: string;
+  selected: boolean;
 }
 
 export interface MyRehabRequests_myRehabRequests_rehabItemsPackage {
@@ -34,9 +36,17 @@ export interface MyRehabRequests_myRehabRequests {
   address: string;
   arv: number | null;
   asIs: number;
+  contactPhoneNumber: string | null;
+  postalCode: string | null;
   propertyDetails: any | null;
-  vacant: boolean | null;
   totalDebts: number | null;
+  vacant: boolean | null;
+  beds: number | null;
+  fullBaths: number | null;
+  halfBaths: number | null;
+  threeQuarterBaths: number | null;
+  sqft: number | null;
+  style: string | null;
   rehabItemsPackage: MyRehabRequests_myRehabRequests_rehabItemsPackage | null;
 }
 

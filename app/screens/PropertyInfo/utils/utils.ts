@@ -1,6 +1,10 @@
 import _ from 'lodash';
 
+import { PropertyInfoFields } from '../PropertyInfo';
 import { eraseComma } from '../../../components/NumberInput/utils'; 
+import { CreateRehabNoArvInput } from '../../../generated/globalTypes';
+
+type PropertyDetailsBedsAndBaths = Omit<PropertyInfoFields, "sqft" |"style">
 
 const getKitchenDefaultVaues = () => {
   const values = {
@@ -27,9 +31,10 @@ const propertyInfoViewOnlyFieldsOrderMap = new Map([
   ["threeQuarterBaths", "4"],
 ]);
 
-const mapPropertyInfoToPropertyDetailsBedsAndBaths = (propertyInfo) => {
-  let propertyDetails = {};
-  _.forEach(propertyInfo, (value, key) => {
+const mapPropertyInfoToPropertyDetailsBedsAndBaths = (propertyInfo: PropertyDetailsBedsAndBaths) => {
+  const _propertyInfo = _.pick(propertyInfo, Array.from(propertyDetailsMap.keys()));
+  let propertyDetails: CreateRehabNoArvInput["propertyDetails"] = Object.create(Object.prototype);
+  _.forEach(_propertyInfo, (value, key) => {
     const _value = +eraseComma(value);
     const obj = propertyDetailsMap.get(key);
     let arr = [];
@@ -38,18 +43,12 @@ const mapPropertyInfoToPropertyDetailsBedsAndBaths = (propertyInfo) => {
     };
     propertyDetails[obj.name] = arr;
   });
+  propertyDetails = { ...propertyDetails, ...getKitchenDefaultVaues()};
   return propertyDetails;
 }
 
-export const getDefaultPropertyDetails = (propertyInfo) => {
-  const { kitchenCabinetBaseLength, kitchenCabinetIslandLength, kitchenCabinetUpperLength } = getKitchenDefaultVaues();
-  const bedsAndBathsValues = mapPropertyInfoToPropertyDetailsBedsAndBaths(_.omit(propertyInfo, ["sqft", "style"]));
-  const propertyDetails = {
-    kitchenCabinetBaseLength,
-    kitchenCabinetIslandLength,
-    kitchenCabinetUpperLength,
-    ...bedsAndBathsValues
-  }
+export const getDefaultPropertyDetails = (propertyInfo: PropertyInfoFields) => {
+  const propertyDetails = mapPropertyInfoToPropertyDetailsBedsAndBaths(propertyInfo);
   return propertyDetails;
 };
 
@@ -61,6 +60,21 @@ export const getDefaultPropertyInfoFields = () => {
     sqft: 0,
     style: "NA",
     threeQuarterBaths: 0,
+  }
+  return result;
+};
+
+export const getDefaultRevisedPropertyInfoFields = () => {
+  const _propertyDetails = mapPropertyInfoToPropertyDetailsBedsAndBaths(getDefaultPropertyInfoFields());
+  const result = {
+    address: "",
+    arv: 0,
+    asIs: 0,
+    contactPhoneNumber: "+1 ",
+    postalCode: "",
+    totalDebts: 0,
+    vacant: true,
+    propertyDetails: _propertyDetails,
   }
   return result;
 };

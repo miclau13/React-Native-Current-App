@@ -9,8 +9,8 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
   const { navigation } = props;
   const loading = navigation.getParam("loading", true);
   const rehabId = navigation.getParam("rehabId");
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId");
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
-  const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId");
   const submitted = navigation.getParam("submitted", false);
   const flow = 2;
   const step = "summary";
@@ -18,8 +18,8 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
     navigation.navigate("PropertyInfoScreen", { 
       flow,
       rehabId,
+      rehabItemPackageId,
       revisedRehabInfo,
-      revisedRehabItemPackageId,
       step,
     })
   };

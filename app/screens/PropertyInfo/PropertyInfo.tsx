@@ -8,11 +8,18 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useLazyQuery } from '@apollo/react-hooks';
 
 import PropertyInfoView from './PropertyInfoView';
-import { getDefaultPropertyDetails, getDefaultPropertyInfoFields, getRequiredPropertyInfoFields, getValuesInPropertyInfoViewOnlyFieldsFormat } from './utils';
+import { 
+  getDefaultPropertyDetails, 
+  getDefaultPropertyInfoFields, 
+  getDefaultRevisedPropertyInfoFields,
+  getRequiredPropertyInfoFields, 
+  getValuesInPropertyInfoViewOnlyFieldsFormat
+} from './utils';
 import { FiximizeFlow } from '../Autocomplete';
 import PropertyInfoEditView from './PropertyInfoEditView';
 import { LoadingComponent } from '../InitialLoading';
 import { eraseComma, validateFormat } from '../../components/NumberInput/utils';
+import { PropertyDetailsInput } from '../../generated/globalTypes';
 import { PropertyInfo as PropertyInfoData, PropertyInfo_propertyInfo } from '../../generated/PropertyInfo';
 import { CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
@@ -25,8 +32,8 @@ type Params = {
   loading?: boolean;
   postalCode?: string;
   rehabId?: string;
+  rehabItemPackageId?: string;
   revisedRehabInfo?: RevisedRehabInfo;
-  revisedRehabItemPackageId?: string;
   step?: string;
 };
 
@@ -46,7 +53,20 @@ export type PropertyInfoEditableFields = {
   halfBaths: string;
   sqft: string;
   threeQuarterBaths: string;
-}
+};
+
+export interface PropertyDetails extends PropertyDetailsInput {};
+
+export type RevisedRehabInfo = {
+  address: string;
+  arv: number;
+  asIs: number;
+  contactPhoneNumber: string;
+  postalCode: string;
+  totalDebts: number;
+  vacant: boolean;
+  propertyDetails: PropertyDetails
+};
 export interface PropertyInfoEditViewProps {
   fields: PropertyInfoEditableFields,
   handleBackdropOnPress: ModalProps['onBackdropPress'];
@@ -59,18 +79,6 @@ export interface PropertyInfoViewProps {
   fields: PropertyData[];
   handleButtonContinueOnPress: ButtonProps['onPress'];
 };
-
-export type RevisedRehabInfo = {
-  address: string;
-  arv: number;
-  asIs: number;
-  contactPhoneNumber: string;
-  postalCode: string;
-  rehabItemPackageId: string;
-  totalDebts: number;
-  vacant: boolean;
-  propertyDetails?: object
-} | {};
 
 const PROPERTY_INFO = gql`
   query PropertyInfo($query: PropertyInfoQuery!) {
@@ -91,10 +99,10 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const arvEstimate = navigation.getParam("arvEstimate", null);
   const asIsEstimate = navigation.getParam("asIsEstimate", null);
   const flow = navigation.getParam("flow");
-  const postalCode = navigation.getParam("postalCode", null);
+  const postalCode = navigation.getParam("postalCode", "");
   const rehabId = navigation.getParam("rehabId", null);
-  const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
-  const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId", null);
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", null);
+  const revisedRehabInfo = navigation.getParam("revisedRehabInfo", getDefaultRevisedPropertyInfoFields());
   const step = navigation.getParam("step", 'summary');
   const totalDebts = navigation.getParam("totalDebts", null);
 
@@ -124,7 +132,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       if (!error && data && data.propertyInfo) {
         let _propertyInfoFields = omit(data.propertyInfo, ["__typename"]);
         // If comes from flow 2, merge the propertyInfo
-        if (revisedRehabInfo) {
+        if (rehabId && revisedRehabInfo) {
           _propertyInfoFields = { ..._propertyInfoFields, ...getUpdatedPropertyInfo({ revisedRehabInfo })};
         };
         setPropertyInfoFields(_propertyInfoFields);
@@ -165,6 +173,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       const _value = +eraseComma(value);
       return _value;
     });
+    const revisedRehabInfoInput = rehabId ? revisedRehabInfo : {};
     const createRehabNoArvInput: CreateRehabNoArvVariables['input'] = {
       // Order is important
       address,
@@ -173,13 +182,24 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       totalDebts,
       vacant: true,
       postalCode,
-      ...revisedRehabInfo,
+      ...revisedRehabInfoInput,
       propertyDetails,
       ..._propertyInfoFields,
-  
     };
-    navigation.navigate("VacantPropertyScreen", { createRehabNoArvInput, rehabId, revisedRehabItemPackageId });
-  }, [address, arvEstimate, asIsEstimate, propertyInfoFields, revisedRehabInfo, revisedRehabItemPackageId, postalCode, totalDebts]);
+    console.log("PropertyInfo handleButtonContinueOnPress rehabId", rehabId)
+    console.log("PropertyInfo handleButtonContinueOnPress rehabItemPackageId", rehabItemPackageId)
+    // console.log("PropertyInfo handleButtonContinueOnPress address", address)
+    // console.log("PropertyInfo handleButtonContinueOnPress arvEstimate", arvEstimate)
+    // console.log("PropertyInfo handleButtonContinueOnPress asIsEstimate", asIsEstimate)
+    // console.log("PropertyInfo handleButtonContinueOnPress totalDebts", totalDebts)
+    // console.log("PropertyInfo handleButtonContinueOnPress postalCode", postalCode)
+    // console.log("PropertyInfo handleButtonContinueOnPress revisedRehabInfoInput", revisedRehabInfoInput)
+
+    // console.log("PropertyInfo handleButtonContinueOnPress propertyDetails", propertyDetails)
+    // console.log("PropertyInfo handleButtonContinueOnPress _propertyInfoFields", _propertyInfoFields)
+    // console.log("PropertyInfo handleButtonContinueOnPress createRehabNoArvInput", createRehabNoArvInput)
+    navigation.navigate("VacantPropertyScreen", { createRehabNoArvInput, rehabId, rehabItemPackageId });
+  }, [address, arvEstimate, asIsEstimate, propertyInfoFields, revisedRehabInfo, postalCode, totalDebts]);
 
   // Update
   const getUpdatedPropertyInfo = (params: { revisedRehabInfo: RevisedRehabInfo }) => {    

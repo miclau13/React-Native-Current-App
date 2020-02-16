@@ -8,14 +8,14 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
   const { navigation } = props;
   const rehabId = navigation.getParam("rehabId");
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
-  const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId");
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId");
   const flow = 1;
   const handleHeaderLeftOnPress = () => {
     navigation.navigate("PropertyInfoScreen", { 
       flow,
       rehabId,
       revisedRehabInfo,
-      revisedRehabItemPackageId
+      rehabItemPackageId
     })
   };
   return { 

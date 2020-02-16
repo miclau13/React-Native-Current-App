@@ -14,11 +14,11 @@ import { CreateRehabNoArv, CreateRehabNoArv_createRehabNoArv_rehabItemPackage_re
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
 
 export interface Params {
-  arv?: CreateRehabNoArv['createRehabNoArv']['arv'];
-  asIs?: number;
-  createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
-  rehabId?: string;
-  revisedRehabId?: string;
+  arv: CreateRehabNoArv['createRehabNoArv']['arv'];
+  asIs: number;
+  createRehabNoArvInput: CreateRehabNoArvVariables['input'];
+  rehabId: CreateRehabNoArv['createRehabNoArv']['rehabId'];
+  rehabItemPackageId: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
   revisedRehabInfo?: RevisedRehabInfo;
   revisedRehabItemPackageId: string;
   submitted?: boolean;
@@ -38,9 +38,7 @@ export type FullRemodelSummaryProps = {
 export type FullRemodelSummaryState = {
   arv: Params['arv'];
   data: RehabItemsPackage[];
-  rehabId: CreateRehabNoArv['createRehabNoArv']['rehabId'];
   rehabItems: Omit<CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems, "__typename">[];
-  rehabItemPackageId: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
 };
 
 type RehabItemsPackage = {
@@ -137,8 +135,9 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
-  const revisedRehabId = navigation.getParam("revisedRehabId", null);
   const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId", null);
+  const rehabId = navigation.getParam("rehabId", "");
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
 
   const totalDebts = createRehabNoArvInput.totalDebts;
   const vacant = createRehabNoArvInput.vacant;
@@ -146,9 +145,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const [arv, setArv] = React.useState<FullRemodelSummaryState['arv']>();
   const [data, setData] = React.useState<FullRemodelSummaryState['data']>();
-  const [rehabId, setRehabId] = React.useState<FullRemodelSummaryState['rehabId']>();
   const [rehabItems, setRehabItems] = React.useState<FullRemodelSummaryState['rehabItems']>();
-  const [rehabItemPackageId, setRehabItemPackageId] = React.useState<FullRemodelSummaryState['rehabItemPackageId']>();
   const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
 
   const updatedArv = navigation.getParam("arv", null);
@@ -161,6 +158,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
     const result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
     if (result) {
       const rehab = result.data.createRehabNoArv;
+      console.log("FullRemodelSummary createRehab rehab.rehabItemPackage.id", rehab.rehabItemPackage.id)
       const itemsMap: RehabItemsPackageMap = (rehab.rehabItemPackage?.rehabItems || []).reduce((acc, item) => {
         if (!acc[item.category]) {
           acc[item.category] = {
@@ -197,17 +195,17 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const updateRehab = async () => {
     const updateRehabItemsPackageInput = {
       rehabRequest: {
-        id: revisedRehabId,
+        id: rehabId,
         ...createRehabNoArvInput
       },
       rehabItemsPackage: {
-        id: revisedRehabItemPackageId
+        id: rehabItemPackageId
       }
     };
-    
+    console.log("FullRemodelSummary updateRehab updateRehabItemsPackageInput", updateRehabItemsPackageInput)
     const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
     if (result) {
-      const rehab = result.data.updateRehabItemsPackage;
+      const rehab = result.data?.updateRehabItemsPackage;
       const itemsMap: RehabItemsPackageMap = (rehab.rehabItemsPackage?.rehabItems || []).reduce((acc, item) => {
         if (!acc[item.category]) {
           acc[item.category] = {
@@ -242,15 +240,16 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   };
 
   const bootstrapAsync = async () => {
+    console.log("FullRemodelSummary bootstrapAsync rehabId", rehabId)
+    console.log("FullRemodelSummary bootstrapAsync rehabItemPackageId", rehabItemPackageId)
     try {
-      const result = !revisedRehabId ? await createRehab() : await updateRehab();
+      const result = !rehabId ? await createRehab() : await updateRehab();
       if (result) {
-        const { arv, dataArry, postalCode: _postalCode, rehabId: _rehabId, rehabItems, rehabItemPackageId, submitted } = result;
+        const { arv, dataArry, postalCode: _postalCode, rehabId: _rehabId, rehabItems, rehabItemPackageId: _rehabItemPackageId, submitted } = result;
+        console.log("FullRemodelSummary bootstrapAsync _rehabItemPackageId", _rehabItemPackageId)
         setArv(arv);
         setData(dataArry);
-        setRehabId(_rehabId);
         setRehabItems(rehabItems);
-        setRehabItemPackageId(rehabItemPackageId);
         setSubmitted(submitted);
         // For revise flow
         const revisedRehabInfo = {
@@ -265,7 +264,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         navigation.setParams({ 
           revisedRehabInfo,
           rehabId: _rehabId,
-          revisedRehabItemPackageId: rehabItemPackageId,
+          rehabItemPackageId: _rehabItemPackageId,
         });
       }
     } catch (e) {
@@ -324,7 +323,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
     return () => {
       // console.log("FullRemodelSummary UnMount");
     }
-  }, [submitted]);
+  }, []);
 
   if (!data) {
     return (
