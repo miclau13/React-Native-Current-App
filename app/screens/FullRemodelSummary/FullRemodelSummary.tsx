@@ -12,17 +12,21 @@ import { LoadingComponent } from '../InitialLoading';
 import { RevisedRehabInfo } from '../PropertyInfo';
 import { CreateRehabNoArv, CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
+import { 
+  getDefaultPropertyDetails, 
+  getDefaultPropertyInfoFields, 
+} from '../PropertyInfo/utils';
 
 export interface Params {
-  arv: CreateRehabNoArv['createRehabNoArv']['arv'];
-  asIs: number;
-  createRehabNoArvInput: CreateRehabNoArvVariables['input'];
-  rehabId: CreateRehabNoArv['createRehabNoArv']['rehabId'];
-  rehabItemPackageId: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
+  // From ContactPhoneNumberScreen for normal input flow
+  createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
+  rehabId?: CreateRehabNoArv['createRehabNoArv']['rehabId'];
+  rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
+  // From FullRemodelSummary itself after create Rehab
   revisedRehabInfo?: RevisedRehabInfo;
-  revisedRehabItemPackageId: string;
-  submitted?: boolean;
-  totalDebts?: number;
+  // From ProfitSummaryScreen due to Back button
+  arv?: CreateRehabNoArv['createRehabNoArv']['arv'];
+  asIs?: number;
   vacant?: boolean;
 };
 
@@ -109,7 +113,7 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   }
 `;
 
-const GetOrderForRehabItemsCategory = (key: string) => {
+const getOrderForRehabItemsCategory = (key: string) => {
   switch (key) {
     case "Kitchen": 
       return 0;
@@ -135,7 +139,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
-  const revisedRehabItemPackageId = navigation.getParam("revisedRehabItemPackageId", null);
   const rehabId = navigation.getParam("rehabId", "");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
 
@@ -146,19 +149,15 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const [arv, setArv] = React.useState<FullRemodelSummaryState['arv']>();
   const [data, setData] = React.useState<FullRemodelSummaryState['data']>();
   const [rehabItems, setRehabItems] = React.useState<FullRemodelSummaryState['rehabItems']>();
-  const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
 
   const updatedArv = navigation.getParam("arv", null);
   const updatedAsIs = navigation.getParam("asIs", null);
-  const updatedSubmitted = navigation.getParam("submitted", false);
   const updatedVacant = navigation.getParam("vacant", null);
 
   const createRehab = async () => {
-    console.log("FullRemodelSummary createRehab createRehabNoArvInput", createRehabNoArvInput)
     const result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
     if (result) {
       const rehab = result.data.createRehabNoArv;
-      console.log("FullRemodelSummary createRehab rehab.rehabItemPackage.id", rehab.rehabItemPackage.id)
       const itemsMap: RehabItemsPackageMap = (rehab.rehabItemPackage?.rehabItems || []).reduce((acc, item) => {
         if (!acc[item.category]) {
           acc[item.category] = {
@@ -168,7 +167,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         } else {
           acc[item.category]["cost"] += item.cost;
         };
-        acc[item.category]['order'] = acc[item.category]['order'] || GetOrderForRehabItemsCategory(item.category);
+        acc[item.category]['order'] = acc[item.category]['order'] || getOrderForRehabItemsCategory(item.category);
         return acc;
       }, {});
 
@@ -202,7 +201,6 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         id: rehabItemPackageId
       }
     };
-    console.log("FullRemodelSummary updateRehab updateRehabItemsPackageInput", updateRehabItemsPackageInput)
     const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
     if (result) {
       const rehab = result.data?.updateRehabItemsPackage;
@@ -215,7 +213,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
         } else {
           acc[item.category]["cost"] += item.cost;
         };
-        acc[item.category]['order'] = acc[item.category]['order'] || GetOrderForRehabItemsCategory(item.category);
+        acc[item.category]['order'] = acc[item.category]['order'] || getOrderForRehabItemsCategory(item.category);
         return acc;
       }, {});
 
@@ -240,17 +238,13 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   };
 
   const bootstrapAsync = async () => {
-    console.log("FullRemodelSummary bootstrapAsync rehabId", rehabId)
-    console.log("FullRemodelSummary bootstrapAsync rehabItemPackageId", rehabItemPackageId)
     try {
       const result = !rehabId ? await createRehab() : await updateRehab();
       if (result) {
-        const { arv, dataArry, postalCode: _postalCode, rehabId: _rehabId, rehabItems, rehabItemPackageId: _rehabItemPackageId, submitted } = result;
-        console.log("FullRemodelSummary bootstrapAsync _rehabItemPackageId", _rehabItemPackageId)
+        const { arv, dataArry, postalCode: _postalCode, rehabId: _rehabId, rehabItems, rehabItemPackageId: _rehabItemPackageId } = result;
         setArv(arv);
         setData(dataArry);
         setRehabItems(rehabItems);
-        setSubmitted(submitted);
         // For revise flow
         const revisedRehabInfo = {
           arv,
@@ -259,6 +253,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
           vacant,
           address: createRehabNoArvInput.address,
           contactPhoneNumber: createRehabNoArvInput.contactPhoneNumber,
+          propertyDetails: getDefaultPropertyDetails(getDefaultPropertyInfoFields()),
           postalCode: _postalCode,
         };
         navigation.setParams({ 
@@ -311,11 +306,10 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
       },
       remodellingCost: totalCost, 
       step: "summary",
-      submitted: updatedSubmitted ? updatedSubmitted : submitted,
       vacant: updatedVacant ? updatedVacant: vacant,
     });
-  }, [arv, asIs, data, rehabId, rehabItems, rehabItemPackageId, setArv, submitted,
-    updatedArv, updatedAsIs, updatedSubmitted, updatedVacant, vacant]);
+  }, [arv, asIs, data, rehabId, rehabItems, rehabItemPackageId, setArv,
+    updatedArv, updatedAsIs, updatedVacant, vacant]);
 
   React.useEffect(() => {
     // console.log("FullRemodelSummary Mount");

@@ -168,8 +168,7 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
   const handleButtonContinueOnPress = React.useCallback<PropertyInfoViewProps['handleButtonContinueOnPress']>(() => {
     const propertyDetails = getDefaultPropertyDetails(propertyInfoFields);
-    const _propertyInfoFields = mapValues(propertyInfoFields, (value, key) => {
-      if (key == "style") return value;
+    const _propertyInfoFields = mapValues(omit(propertyInfoFields, ["style"]), (value, key) => {
       const _value = +eraseComma(value);
       return _value;
     });
@@ -184,27 +183,15 @@ const PropertyInfo: NavigationStackScreenComponent<Params, ScreenProps> = (props
       postalCode,
       ...revisedRehabInfoInput,
       propertyDetails,
+      style: propertyInfoFields.style,
       ..._propertyInfoFields,
     };
-    console.log("PropertyInfo handleButtonContinueOnPress rehabId", rehabId)
-    console.log("PropertyInfo handleButtonContinueOnPress rehabItemPackageId", rehabItemPackageId)
-    // console.log("PropertyInfo handleButtonContinueOnPress address", address)
-    // console.log("PropertyInfo handleButtonContinueOnPress arvEstimate", arvEstimate)
-    // console.log("PropertyInfo handleButtonContinueOnPress asIsEstimate", asIsEstimate)
-    // console.log("PropertyInfo handleButtonContinueOnPress totalDebts", totalDebts)
-    // console.log("PropertyInfo handleButtonContinueOnPress postalCode", postalCode)
-    // console.log("PropertyInfo handleButtonContinueOnPress revisedRehabInfoInput", revisedRehabInfoInput)
-
-    // console.log("PropertyInfo handleButtonContinueOnPress propertyDetails", propertyDetails)
-    // console.log("PropertyInfo handleButtonContinueOnPress _propertyInfoFields", _propertyInfoFields)
-    // console.log("PropertyInfo handleButtonContinueOnPress createRehabNoArvInput", createRehabNoArvInput)
     navigation.navigate("VacantPropertyScreen", { createRehabNoArvInput, rehabId, rehabItemPackageId });
   }, [address, arvEstimate, asIsEstimate, propertyInfoFields, revisedRehabInfo, postalCode, totalDebts]);
 
-  // Update
+  // Update PropertyInfo if has revisedRehabInfo
   const getUpdatedPropertyInfo = (params: { revisedRehabInfo: RevisedRehabInfo }) => {    
     const _propertyInfoFields = getRequiredPropertyInfoFields(revisedRehabInfo);
-    // const _propertyInfoFields = mapPropertyDetailsToPropertyInfo(revisedRehabInfo.propertyDetails);
     return _propertyInfoFields;
   };
 
