@@ -24,9 +24,11 @@ const LoggedInProvider = <T extends string>({
   };
 
   React.useEffect(() => {
-    console.log("LoggedInProvider Mount");
+    // console.log("LoggedInProvider Mount");
     bootstrapAsync();
-    return () => {console.log("LoggedInProvider UnMount")}
+    return () => {
+      // console.log("LoggedInProvider UnMount")
+    }
   }, [value]);
 
   // console.log("LoggedInProvider", value);

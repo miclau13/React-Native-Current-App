@@ -49,11 +49,6 @@ const ProfileView: React.ComponentType<ProfileViewProps> = (props) => {
     // );
   };
 
-  React.useEffect(() => {
-    console.log("ProfileView Mount")
-    return () => {console.log("ProfileView UnMount")}
-  }, []);
-
   return (
     <ScrollView style={styles.scroll}>
       <View style={styles.container}>

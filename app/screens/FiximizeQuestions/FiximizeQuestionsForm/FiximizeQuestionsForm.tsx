@@ -15,7 +15,7 @@ import ThreeQuarterBathSize from '../ThreeQuarterBathSize';
 import VacantProperty from '../VacantProperty';
 import { CreateRehab, CreateRehabVariables } from '../../../generated/CreateRehab';
 
-import { FiximizeFlow } from '../../FiximizeQuestions/Autocomplete';
+import { FiximizeFlow } from '../../Autocomplete';
 
 type FiximizeQuestionsStepForBeds = "beds1" | "beds2" | "beds3" |"beds4" |"beds5";
 type FiximizeQuestionsStepForFullBaths = "fullBaths1" | "fullBaths2" | "fullBaths3" |"fullBaths4" |"fullBaths5";

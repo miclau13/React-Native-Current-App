@@ -31,6 +31,7 @@ export interface CreateRehabNoArv_createRehabNoArv_rehabItemPackage {
 export interface CreateRehabNoArv_createRehabNoArv {
   __typename: "CreateRehabOutput";
   arv: number | null;
+  postalCode: string | null;
   rehabId: string | null;
   rehabItemPackage: CreateRehabNoArv_createRehabNoArv_rehabItemPackage | null;
 }

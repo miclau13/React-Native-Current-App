@@ -4,7 +4,7 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import TotalDebtsView from './TotalDebtsView';
 import  { LoadingComponent } from '../InitialLoading';
-import { FiximizeFlow } from '../FiximizeQuestions/Autocomplete';
+import { FiximizeFlow } from '../Autocomplete';
 import { eraseComma, validateFormat } from '../../components/NumberInput/utils';
 
 type Params = {

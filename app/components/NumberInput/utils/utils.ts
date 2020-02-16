@@ -1,9 +1,11 @@
+import { isString } from 'lodash';
 // From Number Format
 const thousandsGroupRegex = /(\d)(?=(\d{3})+(?!\d))/g;
 const thousandSeparator = ",";
 
 export const eraseComma = (value) => {
-  return value.replace(/,/g, '');
+  if (isString(value))  return value.replace(/,/g, '');
+  return value;
 };
 
 export const applyThousandSeparator = (value: string) => {

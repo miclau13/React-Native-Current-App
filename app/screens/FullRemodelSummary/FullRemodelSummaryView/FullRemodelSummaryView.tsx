@@ -13,10 +13,6 @@ const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> =
   const { data, handleCheckBoxOnPress, handleOnPress, totalCost } = props;  
   let lowerLimit = Math.ceil(totalCost * 0.6);
   let upperLimit = Math.ceil(totalCost * 1.6);
-  React.useEffect(() => {
-    console.log("FullRemodelSummaryView Mount")
-    return () => {console.log("FullRemodelSummaryView UnMount")}
-  }, []);
 
   return (
     <SafeAreaView>

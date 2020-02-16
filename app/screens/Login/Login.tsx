@@ -44,7 +44,7 @@ const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   const getRedirectUri = async (args: { deviceId: string }) => {
-    const response = await fetch(LOGINURL_PROD, {
+    const response = await fetch(REDIRECT_URL_PROD, {
       method: 'get',
       headers: {
         "device-id": args.deviceId,

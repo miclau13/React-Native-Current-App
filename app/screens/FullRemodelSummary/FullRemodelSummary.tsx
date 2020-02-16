@@ -11,15 +11,22 @@ import FullRemodelSummaryView from './FullRemodelSummaryView';
 import { LoadingComponent } from '../InitialLoading';
 import { RevisedRehabInfo } from '../PropertyInfo';
 import { CreateRehabNoArv, CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
+import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
+import { 
+  getDefaultPropertyDetails, 
+  getDefaultPropertyInfoFields, 
+} from '../PropertyInfo/utils';
 
 export interface Params {
+  // From ContactPhoneNumberScreen for normal input flow
+  createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
+  rehabId?: CreateRehabNoArv['createRehabNoArv']['rehabId'];
+  rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
+  // From FullRemodelSummary itself after create Rehab
+  revisedRehabInfo?: RevisedRehabInfo;
+  // From ProfitSummaryScreen due to Back button
   arv?: CreateRehabNoArv['createRehabNoArv']['arv'];
   asIs?: number;
-  createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
-  rehabId?: string;
-  revisedRehabInfo?: RevisedRehabInfo;
-  submitted?: boolean;
-  totalDebts?: number;
   vacant?: boolean;
 };
 
@@ -35,9 +42,7 @@ export type FullRemodelSummaryProps = {
 export type FullRemodelSummaryState = {
   arv: Params['arv'];
   data: RehabItemsPackage[];
-  rehabId: CreateRehabNoArv['createRehabNoArv']['rehabId'];
   rehabItems: Omit<CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems, "__typename">[];
-  rehabItemPackageId: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
 };
 
 type RehabItemsPackage = {
@@ -60,6 +65,7 @@ const CREATE_REHAB_NO_ARV = gql`
   mutation CreateRehabNoArv($input: CreateRehabNoArvInput!) {
     createRehabNoArv(input: $input) {
       arv
+      postalCode
       rehabId
       rehabItemPackage {
         id
@@ -80,7 +86,34 @@ const CREATE_REHAB_NO_ARV = gql`
   }
 `;
 
-const GetOrderForRehabItemsCategory = (key: string) => {
+const UPDATE_REHAB_ITEMS_PACKAGE = gql`
+  mutation UpdateRehabItemsPackage($input: UpdateRehabItemsPackageInput!) {
+    updateRehabItemsPackage(input: $input) {
+      rehabItemsPackage {
+        id
+        rehabItems {
+          category
+          cost
+          name
+          selected
+          unit
+          costPerUnit
+          custom
+          calculationMethod
+          order
+        }
+        submitted
+      }
+      rehabRequest {
+        id
+        arv
+        postalCode
+      }
+    }
+  }
+`;
+
+const getOrderForRehabItemsCategory = (key: string) => {
   switch (key) {
     case "Kitchen": 
       return 0;
@@ -101,10 +134,13 @@ const GetOrderForRehabItemsCategory = (key: string) => {
 };
 
 const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
-  const [createRehabNoArv] = useMutation(CREATE_REHAB_NO_ARV);
+  const [createRehabNoArv] = useMutation<CreateRehabNoArv, CreateRehabNoArvVariables>(CREATE_REHAB_NO_ARV);
+  const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
 
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  const rehabId = navigation.getParam("rehabId", "");
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
 
   const totalDebts = createRehabNoArvInput.totalDebts;
   const vacant = createRehabNoArvInput.vacant;
@@ -112,59 +148,118 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const [arv, setArv] = React.useState<FullRemodelSummaryState['arv']>();
   const [data, setData] = React.useState<FullRemodelSummaryState['data']>();
-  const [rehabId, setRehabId] = React.useState<FullRemodelSummaryState['rehabId']>();
   const [rehabItems, setRehabItems] = React.useState<FullRemodelSummaryState['rehabItems']>();
-  const [rehabItemPackageId, setRehabItemPackageId] = React.useState<FullRemodelSummaryState['rehabItemPackageId']>();
-  const [submitted, setSubmitted] = React.useState(navigation.getParam("submitted", false));
 
   const updatedArv = navigation.getParam("arv", null);
   const updatedAsIs = navigation.getParam("asIs", null);
-  const updatedSubmitted = navigation.getParam("submitted", false);
   const updatedVacant = navigation.getParam("vacant", null);
+
+  const createRehab = async () => {
+    const result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
+    if (result) {
+      const rehab = result.data.createRehabNoArv;
+      const itemsMap: RehabItemsPackageMap = (rehab.rehabItemPackage?.rehabItems || []).reduce((acc, item) => {
+        if (!acc[item.category]) {
+          acc[item.category] = {
+            cost: item.cost,
+            selected: item.selected,
+          }
+        } else {
+          acc[item.category]["cost"] += item.cost;
+        };
+        acc[item.category]['order'] = acc[item.category]['order'] || getOrderForRehabItemsCategory(item.category);
+        return acc;
+      }, {});
+
+      let dataArry: FullRemodelSummaryState['data'] = [];
+      for (let [key, value] of Object.entries(itemsMap)) {
+        dataArry.push({ category: key, value: value.cost, selected: value.selected, order: value.order });
+      };
+      const returnResult = {
+        arv: rehab.arv,
+        dataArry: sortBy(dataArry, ["order"]),
+        postalCode: rehab.postalCode,
+        rehabId: rehab.rehabId,
+        rehabItems: rehab.rehabItemPackage.rehabItems.map(item => {
+          return omit(item, ["__typename"]);
+        }),
+        rehabItemPackageId: rehab.rehabItemPackage.id,
+        submitted: rehab.rehabItemPackage.submitted,
+      };
+      return returnResult;
+    };
+    return {};
+  };
+
+  const updateRehab = async () => {
+    const updateRehabItemsPackageInput = {
+      rehabRequest: {
+        id: rehabId,
+        ...createRehabNoArvInput
+      },
+      rehabItemsPackage: {
+        id: rehabItemPackageId
+      }
+    };
+    const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
+    if (result) {
+      const rehab = result.data?.updateRehabItemsPackage;
+      const itemsMap: RehabItemsPackageMap = (rehab.rehabItemsPackage?.rehabItems || []).reduce((acc, item) => {
+        if (!acc[item.category]) {
+          acc[item.category] = {
+            cost: item.cost,
+            selected: item.selected,
+          }
+        } else {
+          acc[item.category]["cost"] += item.cost;
+        };
+        acc[item.category]['order'] = acc[item.category]['order'] || getOrderForRehabItemsCategory(item.category);
+        return acc;
+      }, {});
+
+      let dataArry: FullRemodelSummaryState['data'] = [];
+      for (let [key, value] of Object.entries(itemsMap)) {
+        dataArry.push({ category: key, value: value.cost, selected: value.selected, order: value.order });
+      };
+      const returnResult = {
+        arv: rehab.rehabRequest.arv,
+        dataArry: sortBy(dataArry, ["order"]),
+        postalCode: rehab.rehabRequest.postalCode,
+        rehabId: rehab.rehabRequest.id,
+        rehabItems: rehab.rehabItemsPackage.rehabItems.map(item => {
+          return omit(item, ["__typename"]);
+        }),
+        rehabItemPackageId: rehab.rehabItemsPackage.id,
+        submitted: rehab.rehabItemsPackage.submitted,
+      };
+      return returnResult;
+    };
+    return {};
+  };
 
   const bootstrapAsync = async () => {
     try {
-      const result = await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
+      const result = !rehabId ? await createRehab() : await updateRehab();
       if (result) {
-        const rehab = result.data.createRehabNoArv;
-        const itemsMap: RehabItemsPackageMap = (rehab.rehabItemPackage?.rehabItems || []).reduce((acc, item) => {
-          if (!acc[item.category]) {
-            acc[item.category] = {
-              cost: item.cost,
-              selected: item.selected,
-            }
-          } else {
-            acc[item.category]["cost"] += item.cost;
-          };
-          acc[item.category]['order'] = acc[item.category]['order'] || GetOrderForRehabItemsCategory(item.category);
-          return acc;
-        }, {});
-
-        let dataArry: FullRemodelSummaryState['data'] = [];
-        for (let [key, value] of Object.entries(itemsMap)) {
-          dataArry.push({ category: key, value: value.cost, selected: value.selected, order: value.order });
-        };
-        setArv(rehab.arv);
-        setData(sortBy(dataArry, ["order"]));
-        setRehabId(rehab.rehabId);
-        setRehabItems(rehab.rehabItemPackage.rehabItems.map(item => {
-          return omit(item, ["__typename"]);
-        }));
-        setRehabItemPackageId(rehab.rehabItemPackage.id);
-        setSubmitted(rehab.rehabItemPackage.submitted);
+        const { arv, dataArry, postalCode: _postalCode, rehabId: _rehabId, rehabItems, rehabItemPackageId: _rehabItemPackageId } = result;
+        setArv(arv);
+        setData(dataArry);
+        setRehabItems(rehabItems);
         // For revise flow
         const revisedRehabInfo = {
+          arv,
           asIs,
           totalDebts,
           vacant,
           address: createRehabNoArvInput.address,
-          arv: rehab.arv, 
           contactPhoneNumber: createRehabNoArvInput.contactPhoneNumber,
-          postalCode: createRehabNoArvInput.postalCode,
+          propertyDetails: getDefaultPropertyDetails(getDefaultPropertyInfoFields()),
+          postalCode: _postalCode,
         };
         navigation.setParams({ 
           revisedRehabInfo,
-          rehabId: rehab.rehabId, 
+          rehabId: _rehabId,
+          rehabItemPackageId: _rehabItemPackageId,
         });
       }
     } catch (e) {
@@ -211,19 +306,18 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
       },
       remodellingCost: totalCost, 
       step: "summary",
-      submitted: updatedSubmitted ? updatedSubmitted : submitted,
       vacant: updatedVacant ? updatedVacant: vacant,
     });
-  }, [arv, asIs, data, rehabId, rehabItems, rehabItemPackageId, setArv, submitted,
-    updatedArv, updatedAsIs, updatedSubmitted, updatedVacant, vacant]);
+  }, [arv, asIs, data, rehabId, rehabItems, rehabItemPackageId, setArv,
+    updatedArv, updatedAsIs, updatedVacant, vacant]);
 
   React.useEffect(() => {
-    console.log("FullRemodelSummary Mount");
+    // console.log("FullRemodelSummary Mount");
     bootstrapAsync();
     return () => {
-      console.log("FullRemodelSummary UnMount");
+      // console.log("FullRemodelSummary UnMount");
     }
-  }, [submitted]);
+  }, []);
 
   if (!data) {
     return (

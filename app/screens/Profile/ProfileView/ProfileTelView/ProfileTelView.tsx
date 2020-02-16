@@ -18,11 +18,6 @@ const ProfileTelView: React.ComponentType<ProfileTelViewProps> = (props) => {
     onPressTel(number);
   }, [onPressTel, number])
 
-  React.useEffect(() => {
-    console.log("ProfileTelView Mount")
-    return () => {console.log("ProfileTelView UnMount")}
-  }, []);
-
   return (
     <TouchableOpacity onPress={handleTelOnPress}>
       <View style={[styles.container, styles.telContainer]}>

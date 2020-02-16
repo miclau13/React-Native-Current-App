@@ -20,20 +20,32 @@ const MY_REHAB_REQUESTS = gql`
       address
       arv
       asIs
+      contactPhoneNumber
+      postalCode
       propertyDetails
-      vacant
       totalDebts
+      vacant
+
+      beds
+      fullBaths
+      halfBaths
+      threeQuarterBaths
+      sqft
+      style
+
       rehabItemsPackage {
         id
         rehabItems {
           category
           cost
           name
+          selected
         }
         revisedRehabItems {
           category
           cost
           name
+          selected
         }
         submitted
       }
@@ -112,7 +124,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   // For RehabRecordsView
   const handleItemOnPress: RehabRecordsViewProps['handleItemOnPress'] = index => (event) => {
-    navigation.push("RehabRecordsDetailScreen", { detail: rehabRecords[index]} );
+    navigation.push("RehabRecordsDetailScreen", { detail: rehabRecords[index], submitted: rehabRecords[index].rehabItemsPackage.submitted });
   };
   const handleItemDeleteOnPress: RehabRecordsViewProps['handleItemDeleteOnPress'] = index => (event) => {
     const updatedRehabRecords = rehabRecords.map((record, _index) => {

@@ -6,16 +6,11 @@ import NumberFormat from 'react-number-format';
 
 import styles from './styles';
 import { RehabRecordsViewProps } from '../RehabRecords';
-import { CalculateRemodelingCost, FindLabelAttributes } from '../../../common/utils/Calculator';
+import { calculateRemodelingCost, findLabelAttributes } from '../../../common/utils/Calculator';
 import { primaryRed } from '../../../styles/constants';
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {
   const { deleteMode, handleItemOnPress, handleItemDeleteOnPress, rehabRecords } = props;  
-
-  React.useEffect(() => {
-    console.log("RehabRecordsView Mount")
-    return () => {console.log("RehabRecordsView UnMount")}
-  }, []);
   
   return (
     <SafeAreaView>
@@ -23,11 +18,10 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
         {rehabRecords.map((rehabRecord, i) => {
           const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
           const isRevised = !!rehabItemsPackage.revisedRehabItems;
-          const remodellingCost = isRevised ? CalculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : CalculateRemodelingCost(rehabItemsPackage?.rehabItems);
+          const remodellingCost = isRevised ? calculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : calculateRemodelingCost(rehabItemsPackage?.rehabItems);
           const profit = arv - asIs - remodellingCost;
           const profitPercent = profit / remodellingCost * 100;
-          const labelColor = FindLabelAttributes(profitPercent).labelColor;
-
+          const labelColor = findLabelAttributes(profitPercent).labelColor;
           return (
             <ListItem
               bottomDivider

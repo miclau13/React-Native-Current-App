@@ -22,8 +22,10 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
   };
 
   React.useEffect(() => {
-    console.log("ProfitSummaryView Mount");
-    return () => {console.log("ProfitSummaryView UnMount")}
+    // console.log("ProfitSummaryView Mount");
+    return () => {
+      // console.log("ProfitSummaryView UnMount")
+    }
   }, []);
 
   return (
@@ -136,6 +138,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
           ))}
           <View style={styles.container}>
             <Button
+              disabled={submitted}
               mode="contained"
               onPress={handleEditOnPress}
               style={styles.buttonContainer}
@@ -143,6 +146,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
               {"Edit"}
             </Button>
             <Button
+              disabled={submitted}
               mode="contained" 
               onPress={handleSaveOnPress}
               style={styles.buttonContainer}

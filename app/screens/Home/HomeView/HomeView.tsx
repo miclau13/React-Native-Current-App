@@ -7,7 +7,7 @@ import styles from './styles';
 
 const HomeView: React.ComponentType<HomeViewProps> = (props) => {
   const { handleOnFocus } = props;
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.keyBoardContainer}>

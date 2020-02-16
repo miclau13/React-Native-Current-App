@@ -10,6 +10,7 @@ import { CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 type Params = {
   createRehabNoArvInput: CreateRehabNoArvVariables['input'];
   rehabId?: string;
+  rehabItemPackageId?: string;
 };
 
 type ScreenProps = {};
@@ -29,13 +30,14 @@ const VacantProperty: NavigationStackScreenComponent<Params, ScreenProps> = (pro
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
   const rehabId = navigation.getParam("rehabId", null);
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", null);
 
   const [loading] = React.useState(false);
-  const [vacantPropertyIndex, setVacantPropertyIndex] = React.useState<VacantPropertyViewProps['vacantPropertyIndex']>(Number(createRehabNoArvInput.vacant) || 1);
+  const [vacantPropertyIndex, setVacantPropertyIndex] = React.useState<VacantPropertyViewProps['vacantPropertyIndex']>(Number(createRehabNoArvInput.vacant) ?? 1);
 
   const handleButtonOnPress: VacantPropertyViewProps['handleButtonOnPress'] = () => { 
     const _createRehabNoArvInput = { ...createRehabNoArvInput, vacant: !!vacantPropertyIndex };
-    navigation.navigate("ContactPhoneNumberScreen", { rehabId, createRehabNoArvInput: _createRehabNoArvInput });
+    navigation.navigate("ContactPhoneNumberScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
   };
   const handleOnPress: VacantPropertyViewProps['handleOnPress'] = (value) => {
     setVacantPropertyIndex(value);

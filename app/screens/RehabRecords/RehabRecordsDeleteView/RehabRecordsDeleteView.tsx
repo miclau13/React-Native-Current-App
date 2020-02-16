@@ -15,11 +15,6 @@ const RehabRecordsDeleteView: React.ComponentType<RehabRecordsDeleteViewProps> =
     openConfirmModal
   } = props;  
 
-  React.useEffect(() => {
-    console.log("RehabRecordsDeleteView Mount")
-    return () => {console.log("RehabRecordsDeleteView UnMount")}
-  }, []);
-
   return (
     <SafeAreaView>
       <Modal

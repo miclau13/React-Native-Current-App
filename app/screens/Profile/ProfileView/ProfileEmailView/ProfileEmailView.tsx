@@ -18,11 +18,6 @@ const ProfileEmailView: React.ComponentType<ProfileEmailViewProps> = (props) => 
     onPressEmail(email);
   }, [onPressEmail, email])
 
-  React.useEffect(() => {
-    console.log("ProfileEmailView Mount")
-    return () => {console.log("ProfileEmailView UnMount")}
-  }, []);
-
   return (
     <TouchableOpacity onPress={handleEmailOnPress}>
       <View style={[styles.container, styles.emailContainer]}>

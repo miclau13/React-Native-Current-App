@@ -15,7 +15,10 @@ const styles = StyleSheet.create({
   costContainer: {
     marginBottom: 8,
     textAlign: 'center',
-  }
+  },
+  subtitleStyle: {
+    color: 'grey',
+  },
 });
 
 export default styles;

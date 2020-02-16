@@ -20,13 +20,16 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
     if (accessToken) {
       navigation.navigate("MainNavigator");
     } else {
-      navigation.navigate("AuthTabs");
+      navigation.navigate("AuthNavigator");
     };
   }
 
   useEffect(() => {
-    bootstrapAsync();
-    return () => {}
+    // console.log("InitialLoading Mount");
+    bootstrapAsync()
+    return () => {
+      // console.log("InitialLoading UnMount");
+    }
   }, []);
 
   return (

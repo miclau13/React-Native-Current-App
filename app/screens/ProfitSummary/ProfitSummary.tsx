@@ -9,7 +9,7 @@ import ProfitSummaryView from './ProfitSummaryView';
 import { CheckIsQualified } from './utils';
 import { LoadingComponent } from '../InitialLoading';
 import { Params as FullRemodelSummaryParams, FullRemodelSummaryProps, FullRemodelSummaryState } from '../FullRemodelSummary';
-import ProfitAdjustment from '../ProfitAdjustment';
+import ProfitAdjustment from './ProfitAdjustment';
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
 
 export type Params = {
@@ -197,18 +197,18 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   }, [step, submitted]);
 
   React.useEffect(() => {
-    console.log("ProfitSummary Mount");
+    // console.log("ProfitSummary Mount");
     return () => {
-      console.log("ProfitSummary UnMount");
+      // console.log("ProfitSummary UnMount");
     }
   }, []);
 
   React.useEffect(() => {
-    console.log("ProfitSummary useEffect start update banner");
+    // console.log("ProfitSummary useEffect start update banner");
     setBannerMessages(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
     setIsQualified(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
     return () => {
-      console.log("ProfitSummary useEffect delete update banner");
+      // console.log("ProfitSummary useEffect delete update banner");
     }
   }, [arv, asIs, remodellingCost, totalDebts, vacant]);
 

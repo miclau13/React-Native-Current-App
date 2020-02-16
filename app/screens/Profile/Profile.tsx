@@ -57,21 +57,20 @@ const Profile: NavigationStackScreenComponent<Params, ScreenProps> = (props) => 
 
   const signOutAsync = async () => {
     await SecureStore.deleteItemAsync("accessToken", {});
-    navigation.navigate("AuthTabs");
+    navigation.navigate("AuthNavigator");
   }
   const handleLogOutOnPress = () => signOutAsync();
 
   const handleRefetch = async () => {
     await refetch();
   }
+
   React.useEffect(() => {
-    console.log("Profile Mount");
-    return () => {console.log("Profile UnMount");}
-  });
-  React.useEffect(() => {
-    console.log("Profile refetch mount");
+    // console.log("Profile refetch mount");
     handleRefetch();
-    return () => {console.log("Profile refetch UnMount");}
+    return () => {
+      // console.log("Profile refetch UnMount");
+    }
   }, []);
 
   if (loading) {
