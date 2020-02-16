@@ -20,12 +20,11 @@ const InitialLoading: React.ComponentType<NavigationStackScreenProps<Params, Scr
     if (accessToken) {
       navigation.navigate("MainNavigator");
     } else {
-      navigation.navigate("AuthTabs");
+      navigation.navigate("AuthNavigator");
     };
   }
 
   useEffect(() => {
-    // TODO dont use setTImeout
     // console.log("InitialLoading Mount");
     bootstrapAsync()
     return () => {

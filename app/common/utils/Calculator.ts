@@ -6,15 +6,16 @@ const LABELS = [
   { name: "Good", labelColor: primaryGreen, activeBarColor: primaryGreen },
 ];
 
-export const CalculateRemodelingCost = (data) => {
+export const calculateRemodelingCost = (data) => {
   const cost = (data || []).reduce((acc, item) => {
-    acc += item.cost;
+    const _cost = item.selected ? item.cost : 0;
+    acc += _cost;
     return acc;
   }, 0);
   return cost;
 };
 
-export const FindLabelAttributes = (value) => {
+export const findLabelAttributes = (value) => {
   const currentIndex = value < 0 ? 0 : value > 50 ? 2 : 1;
   const label = LABELS[currentIndex];
   return label;

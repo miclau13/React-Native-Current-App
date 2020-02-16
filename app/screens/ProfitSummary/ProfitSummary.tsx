@@ -152,6 +152,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         id: rehabId,
       }
     };
+    console.log("ProfitSummary handleSaveOnPress updateRehabItemsPackageInput",updateRehabItemsPackageInput)
     try {
       setLoading(true);
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
@@ -197,18 +198,18 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   }, [step, submitted]);
 
   React.useEffect(() => {
-    console.log("ProfitSummary Mount");
+    // console.log("ProfitSummary Mount");
     return () => {
-      console.log("ProfitSummary UnMount");
+      // console.log("ProfitSummary UnMount");
     }
   }, []);
 
   React.useEffect(() => {
-    console.log("ProfitSummary useEffect start update banner");
+    // console.log("ProfitSummary useEffect start update banner");
     setBannerMessages(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
     setIsQualified(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
     return () => {
-      console.log("ProfitSummary useEffect delete update banner");
+      // console.log("ProfitSummary useEffect delete update banner");
     }
   }, [arv, asIs, remodellingCost, totalDebts, vacant]);
 

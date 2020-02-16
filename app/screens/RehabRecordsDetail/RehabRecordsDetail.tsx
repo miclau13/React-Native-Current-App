@@ -8,7 +8,7 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import RehabRecordsDetailView from './RehabRecordsDetailView';
 import { LoadingComponent } from '../InitialLoading';
 import { getItemAttributes } from './utils';
-import { CalculateRemodelingCost } from '../../common/utils/Calculator';
+import { calculateRemodelingCost } from '../../common/utils/Calculator';
 import { MyRehabRequests_myRehabRequests } from '../../generated/MyRehabRequests';
 import { RevisedRehabInfo } from '../PropertyInfo';
 
@@ -77,7 +77,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     };
     if (key === "rehabItemsPackage") {
       const { arv, asIs } = detail;
-      const remodellingCost = CalculateRemodelingCost(value?.rehabItems);
+      const remodellingCost = calculateRemodelingCost(value?.rehabItems);
       const { name: nameForRemodelingCost, order: orderForRemodelingCost } = getItemAttributes("remodelingCost");
       result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: remodellingCost });
       const profit = arv - asIs - remodellingCost;
@@ -95,6 +95,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
   const bootstrapAsync = async () => {
     // For revise flow
     const { address, arv, asIs, contactPhoneNumber="+1 ", id, propertyDetails, postalCode, totalDebts, vacant, rehabItemsPackage: { id: rehabItemPackageId } } = detail;
+    console.log("RehabRecordsDetail bootstrapAsync id",id, " \n rehabItemPackageId ", rehabItemPackageId  )
     const revisedRehabInfo = {
       address,
       arv,

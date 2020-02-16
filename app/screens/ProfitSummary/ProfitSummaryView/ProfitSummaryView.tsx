@@ -22,8 +22,10 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
   };
 
   React.useEffect(() => {
-    console.log("ProfitSummaryView Mount");
-    return () => {console.log("ProfitSummaryView UnMount")}
+    // console.log("ProfitSummaryView Mount");
+    return () => {
+      // console.log("ProfitSummaryView UnMount")
+    }
   }, []);
 
   return (

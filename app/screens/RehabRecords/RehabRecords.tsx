@@ -25,17 +25,27 @@ const MY_REHAB_REQUESTS = gql`
       propertyDetails
       totalDebts
       vacant
+
+      beds
+      fullBaths
+      halfBaths
+      threeQuarterBaths
+      sqft
+      style
+
       rehabItemsPackage {
         id
         rehabItems {
           category
           cost
           name
+          selected
         }
         revisedRehabItems {
           category
           cost
           name
+          selected
         }
         submitted
       }
@@ -89,7 +99,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const myRehabRequests = data?.myRehabRequests || [];
   const [rehabRecords, setRehabRecords] = React.useState<RehabRecords[]>([]);
   const selectedRehabRecordsIds = rehabRecords.filter(record => record.checked).map(record => record.id);
-
+  // console.log("RehabRecords outside myRehabRequests",myRehabRequests)
   const deleteRehabs = async () => {
     const deleteRehabMutations = selectedRehabRecordsIds.map(id => {
       const result = deleteRehab({ variables: { input: { rehabId: id } } });
