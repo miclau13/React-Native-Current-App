@@ -79,6 +79,11 @@ const CREATE_REHAB_NO_ARV = gql`
           custom
           calculationMethod
           order
+          id
+          roomName
+          measurement
+          measurementUnit
+          notes
         }
         submitted
       }
