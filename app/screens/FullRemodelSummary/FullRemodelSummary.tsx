@@ -101,6 +101,11 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
           custom
           calculationMethod
           order
+          id
+          roomName
+          measurement
+          measurementUnit
+          notes
         }
         submitted
       }
