@@ -69,7 +69,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                     decimalScale={0}
                     displayType={'text'} 
                     prefix={'$'}
-                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Cost${isRevised ? '(Revised)' : ''}: ${value}`}</Text>}
+                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Budget${isRevised ? '(Revised)' : ''}: ${value}`}</Text>}
                     thousandSeparator={true} 
                     value={remodellingCost}
                   />

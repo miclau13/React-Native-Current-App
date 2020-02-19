@@ -17,7 +17,7 @@ const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> =
   return (
     <SafeAreaView>
       <ScrollView>
-          <Card title="Remodeling Costs">
+          <Card title="Remodeling Budget">
             <>
               <Text h3 style={styles.totalCostText}>
                 <NumberFormat 

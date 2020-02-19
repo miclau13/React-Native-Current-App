@@ -17,7 +17,7 @@ export const getItemAttributes = (key, index = -1) => {
       };
     case "remodelingCost":
       return {
-        name: "Remodeling Cost: ",
+        name: "Remodeling Budget: ",
         order: 3,
       };
     case "profit":

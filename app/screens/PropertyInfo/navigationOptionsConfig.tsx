@@ -44,7 +44,7 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
           {...props}
           color={primaryButtonColor}
           onPress={handleHeaderRightOnPress}
-          title="Edit"
+          title="Edit Property Info"
         />
       );
     } 
