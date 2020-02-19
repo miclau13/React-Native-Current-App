@@ -77,7 +77,13 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     };
     if (key === "rehabItemsPackage") {
       const { arv, asIs } = detail;
-      const remodellingCost = calculateRemodelingCost(value?.rehabItems);
+      const isRevised = !!value?.revisedRehabItems;
+      const remodellingCost = isRevised ? calculateRemodelingCost(value?.revisedRehabItems) : calculateRemodelingCost(value?.rehabItems);
+      console.log("value",value)
+      console.log("value?.revisedRehabItems",value?.revisedRehabItems)
+      console.log("isRevised",isRevised)
+      console.log("remodellingCost",remodellingCost)
+      // const remodellingCost = calculateRemodelingCost(value?.rehabItems);
       const { name: nameForRemodelingCost, order: orderForRemodelingCost } = getItemAttributes("remodelingCost");
       result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: remodellingCost });
       const profit = arv - asIs - remodellingCost;

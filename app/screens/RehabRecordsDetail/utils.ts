@@ -12,7 +12,7 @@ export const getItemAttributes = (key, index = -1) => {
       };
     case "asIs":
       return {
-        name: "“Estimated As-Is Value: ",
+        name: "Estimated As-Is Value: ",
         order: 2,
       };
     case "remodelingCost":
