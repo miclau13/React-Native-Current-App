@@ -77,12 +77,18 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     };
     if (key === "rehabItemsPackage") {
       const { arv, asIs } = detail;
-      const remodellingCost = calculateRemodelingCost(value?.rehabItems);
+      const isRevised = !!value?.revisedRehabItems;
+      const remodelingCost = isRevised ? calculateRemodelingCost(value?.revisedRehabItems) : calculateRemodelingCost(value?.rehabItems);
+      // const remodelingCost = calculateRemodelingCost(value?.rehabItems);
+      let lowerLimitOfRemodelingCost = Math.ceil(remodelingCost * 0.6);
+      let upperLimitOfRemodelingCost = Math.ceil(remodelingCost * 1.6);
       const { name: nameForRemodelingCost, order: orderForRemodelingCost } = getItemAttributes("remodelingCost");
-      result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: remodellingCost });
-      const profit = arv - asIs - remodellingCost;
+      result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: isNil(remodelingCost) ? "NA" : remodelingCost, upperLimit: isNil(upperLimitOfRemodelingCost) ? "NA" : upperLimitOfRemodelingCost, lowerLimit: isNil(lowerLimitOfRemodelingCost) ? "NA" : lowerLimitOfRemodelingCost });
+      const profit = arv - asIs - remodelingCost;
+      let lowerLimitOfProfit = arv - asIs - upperLimitOfRemodelingCost;
+      let upperLimitOfProfit = arv - asIs - lowerLimitOfRemodelingCost;
       let { name: nameForProfit, order: orderForProfit } = getItemAttributes("profit");
-      result.push({ name: nameForProfit, order: orderForProfit, value: profit });
+      result.push({ name: nameForProfit, order: orderForProfit, value: isNil(profit) ? "NA" : profit, upperLimit: isNil(upperLimitOfProfit) ? "NA" : upperLimitOfProfit, lowerLimit: isNil(lowerLimitOfProfit) ? "NA" : lowerLimitOfProfit });
     };
 
     return result;
