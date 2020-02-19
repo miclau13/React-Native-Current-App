@@ -119,7 +119,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const data: ProfitSummaryProps['data'] = [
     { name: "Est. ARV", value: arv },
     { name: "As-Is", value: asIs },
-    { name: "Remodeling Cost", value: remodellingCost, lower: lowerRemdellingCost, upper: upperRemodellingCost },
+    { name: "Remodeling Budget", value: remodellingCost, lower: lowerRemdellingCost, upper: upperRemodellingCost },
     { name: "Total Debts", value: totalDebts },
     { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935' },
   ];

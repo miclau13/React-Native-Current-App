@@ -17,7 +17,7 @@ const ArvEstimateView: React.ComponentType<ArvEstimateViewProps> = (props) => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View style={styles.viewBox1}/>
-        <Headline>Estimate ARV:</Headline>
+        <Headline>Estimated After-Repair Value:</Headline>
         <View style={styles.viewBox1}/>
         <NumberInput
           error={+arvEstimate < 0}
