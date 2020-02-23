@@ -1,9 +1,11 @@
 import React from 'react';
 import { ButtonGroupProps } from 'react-native-elements';
+import { ModalProps } from 'react-native-modal';
 import { ButtonProps, TextInputProps } from 'react-native-paper';
 
 import ProfitAdjustmentView from './ProfitAdjustmentView';
 import { Params as ProfitSummaryParams, ProfitSummaryProps } from '..';
+import { eraseComma, validateFormat } from '../../../components/NumberInput/utils';
 
 export interface ProfitAdjustmentInnerProps {
   _arv: ProfitAdjustmentState['_arv'];
@@ -28,13 +30,22 @@ export type ProfitAdjustmentState = {
   _vacant: number;
 };
 
+export interface ProfitAdjustmentViewProps {
+  handleBackdropOnPress: ModalProps['onBackdropPress'];
+  handleButtonConfirmOnPress: ButtonProps['onPress'];
+  handleOnChangeText: (key: string) => TextInputProps['onChangeText'];
+  modalVisible: ModalProps['isVisible'];
+};
+
 const ProfitAdjustment: React.ComponentType<ProfitAdjustmentOuterProps>  = (props) => {
   const { arv, asIs, handleStepNavigation, vacant } = props;
   const [_arv, set_arv] = React.useState<ProfitAdjustmentState['_arv']>(arv.toString());
   const [_asIs, set_asIs] = React.useState<ProfitAdjustmentState['_asIs']>(asIs.toString());
   const [_vacant, set_vacant] = React.useState<ProfitAdjustmentState['_vacant']>(vacant ? 1 : 0);
 
-  const handleOnChangeText: ProfitAdjustmentInnerProps['handleOnChangeText'] = (key) => (text) => {
+  const handleOnChangeText: ProfitAdjustmentInnerProps['handleOnChangeText'] = (key) => (value) => {
+    const validValue = validateFormat(value);
+    const result = { ...propertyInfoFields, [key]: validValue };
     if (key === "ARV") {
       set_arv(text);
     } else if (key === "ASIS"){
@@ -54,11 +65,6 @@ const ProfitAdjustment: React.ComponentType<ProfitAdjustmentOuterProps>  = (prop
   };
 
   const buttons: ProfitAdjustmentInnerProps['buttons'] = ['NO', 'YES'];
-
-  React.useEffect(() => {
-    console.log("ProfitAdjustment Mount")
-    return () => {console.log("ProfitAdjustment UnMount")}
-  }, []);
 
   return (
     <ProfitAdjustmentView

@@ -5,14 +5,25 @@ import Modal from 'react-native-modal';
 import { Button, Headline, HelperText } from 'react-native-paper';
 
 import styles from './styles';
-import { ProfitAdjustmentInnerProps } from '../ProfitAdjustment';
+import { ProfitSummaryEditViewProps } from '../ProfitSummary';
 
-import NumberInput from '../../../../components/NumberInput';
+import NumberInput from '../../../components/NumberInput';
 
-interface ProfitAdjustmentViewProps extends ProfitAdjustmentInnerProps {};
+const ProfitSummaryEditView: React.ComponentType<ProfitSummaryEditViewProps> = (props) => {
+  const { 
+    buttonsForVacant,
+    handleBackdropOnPress,
+    handleButtonConfirmOnPress,
+    handleOnChangeText,
+    modalVisible,
+    profitSummaryEditOnlyFields,
+  } = props;
 
-const ProfitAdjustmentView: React.ComponentType<ProfitAdjustmentViewProps> = (props) => {
-  const { _arv, _asIs, _vacant, buttons, handleOnChangeText, handleOnPress, handleVacantOnPress } = props; 
+  const { 
+    arv,
+    asIs,
+    vacant
+  } = profitSummaryEditOnlyFields
 
   return (
     <SafeAreaView>
@@ -32,14 +43,14 @@ const ProfitAdjustmentView: React.ComponentType<ProfitAdjustmentViewProps> = (pr
             <View style={styles.viewBox1}/>
             <NumberInput
               autoFocus={true}
-              error={+_arv < 1}
+              error={+arv < 1}
               label="$"
               onChangeText={handleOnChangeText("ARV")}
-              value={_arv}
+              value={arv}
             />
             <HelperText 
               type="error"
-              visible={+_arv < 0}
+              visible={+arv < 0}
             >
               {"This field must be not be negative"}
             </HelperText>
@@ -48,14 +59,14 @@ const ProfitAdjustmentView: React.ComponentType<ProfitAdjustmentViewProps> = (pr
             <View style={styles.viewBox1}/>
             <NumberInput
               autoFocus={true}
-              error={+_asIs < 1}
+              error={+asIs < 1}
               label="$"
               onChangeText={handleOnChangeText("ARV")}
-              value={_asIs}
+              value={asIs}
             />
             <HelperText 
               type="error"
-              visible={+_asIs < 0}
+              visible={+asIs < 0}
             >
               {"This field must be not be negative"}
             </HelperText>
@@ -63,15 +74,15 @@ const ProfitAdjustmentView: React.ComponentType<ProfitAdjustmentViewProps> = (pr
             <Headline>Vacant?</Headline>
             <View style={styles.viewBox1}/>
             <ButtonGroup
-              buttons={buttons}
-              onPress={handleVacantOnPress}
+              buttons={buttonsForVacant}
+              onPress={handleButtonGroupVacantOnPress}
               selectedButtonStyle={styles.buttonSelectedContainer}
-              selectedIndex={_vacant}
+              selectedIndex={vacant}
             />
             <View style={styles.viewBox1}/>
             <Button 
               mode="contained" 
-              onPress={handleOnPress}
+              onPress={handleButtonConfirmOnPress}
               style={styles.modalButton}
             >
               Confirm
@@ -83,4 +94,4 @@ const ProfitAdjustmentView: React.ComponentType<ProfitAdjustmentViewProps> = (pr
     </SafeAreaView>
   );
 }
-export default React.memo(ProfitAdjustmentView);
+export default React.memo(ProfitSummaryEditView);

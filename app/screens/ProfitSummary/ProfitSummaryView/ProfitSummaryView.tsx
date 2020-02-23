@@ -31,29 +31,10 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
   return (
     <SafeAreaView>
       <ScrollView>
-        {/* <Banner 
-          actions={[
-            {
-              label: 'Close',
-              onPress: handleBannerButtonOnClick,
-            },
-          ]}
-          //TODO change the data [4] access
-          image={({size}) => <Icon
-            color={bannerIcon.color}
-            name={bannerIcon.name}
-            size={size}
-            type='font-awesome'
-          />}
-          style={{ backgroundColor: '#e9d8f2'}}
-          visible={hasBanner}
-        >
-          <Text>{bannerMessages}</Text>
-        </Banner>   */}
         <Card title="Profit Summary">
         <>
           {/* <Speedometer value={profitPercent} /> */}
-          <Text h3 style={{ marginBottom: 8, marginTop: 8, textAlign: 'center' }}>
+          <Text h3 style={styles.h3}>
           <Text >Est. ROI:{'\n'}</Text>
           <NumberFormat 
             decimalScale={0}
@@ -71,7 +52,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
             value={upperProfitPercent}
           />
           </Text>
-          <Text h3 style={{ marginBottom: 8, marginTop: 8, textAlign: 'center' }}>
+          <Text h3 style={styles.h3}>
             <Text >Est. Profit:{'\n'}</Text>
             <NumberFormat 
               decimalScale={0}

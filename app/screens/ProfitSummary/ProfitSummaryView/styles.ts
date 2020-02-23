@@ -16,6 +16,11 @@ const styles = StyleSheet.create({
   costContainer: {
     marginBottom: 8,
     textAlign: 'center',
+  },
+  h3: {
+    marginBottom: 8, 
+    marginTop: 8, 
+    textAlign: 'center',
   }
 });
 
