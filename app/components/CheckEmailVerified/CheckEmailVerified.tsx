@@ -1,24 +1,65 @@
 import React from 'react';
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, Platform, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import Modal, { ModalProps } from 'react-native-modal';
 import { Button, ButtonProps, Headline } from 'react-native-paper';
 
 import styles from './styles';
-import { Viewer } from '../../generated/Viewer';
+import { LoadingComponent } from '../../screens/InitialLoading';
 
 export interface CheckEmailVerifiedProps {
-  // emailVerified: Viewer['viewer']['emailVerified'];
   handleBackdropOnPress: ModalProps['onBackdropPress'];
-  handleButtonOnPress: ButtonProps['onPress'];
+  handleButtonRefreshOnPress: ButtonProps['onPress'];
+  handleButtonVerifyOnPress: ButtonProps['onPress'];
+  loading: boolean;
   modalVisible: ModalProps['isVisible'];
+  verificationPending: boolean;
 }
 
 const CheckEmailVerified: React.ComponentType<CheckEmailVerifiedProps> = (props) => {
   const { 
     handleBackdropOnPress,
-    handleButtonOnPress,
+    handleButtonRefreshOnPress,
+    handleButtonVerifyOnPress,
+    loading,
     modalVisible,
+    verificationPending,
   } = props;
+
+  const VerificationChecking = () => (
+    <>
+      <Headline>To continue, please verify your email</Headline>
+        <View style={styles.viewBox1} />
+        <Button 
+          mode="contained" 
+          onPress={handleButtonVerifyOnPress}
+          style={styles.modalButton}
+        >
+          {"Verify"}
+        </Button>
+    </>
+  );
+
+  const VerificationPending = () => (
+    <>
+      <Headline>{'A verification email has been sent to you mail box\nPlease check you mail box.'} </Headline>
+        <View style={styles.viewBox1} />
+        <Button 
+          mode="contained" 
+          onPress={handleButtonVerifyOnPress}
+          style={styles.modalButton}
+        >
+          {"Re-send"}
+        </Button>
+        <View style={styles.viewBox1} />
+        <Button 
+          mode="contained" 
+          onPress={handleButtonRefreshOnPress}
+          style={styles.modalButton}
+        >
+          {"Refresh"}
+        </Button>
+    </>
+  );
 
   return (
     <SafeAreaView>
@@ -26,29 +67,19 @@ const CheckEmailVerified: React.ComponentType<CheckEmailVerifiedProps> = (props)
         isVisible={modalVisible}
         onBackdropPress={handleBackdropOnPress}
         style={styles.modalContainer}
-      >           
-      <ScrollView>
-        <View style={styles.content}>
-          <KeyboardAvoidingView
-            style={styles.keyBoardContainer}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-          >
-            <View style={styles.viewBox1}/>
-            <Headline>To proceed, please verify your email</Headline>
-            <View style={styles.viewBox1}/>
-            <Button 
-              mode="contained" 
-              onPress={handleButtonOnPress}
-              style={styles.modalButton}
-            >
-              {"Save"}
-            </Button>
-            </KeyboardAvoidingView>
-          </View>
-        </ScrollView>
+      >
+      <View style={styles.content}>
+        <View style={styles.viewBox1} />
+        {loading ? 
+          <LoadingComponent /> :
+          verificationPending ?
+            <VerificationPending /> :
+            <VerificationChecking />
+        }
+        <View style={styles.viewBox1} />
+      </View>
       </Modal>
     </SafeAreaView>
   );
-
 }
 export default React.memo(CheckEmailVerified);

@@ -1,15 +1,22 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
+import { Keyboard } from 'react-native';
 import { ButtonProps, TextInputProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import ContactPhoneNumberView from './ContactPhoneNumberView';
 import { checkIfFormatValid, validateFormat } from './utils';
 import { LoadingComponent } from '../InitialLoading';
 import CheckEmailVerified, { CheckEmailVerifiedProps } from '../../components/CheckEmailVerified';
 import { CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
+
+const SEND_VERIFICATION_EMAIL = gql`
+  mutation SendVerificationEmail {
+    sendVerificationEmail
+  }
+`
 
 const VIEWER = gql`
   query Viewer {
@@ -41,30 +48,31 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   const rehabId = navigation.getParam("rehabId", null);
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", null);
 
-  const [emailVerified, setEmailVerified] = React.useState(false);
-
-  const [viewerQuery, { error, called: viewerQueryCalled, loading: viewerQueryLoading }] = useLazyQuery(VIEWER,  { 
-    onCompleted: (data) => {
-      if (!error && data?.viewer?.emailVerified) {
-        setEmailVerified(data.viewer.emailVerified)
-      };
-    },
-  });
+  const { called: viewerQueryCalled, data: viewerQueryData, loading: viewerQueryLoading, refetch: viewerQueryRefetch } = useQuery(VIEWER);
+  const [sendVerificationEmail, { data: sendVerificationEmailMutationData, called: sendVerificationEmailMutationCalled, loading: sendVerificationEmailMutationLoading }] = useMutation(SEND_VERIFICATION_EMAIL);
 
   const [contactPhoneNumber, setContactPhoneNumber] = React.useState((createRehabNoArvInput.contactPhoneNumber) || "+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [verificationPending, setVerificationPending] = React.useState(false);
+
+  const moveToNextScreen = () => {
+    const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
+    navigation.navigate("FullRemodelSummaryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
+  }
 
   const handleButtonOnPress: ContactPhoneNumberViewProps['handleButtonOnPress'] = async () => {
     const valueIsValid = checkIfFormatValid(contactPhoneNumber);
     if (!valueIsValid) {
       setContactPhoneNumberIsValid(false);
     } else {
+      Keyboard.dismiss();
       setContactPhoneNumberIsValid(true);
-      if (emailVerified) {
-        const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
-        navigation.navigate("FullRemodelSummaryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
+      if (viewerQueryData?.viewer?.emailVerified) {
+        moveToNextScreen();
       } else {
-        viewerQuery();
+        setModalVisible(true);
       }
     }
   };
@@ -74,28 +82,39 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   };
 
   // For CheckEmailVerified
-  const confirmEmailVerified = () => {
-    // navigation.setParams({ step: "summary" });
-  };
   const handleBackdropOnPress: CheckEmailVerifiedProps['handleBackdropOnPress'] = () => {
-    confirmEmailVerified();
+    setModalVisible(false);
   };
-  
-  console.log("emailVerified",emailVerified)
+  const handleButtonRefreshOnPress: CheckEmailVerifiedProps['handleButtonRefreshOnPress'] = async () => {
+    setLoading(true);
+    const result = await viewerQueryRefetch();
+    setLoading(false);
+    if (result?.data?.viewer.emailVerified) {
+      setModalVisible(false);
+      setVerificationPending(false);
+      moveToNextScreen();
+    }
+  };
+  const handleButtonVerifyOnPress: CheckEmailVerifiedProps['handleButtonVerifyOnPress'] = async () => {
+    sendVerificationEmail();
+    setVerificationPending(true);
+  };
 
-  if (viewerQueryCalled && viewerQueryLoading) {
+  if (viewerQueryLoading) {
     return (
       <LoadingComponent />
     );
   };
 
-
   return (
     <>
       <CheckEmailVerified
         handleBackdropOnPress={handleBackdropOnPress}
-        handleButtonOnPress={handleButtonOnPress}
-        modalVisible={!emailVerified}
+        handleButtonRefreshOnPress={handleButtonRefreshOnPress}
+        handleButtonVerifyOnPress={handleButtonVerifyOnPress}
+        loading={sendVerificationEmailMutationLoading || loading}
+        modalVisible={modalVisible}
+        verificationPending={verificationPending}
       />
       <ContactPhoneNumberView 
         handleButtonOnPress={handleButtonOnPress}
