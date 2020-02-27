@@ -115,8 +115,8 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const bannerIcon: ProfitSummaryProps['bannerIcon'] = {
     name: isQualified ? "check" : "close", color: isQualified ? '#43a048' : '#e53935'
   };
-  const upperRemodellingCost = remodellingCost * 1.6;
-  const lowerRemdellingCost = remodellingCost * 0.6
+  const upperRemodellingCost = remodellingCost * 1.3;
+  const lowerRemdellingCost = remodellingCost * 0.7;
   const profit = React.useMemo<ProfitSummaryProps['profit']>(() => {
     return +(arv - asIs - remodellingCost);
   }, [arv, asIs, remodellingCost]);

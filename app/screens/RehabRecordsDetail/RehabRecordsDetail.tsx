@@ -80,8 +80,8 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
       const isRevised = !!value?.revisedRehabItems;
       const remodelingCost = isRevised ? calculateRemodelingCost(value?.revisedRehabItems) : calculateRemodelingCost(value?.rehabItems);
       // const remodelingCost = calculateRemodelingCost(value?.rehabItems);
-      let lowerLimitOfRemodelingCost = Math.ceil(remodelingCost * 0.6);
-      let upperLimitOfRemodelingCost = Math.ceil(remodelingCost * 1.6);
+      let lowerLimitOfRemodelingCost = Math.ceil(remodelingCost * 0.7);
+      let upperLimitOfRemodelingCost = Math.ceil(remodelingCost * 1.3);
       const { name: nameForRemodelingCost, order: orderForRemodelingCost } = getItemAttributes("remodelingCost");
       result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: isNil(remodelingCost) ? "NA" : remodelingCost, upperLimit: isNil(upperLimitOfRemodelingCost) ? "NA" : upperLimitOfRemodelingCost, lowerLimit: isNil(lowerLimitOfRemodelingCost) ? "NA" : lowerLimitOfRemodelingCost });
       const profit = arv - asIs - remodelingCost;

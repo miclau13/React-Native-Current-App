@@ -23,8 +23,8 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
           const profitPercent = profit / remodelingCost * 100;
           const labelColor = findLabelAttributes(profitPercent).labelColor;
 
-          let lowerLimit = Math.ceil(remodelingCost * 0.6);
-          let upperLimit = Math.ceil(remodelingCost * 1.6);
+          let lowerLimit = Math.ceil(remodelingCost * 0.7);
+          let upperLimit = Math.ceil(remodelingCost * 1.3);
           return (
             <ListItem
               bottomDivider
