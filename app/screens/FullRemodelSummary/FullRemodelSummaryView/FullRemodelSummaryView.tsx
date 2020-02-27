@@ -11,8 +11,8 @@ interface FullRemodelSummaryViewProps extends FullRemodelSummaryProps {};
 
 const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> = (props) => {
   const { data, handleCheckBoxOnPress, handleOnPress, totalCost } = props;  
-  let lowerLimit = Math.ceil(totalCost * 0.6);
-  let upperLimit = Math.ceil(totalCost * 1.6);
+  let lowerLimit = Math.ceil(totalCost * 0.7);
+  let upperLimit = Math.ceil(totalCost * 1.3);
 
   return (
     <SafeAreaView>
