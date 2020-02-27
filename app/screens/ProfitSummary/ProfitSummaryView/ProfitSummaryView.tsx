@@ -52,26 +52,9 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
         </Banner>   */}
         <Card title="Profit Summary">
         <>
-          {/* <Speedometer value={profitPercent} /> */}
-          <Text h3 style={{ marginBottom: 8, marginTop: 8, textAlign: 'center' }}>
-          <Text >Est. ROI:{'\n'}</Text>
-          <NumberFormat 
-            decimalScale={0}
-            displayType={'text'} 
-            // suffix={'%'}
-            renderText={value => <Text>{`${value}%`}</Text>}
-            value={lowerProfitPercent}
-          />
-          <Text> to </Text>
-          <NumberFormat 
-            decimalScale={0}
-            displayType={'text'} 
-            // suffix={'%'}
-            renderText={value => <Text>{`${value}%`}</Text>}
-            value={upperProfitPercent}
-          />
-          </Text>
-          <Text h3 style={{ marginBottom: 8, marginTop: 8, textAlign: 'center' }}>
+          <Speedometer value={profitPercent} />
+          
+          {/* <Text h3 style={{ marginBottom: 8, marginTop: 8, textAlign: 'center' }}>
             <Text >Est. Profit:{'\n'}</Text>
             <NumberFormat 
               decimalScale={0}
@@ -90,7 +73,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
               thousandSeparator={true} 
               value={upperProfit}
             />
-          </Text>
+          </Text> */}
           {data.map((item, i) => (
             <ListItem
               bottomDivider
@@ -100,7 +83,8 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                 <NumberFormat 
                   decimalScale={0}
                   displayType={'text'} 
-                  prefix={'$'}
+                  prefix={item.unit != '%' ? '$' : null}
+                  suffix={item.unit == '%' ? '%' : null}
                   renderText={value => <Text>{value}</Text>}
                   thousandSeparator={true} 
                   value={item.value}
@@ -110,16 +94,18 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                   <NumberFormat 
                     decimalScale={0}
                     displayType={'text'} 
-                    prefix={'$'}
+                    prefix={item.unit != '%' ? '$' : null}
+                    suffix={item.unit == '%' ? '%' : null}
                     renderText={value => <Text>{`${value}`}</Text>}
                     thousandSeparator={true} 
                     value={item.lower}
                   />
-                  <Text> - </Text>
+                  <Text> to </Text>
                   <NumberFormat 
                     decimalScale={0}
                     displayType={'text'} 
-                    prefix={'$'}
+                    prefix={item.unit != '%' ? '$' : null}
+                    suffix={item.unit == '%' ? '%' : null}
                     renderText={value => <Text>{`${value}`}</Text>}
                     thousandSeparator={true} 
                     value={item.upper}

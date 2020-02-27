@@ -23,8 +23,8 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
           const profitPercent = profit / remodelingCost * 100;
           const labelColor = findLabelAttributes(profitPercent).labelColor;
 
-          let lowerLimit = Math.ceil(remodelingCost * 0.6);
-          let upperLimit = Math.ceil(remodelingCost * 1.6);
+          let lowerLimit = Math.ceil(remodelingCost * 0.7);
+          let upperLimit = Math.ceil(remodelingCost * 1.3);
           return (
             <ListItem
               bottomDivider
@@ -69,26 +69,37 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                   />
                   <View style={styles.viewBox1} />
                   <View style={styles.totalCostText}>
-                  <Text style={styles.greyColor}>{`Remodeling Budget${isRevised ? '(Revised)' : ''}: `}</Text> 
-                    <NumberFormat 
-                      decimalScale={0}
-                      displayType={'text'} 
-                      prefix={'$'}
-                      renderText={value => <Text style={styles.greyColor}>{value}</Text>}
-                      thousandSeparator={true} 
-                      value={lowerLimit}
-                    />
-                    <Text style={styles.greyColor}> to </Text> 
-                    <NumberFormat 
-                      decimalScale={0}
-                      displayType={'text'} 
-                      prefix={'$'}
-                      renderText={value => <Text style={styles.greyColor}>{value}</Text>}
-                      thousandSeparator={true} 
-                      value={upperLimit}
-                    />
+                    {isRevised ? 
+                      <NumberFormat 
+                        decimalScale={0}
+                        displayType={'text'} 
+                        prefix={'$'}
+                        renderText={value => <Text style={styles.greyColor}>{`Fiximize Quotation: ${value}`}</Text>}
+                        thousandSeparator={true} 
+                        value={remodelingCost}
+                      /> :
+                      <>
+                        <Text style={styles.greyColor}>{`Remodeling Budget: `}</Text> 
+                        <NumberFormat 
+                          decimalScale={0}
+                          displayType={'text'} 
+                          prefix={'$'}
+                          renderText={value => <Text style={styles.greyColor}>{value}</Text>}
+                          thousandSeparator={true} 
+                          value={lowerLimit}
+                        />
+                        <Text style={styles.greyColor}> to </Text> 
+                        <NumberFormat 
+                          decimalScale={0}
+                          displayType={'text'} 
+                          prefix={'$'}
+                          renderText={value => <Text style={styles.greyColor}>{value}</Text>}
+                          thousandSeparator={true} 
+                          value={upperLimit}
+                        />
+                      </>
+                    }
                   </View>
-                  
                   {/* <NumberFormat 
                     decimalScale={0}
                     displayType={'text'} 

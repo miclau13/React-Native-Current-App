@@ -128,11 +128,6 @@ class Speedometer extends Component {
         </View>
         <View style={[style.labelWrapper, labelWrapperStyle]}>
           <Text style={
-            [style.label, labelStyle]}
-          >
-            ROI: {Math.round(value)} %
-          </Text>
-          <Text style={
             [style.labelNote, { color: label.labelColor }, labelNoteStyle]}
           >
             {label.name}
