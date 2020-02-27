@@ -69,26 +69,37 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                   />
                   <View style={styles.viewBox1} />
                   <View style={styles.totalCostText}>
-                  <Text style={styles.greyColor}>{`Remodeling Budget${isRevised ? '(Revised)' : ''}: `}</Text> 
-                    <NumberFormat 
-                      decimalScale={0}
-                      displayType={'text'} 
-                      prefix={'$'}
-                      renderText={value => <Text style={styles.greyColor}>{value}</Text>}
-                      thousandSeparator={true} 
-                      value={lowerLimit}
-                    />
-                    <Text style={styles.greyColor}> to </Text> 
-                    <NumberFormat 
-                      decimalScale={0}
-                      displayType={'text'} 
-                      prefix={'$'}
-                      renderText={value => <Text style={styles.greyColor}>{value}</Text>}
-                      thousandSeparator={true} 
-                      value={upperLimit}
-                    />
+                    {isRevised ? 
+                      <NumberFormat 
+                        decimalScale={0}
+                        displayType={'text'} 
+                        prefix={'$'}
+                        renderText={value => <Text style={styles.greyColor}>{`Fiximize Quotation: ${value}`}</Text>}
+                        thousandSeparator={true} 
+                        value={remodelingCost}
+                      /> :
+                      <>
+                        <Text style={styles.greyColor}>{`Remodeling Budget: `}</Text> 
+                        <NumberFormat 
+                          decimalScale={0}
+                          displayType={'text'} 
+                          prefix={'$'}
+                          renderText={value => <Text style={styles.greyColor}>{value}</Text>}
+                          thousandSeparator={true} 
+                          value={lowerLimit}
+                        />
+                        <Text style={styles.greyColor}> to </Text> 
+                        <NumberFormat 
+                          decimalScale={0}
+                          displayType={'text'} 
+                          prefix={'$'}
+                          renderText={value => <Text style={styles.greyColor}>{value}</Text>}
+                          thousandSeparator={true} 
+                          value={upperLimit}
+                        />
+                      </>
+                    }
                   </View>
-                  
                   {/* <NumberFormat 
                     decimalScale={0}
                     displayType={'text'} 
