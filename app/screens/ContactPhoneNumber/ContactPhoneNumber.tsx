@@ -48,14 +48,12 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   const rehabId = navigation.getParam("rehabId", null);
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", null);
 
-  const { called: viewerQueryCalled, data: viewerQueryData, loading: viewerQueryLoading, refetch: viewerQueryRefetch } = useQuery(VIEWER);
-  const [sendVerificationEmail, { data: sendVerificationEmailMutationData, called: sendVerificationEmailMutationCalled, loading: sendVerificationEmailMutationLoading }] = useMutation(SEND_VERIFICATION_EMAIL);
+  const { data: viewerQueryData, loading: viewerQueryLoading, refetch: viewerQueryRefetch } = useQuery(VIEWER);
+  const [sendVerificationEmail, { loading: sendVerificationEmailMutationLoading }] = useMutation(SEND_VERIFICATION_EMAIL);
 
   const [contactPhoneNumber, setContactPhoneNumber] = React.useState((createRehabNoArvInput.contactPhoneNumber) || "+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
-  const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [verificationPending, setVerificationPending] = React.useState(false);
 
   const moveToNextScreen = () => {
     const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
@@ -73,8 +71,8 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
         moveToNextScreen();
       } else {
         setModalVisible(true);
-      }
-    }
+      };
+    };
   };
   const handleOnChangeText: ContactPhoneNumberViewProps['handleOnChangeText'] = (value) => {
     const validValue = validateFormat(value);
@@ -85,19 +83,14 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   const handleBackdropOnPress: CheckEmailVerifiedProps['handleBackdropOnPress'] = () => {
     setModalVisible(false);
   };
-  const handleButtonRefreshOnPress: CheckEmailVerifiedProps['handleButtonRefreshOnPress'] = async () => {
-    setLoading(true);
-    const result = await viewerQueryRefetch();
-    setLoading(false);
-    if (result?.data?.viewer.emailVerified) {
-      setModalVisible(false);
-      setVerificationPending(false);
-      moveToNextScreen();
-    }
+  const handleButtonOkOnPress: CheckEmailVerifiedProps['handleButtonOkOnPress'] = async () => {
+    setModalVisible(false);
+    moveToNextScreen();
   };
   const handleButtonVerifyOnPress: CheckEmailVerifiedProps['handleButtonVerifyOnPress'] = async () => {
     sendVerificationEmail();
-    setVerificationPending(true);
+    setModalVisible(false);
+    moveToNextScreen();
   };
 
   if (viewerQueryLoading) {
@@ -110,11 +103,10 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
     <>
       <CheckEmailVerified
         handleBackdropOnPress={handleBackdropOnPress}
-        handleButtonRefreshOnPress={handleButtonRefreshOnPress}
+        handleButtonOkOnPress={handleButtonOkOnPress}
         handleButtonVerifyOnPress={handleButtonVerifyOnPress}
-        loading={sendVerificationEmailMutationLoading || loading}
+        loading={sendVerificationEmailMutationLoading}
         modalVisible={modalVisible}
-        verificationPending={verificationPending}
       />
       <ContactPhoneNumberView 
         handleButtonOnPress={handleButtonOnPress}

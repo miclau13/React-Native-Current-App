@@ -8,55 +8,39 @@ import { LoadingComponent } from '../../screens/InitialLoading';
 
 export interface CheckEmailVerifiedProps {
   handleBackdropOnPress: ModalProps['onBackdropPress'];
-  handleButtonRefreshOnPress: ButtonProps['onPress'];
+  handleButtonOkOnPress: ButtonProps['onPress'];
   handleButtonVerifyOnPress: ButtonProps['onPress'];
   loading: boolean;
   modalVisible: ModalProps['isVisible'];
-  verificationPending: boolean;
 }
 
 const CheckEmailVerified: React.ComponentType<CheckEmailVerifiedProps> = (props) => {
   const { 
     handleBackdropOnPress,
-    handleButtonRefreshOnPress,
+    handleButtonOkOnPress,
     handleButtonVerifyOnPress,
     loading,
     modalVisible,
-    verificationPending,
   } = props;
 
   const VerificationChecking = () => (
     <>
-      <Headline>To continue, please verify your email</Headline>
+      <Headline>Please check your email and confirm your email address before proceeding.</Headline>
+        <View style={styles.viewBox1} />
+        <Button 
+          mode="contained" 
+          onPress={handleButtonOkOnPress}
+          style={styles.modalButton}
+        >
+          {"OK"}
+        </Button>
         <View style={styles.viewBox1} />
         <Button 
           mode="contained" 
           onPress={handleButtonVerifyOnPress}
           style={styles.modalButton}
         >
-          {"Verify"}
-        </Button>
-    </>
-  );
-
-  const VerificationPending = () => (
-    <>
-      <Headline>{'A verification email has been sent to you mail box\nPlease check you mail box.'} </Headline>
-        <View style={styles.viewBox1} />
-        <Button 
-          mode="contained" 
-          onPress={handleButtonVerifyOnPress}
-          style={styles.modalButton}
-        >
-          {"Re-send"}
-        </Button>
-        <View style={styles.viewBox1} />
-        <Button 
-          mode="contained" 
-          onPress={handleButtonRefreshOnPress}
-          style={styles.modalButton}
-        >
-          {"Refresh"}
+          {"Resend Verification EMail"}
         </Button>
     </>
   );
@@ -72,9 +56,7 @@ const CheckEmailVerified: React.ComponentType<CheckEmailVerifiedProps> = (props)
         <View style={styles.viewBox1} />
         {loading ? 
           <LoadingComponent /> :
-          verificationPending ?
-            <VerificationPending /> :
-            <VerificationChecking />
+          <VerificationChecking />
         }
         <View style={styles.viewBox1} />
       </View>
