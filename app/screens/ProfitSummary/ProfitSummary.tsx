@@ -43,6 +43,7 @@ export type ProfitSummaryProps = {
     color?: string;
     lower?: number;
     upper?: number;
+    unit?: string;
   }[];
   handleBannerButtonOnClick: BannerAction['onPress'];
   handleSaveOnPress: ButtonProps['onPress'];
@@ -114,15 +115,8 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const bannerIcon: ProfitSummaryProps['bannerIcon'] = {
     name: isQualified ? "check" : "close", color: isQualified ? '#43a048' : '#e53935'
   };
-  const upperRemodellingCost = remodellingCost * 1.6;
-  const lowerRemdellingCost = remodellingCost * 0.6
-  const data: ProfitSummaryProps['data'] = [
-    { name: "Est. ARV", value: arv },
-    { name: "As-Is", value: asIs },
-    { name: "Remodeling Budget", value: remodellingCost, lower: lowerRemdellingCost, upper: upperRemodellingCost },
-    { name: "Total Debts", value: totalDebts },
-    { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935' },
-  ];
+  const upperRemodellingCost = remodellingCost * 1.3;
+  const lowerRemdellingCost = remodellingCost * 0.7;
   const profit = React.useMemo<ProfitSummaryProps['profit']>(() => {
     return +(arv - asIs - remodellingCost);
   }, [arv, asIs, remodellingCost]);
@@ -141,6 +135,17 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const lowerProfitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
     return lowerProfit / upperRemodellingCost * 100;
   },[lowerProfit, upperRemodellingCost]);
+
+  const data: ProfitSummaryProps['data'] = [
+    { name: "Est. ROI", value: profitPercent, lower: lowerProfitPercent, upper: upperProfitPercent, unit: '%' },
+    { name: "Est. Profit", value: profit, lower: lowerProfit, upper: upperProfit },
+    { name: "Remodeling Budget", value: remodellingCost, lower: lowerRemdellingCost, upper: upperRemodellingCost },
+    { name: "Est. After-Repair Value", value: arv },
+    { name: "Est. As-Is Value", value: asIs },
+    { name: "Total Debts", value: totalDebts },
+    { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935' },
+  ];
+
   const handleBannerButtonOnClick = React.useCallback<ProfitSummaryProps['handleBannerButtonOnClick']>(() => setHasBanner(false), [hasBanner]);
 
   const handleSaveOnPress: ProfitSummaryProps['handleSaveOnPress'] = async () => {

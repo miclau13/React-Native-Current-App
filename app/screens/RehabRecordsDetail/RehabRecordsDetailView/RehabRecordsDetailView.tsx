@@ -20,7 +20,8 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
             return null;
           };
           const isPropertyDetails = item.name === "Property Details: ";
-          const isRange = item.name === "Profit: " || item.name === "Remodeling Budget: ";
+          // const isRange = item.name === "Profit: " || item.name === "Remodeling Budget: ";
+          const isRange = item.isRange;
           return (
             <ListItem
               chevron={isPropertyDetails ? expandPropertyDetails ? <Icon name="keyboard-arrow-up" /> : <Icon name="keyboard-arrow-down" /> : null}
