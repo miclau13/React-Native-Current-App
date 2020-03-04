@@ -46,6 +46,10 @@ const MY_REHAB_REQUESTS = gql`
           cost
           name
           selected
+          roomName
+          notes
+          measurement
+          measurementUnit
         }
         submitted
       }

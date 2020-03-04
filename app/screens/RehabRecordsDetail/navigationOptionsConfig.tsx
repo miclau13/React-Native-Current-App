@@ -7,6 +7,7 @@ import { primaryButtonColor } from "../../styles/constants";
 
 const navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
   const { navigation } = props;
+  const detail = navigation.getParam("detail", {});
   const loading = navigation.getParam("loading", true);
   const rehabId = navigation.getParam("rehabId");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId");
@@ -14,13 +15,19 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
   const submitted = navigation.getParam("submitted", false);
   const flow = 2;
   const step = "summary";
-  const handleHeaderRightOnPress = () => {
+
+  const handleHeaderRightReviseOnPress = () => {
     navigation.navigate("PropertyInfoScreen", { 
       flow,
       rehabId,
       rehabItemPackageId,
       revisedRehabInfo,
       step,
+    })
+  };
+  const handleHeaderRightCheckOnPress = () => {
+    navigation.push("RehabQuotationScreen", { 
+      detail
     })
   };
   return {
@@ -33,15 +40,15 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
       );
     },
     headerRight: (props) => {
-      if (loading || submitted) {
+      if (loading) {
         return null;
       };
       return (
         <Button
           {...props}
           color={primaryButtonColor}
-          onPress={handleHeaderRightOnPress}
-          title="Revise"
+          onPress={!submitted ? handleHeaderRightReviseOnPress : handleHeaderRightCheckOnPress}
+          title={!submitted ? "Revise" : "Check Quotation"}
         />
       );
     }
