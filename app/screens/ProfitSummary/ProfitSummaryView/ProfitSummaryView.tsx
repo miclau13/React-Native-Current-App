@@ -12,10 +12,9 @@ import Speedometer from '../ProfitSummarySpeedometerChart';
 interface ProfitSummaryViewProps extends ProfitSummaryProps {};
 
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
-  const { bannerIcon, bannerMessages, data, handleBannerButtonOnClick, handleSaveOnPress, 
-    handleSubmitOnPress, handleStepNavigation, hasBanner, isQualified, profit, lowerProfit, upperProfit, 
-    profitPercent, lowerProfitPercent, upperProfitPercent,
-    status, submitted } = props; 
+  const { data, handleSaveOnPress, 
+    handleSubmitOnPress, handleStepNavigation, isQualified, profit, lowerProfit, upperProfit, 
+    profitPercent, lowerProfitPercent, upperProfitPercent, status, submitted } = props; 
 
   const handleEditOnPress: ButtonProps['onPress'] = () => {
     handleStepNavigation("edit");

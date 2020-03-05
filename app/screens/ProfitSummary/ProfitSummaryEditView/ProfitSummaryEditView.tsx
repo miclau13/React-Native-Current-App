@@ -14,6 +14,7 @@ const ProfitSummaryEditView: React.ComponentType<ProfitSummaryEditViewProps> = (
     buttonsForVacant,
     handleBackdropOnPress,
     handleButtonConfirmOnPress,
+    handleButtonGroupVacantOnPress,
     handleOnChangeText,
     modalVisible,
     profitSummaryEditOnlyFields,

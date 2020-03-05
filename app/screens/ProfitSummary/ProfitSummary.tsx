@@ -34,11 +34,6 @@ export type Params = {
 type ScreenProps = {};
 
 export type ProfitSummaryProps = {
-  bannerIcon: {
-    name: string;
-    color: string;
-  };
-  bannerMessages: string;
   data: {
     name: string;
     value?: number;
@@ -47,11 +42,9 @@ export type ProfitSummaryProps = {
     lower?: number;
     upper?: number;
   }[];
-  handleBannerButtonOnClick: BannerAction['onPress'];
   handleSaveOnPress: ButtonProps['onPress'];
   handleSubmitOnPress: ButtonProps['onPress'];
   handleStepNavigation(nextStep: string, options?: {}): void;
-  hasBanner: ProfitSummaryState['hasBanner'];
   isQualified: ProfitSummaryState['isQualified'];
   profit: number;
   upperProfit: number;
@@ -60,16 +53,13 @@ export type ProfitSummaryProps = {
   upperProfitPercent: number;
   lowerProfitPercent: number;
   submitted: ProfitSummaryState['submitted'];
-  status: ProfitSummaryState['status'];
 };
 
 export type ProfitSummaryState = {
-  bannerMessages: string;
   isQualified: boolean;
-  hasBanner: boolean;
   loading: boolean;
-  submitted: boolean;
   status: string;
+  submitted: boolean;
 };
 
 const UPDATE_REHAB_ITEMS_PACKAGE = gql`
@@ -107,6 +97,7 @@ export interface ProfitSummaryEditViewProps {
   handleOnChangeText: (key: string) => TextInputProps['onChangeText'];
   modalVisible: ModalProps['isVisible'];
   profitSummaryEditOnlyFields: ProfitSummaryEditOnlyFields;
+  status: ProfitSummaryState['status'];
 };
 
 const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
@@ -123,6 +114,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const vacant = navigation.getParam("vacant", null);
 
   const [loading, setLoading] = React.useState<ProfitSummaryState['loading']>(false);
+  const [status, setStatus] = React.useState<ProfitSummaryState['status']>("");
   const [submitted, setSubmitted] = React.useState<ProfitSummaryState['submitted']>(navigation.getParam("submitted", false));
 
   const upperRemodellingCost = remodellingCost * 1.6;
@@ -152,7 +144,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const lowerProfitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
     return lowerProfit / upperRemodellingCost * 100;
   },[lowerProfit, upperRemodellingCost]);
-  const handleBannerButtonOnClick = React.useCallback<ProfitSummaryProps['handleBannerButtonOnClick']>(() => setHasBanner(false), [hasBanner]);
 
   const handleSaveOnPress: ProfitSummaryProps['handleSaveOnPress'] = async () => {
     setLoading(true);
@@ -167,6 +158,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     try {
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
       if (result) {
+        setStatus("Updated Successfully!");
         setLoading(false);
       }
 
@@ -189,6 +181,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     try {
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
       if (result) {
+        setStatus("Submitted Successfully!");
         setSubmitted(true);
         navigation.setParams({ submitted: true });
         setLoading(false);
@@ -283,7 +276,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         :
         <ProfitSummaryView
           data={data}
-          handleBannerButtonOnClick={handleBannerButtonOnClick}
           handleSaveOnPress={handleSaveOnPress}
           handleSubmitOnPress={handleSubmitOnPress}
           handleStepNavigation={handleStepNavigation}
