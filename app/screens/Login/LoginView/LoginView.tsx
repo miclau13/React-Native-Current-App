@@ -13,13 +13,16 @@ const LoginView: React.ComponentType<LoginViewProps> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.viewBox3} />
-      <Image
-        resizeMethod="resize"
-        resizeMode="center"
-        source={FiximizeImage}
-        style={styles.imageContainer}
-        PlaceholderContent={<ActivityIndicator />}
-      />
+      <View style={styles.imageContainer}>
+        <Image
+          defaultSource={FiximizeImage}
+          resizeMethod="scale"
+          resizeMode="center"
+          source={FiximizeImage}
+          style={styles.image}
+          PlaceholderContent={<ActivityIndicator />}
+        />
+      </View>
       <View style={styles.viewBox2} />
       <Title>Ready to Fiximize?</Title>
       <View style={styles.viewBox1} />
