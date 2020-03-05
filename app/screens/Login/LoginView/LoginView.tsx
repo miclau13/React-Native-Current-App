@@ -17,7 +17,7 @@ const LoginView: React.ComponentType<LoginViewProps> = (props) => {
         <Image
           defaultSource={FiximizeImage}
           resizeMethod="scale"
-          resizeMode="center"
+          resizeMode="contain"
           source={FiximizeImage}
           style={styles.image}
           PlaceholderContent={<ActivityIndicator />}
