@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
   },
+  image: {
+    height: 100, 
+    width: "auto", 
+  },
   imageContainer: {
     alignSelf: "center",
     height: 100, 
