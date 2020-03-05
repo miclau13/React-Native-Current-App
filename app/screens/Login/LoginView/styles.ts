@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { deviceScreenWidth } from '../../../styles/constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -8,8 +9,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: "center",
-    height: 50, 
-    width: 50, 
+    height: 100, 
+    width: deviceScreenWidth * 0.75, 
   },
   nextButton: {
     alignSelf: "center",

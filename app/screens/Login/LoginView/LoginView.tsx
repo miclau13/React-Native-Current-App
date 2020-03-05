@@ -3,7 +3,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { Image } from 'react-native-elements';
 import { Button, Title } from 'react-native-paper';
 
-import FiximizeImage from './fiximizeImage.png';
+import FiximizeImage from '../../../../assets/FiximizeLogo.png';
 import styles from './styles';
 import { LoginViewProps } from '../Login';
 
@@ -14,7 +14,8 @@ const LoginView: React.ComponentType<LoginViewProps> = (props) => {
     <View style={styles.container}>
       <View style={styles.viewBox3} />
       <Image
-        resizeMethod="scale"
+        resizeMethod="resize"
+        resizeMode="center"
         source={FiximizeImage}
         style={styles.imageContainer}
         PlaceholderContent={<ActivityIndicator />}
