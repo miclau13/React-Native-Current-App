@@ -19,9 +19,7 @@ import { LoggedInProvider } from './app/common/LoggedInContext';
         }
       })
     },
-    // uri: 'http://192.168.100.89:3000/graphql',
-    uri: 'http://192.168.0.103:3000/graphql',
-    // uri: 'http://192.168.103.42:3000/graphql',
+    uri: 'https://dev-agent.trudeed.com/graphql'
   });
 
 const App = () => {
