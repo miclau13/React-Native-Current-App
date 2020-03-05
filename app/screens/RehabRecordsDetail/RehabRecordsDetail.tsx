@@ -58,18 +58,18 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     const { name, order } = getItemAttributes(key);
     if (name) {
       if (key === "propertyDetails") {
-        result.push({ name, order, value: "" });
-        for (const property in value) {
-          if (value[property].length > 0) {
-            for (let i = 0 ; i < value[property].length; i++) {
-              const { name, order } = getItemAttributes(property, value[property][i].order);
-              result.push({ name, order, category: "propertyDetails", value: value[property][i].size, style: { paddingLeft: 16 }, unit: " sq. ft." });
-            }
-          } else if (isNumber(value[property])) {
-            const { name, order } = getItemAttributes(property, value[property]);
-            result.push({ name, order, category: "propertyDetails", value: value[property], style: { paddingLeft: 16 }, unit: " linear ft." });
-          };
-        };
+        // result.push({ name, order, value: "" });
+        // for (const property in value) {
+        //   if (value[property].length > 0) {
+        //     for (let i = 0 ; i < value[property].length; i++) {
+        //       const { name, order } = getItemAttributes(property, value[property][i].order);
+        //       result.push({ name, order, category: "propertyDetails", value: value[property][i].size, style: { paddingLeft: 16 }, unit: " sq. ft." });
+        //     }
+        //   } else if (isNumber(value[property])) {
+        //     const { name, order } = getItemAttributes(property, value[property]);
+        //     result.push({ name, order, category: "propertyDetails", value: value[property], style: { paddingLeft: 16 }, unit: " linear ft." });
+        //   };
+        // };
       } else if (key === "vacant") {
         result.push({ name, order, value: isNil(value) ? "NA" : value ? "Yes" : "No" });
       } else {

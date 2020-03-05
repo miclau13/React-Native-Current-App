@@ -21,10 +21,10 @@ export interface LoginViewProps {
 
 const REDIRECT_URL_LOCALHOST = "http://192.168.100.89:3000/auth/fiximize-login";
 const REDIRECT_URL_LOCALHOST2 = "http://192.168.0.110:3000/auth/fiximize-login";
-const REDIRECT_URL_LOCALHOST3 = "http://192.168.106.46:3000/auth/fiximize-login";
+const REDIRECT_URL_LOCALHOST3 = "http://192.168.103.46:3000/auth/fiximize-login";
 const RETURN_URL_LOCALHOST = "exp://192.168.100.89:19000";
 const RETURN_URL_LOCALHOST2 = "exp://192.168.0.110:19000";
-const RETURN_URL_LOCALHOST3 = "exp://192.168.106.46:19000";
+const RETURN_URL_LOCALHOST3 = "exp://192.168.103.46:19000";
 
 const Login: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
