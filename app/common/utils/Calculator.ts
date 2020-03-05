@@ -1,3 +1,4 @@
+import { MyRehabRequests_myRehabRequests } from '../../generated/MyRehabRequests';
 import { primaryGreen, primaryRed, primaryYellow } from '../../styles/constants';
 
 const LABELS = [
@@ -6,7 +7,7 @@ const LABELS = [
   { name: "Good", labelColor: primaryGreen, activeBarColor: primaryGreen },
 ];
 
-export const calculateRemodelingCost = (data) => {
+export const calculateRemodelingCost = (data: MyRehabRequests_myRehabRequests['rehabItemsPackage']['rehabItems']) => {
   const cost = (data || []).reduce((acc, item) => {
     const _cost = item.selected ? item.cost : 0;
     acc += _cost;
