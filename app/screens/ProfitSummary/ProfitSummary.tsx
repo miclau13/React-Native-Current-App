@@ -1,16 +1,17 @@
 import { gql } from 'apollo-boost';
+import { pick } from 'lodash';
 import React from 'react';
 import { ButtonGroupProps } from 'react-native-elements';
 import { ModalProps } from 'react-native-modal';
-import { BannerAction, ButtonProps, TextInputProps } from 'react-native-paper';
+import { ButtonProps, TextInputProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import { useMutation } from '@apollo/react-hooks';
 
+import { getValuesInProfitSummaryViewOnlyFieldsFormat } from './utils';
 import ProfitSummaryView from './ProfitSummaryView';
 import { LoadingComponent } from '../InitialLoading';
 import { Params as FullRemodelSummaryParams, FullRemodelSummaryProps, FullRemodelSummaryState } from '../FullRemodelSummary';
-import ProfitAdjustment from './ProfitAdjustment';
 import ProfitSummaryEditView from './ProfitSummaryEditView';
 import { eraseComma, validateFormat } from '../../components/NumberInput/utils';
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
@@ -33,35 +34,6 @@ export type Params = {
 
 type ScreenProps = {};
 
-export type ProfitSummaryProps = {
-  data: {
-    name: string;
-    value?: number;
-    icon?: string;
-    color?: string;
-    lower?: number;
-    upper?: number;
-  }[];
-  handleSaveOnPress: ButtonProps['onPress'];
-  handleSubmitOnPress: ButtonProps['onPress'];
-  handleStepNavigation(nextStep: string, options?: {}): void;
-  isQualified: ProfitSummaryState['isQualified'];
-  profit: number;
-  upperProfit: number;
-  lowerProfit: number;
-  profitPercent: number;
-  upperProfitPercent: number;
-  lowerProfitPercent: number;
-  submitted: ProfitSummaryState['submitted'];
-};
-
-export type ProfitSummaryState = {
-  isQualified: boolean;
-  loading: boolean;
-  status: string;
-  submitted: boolean;
-};
-
 const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   mutation UpdateRehabItemsPackage($input: UpdateRehabItemsPackageInput!) {
     updateRehabItemsPackage(input: $input) {
@@ -83,10 +55,53 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   }
 `;
 
-interface ProfitSummaryEditOnlyFields {
+export type ProfitSummaryProps = {
+  data: {
+    name: string;
+    value?: number;
+    icon?: string;
+    color?: string;
+    lower?: number;
+    upper?: number;
+  }[];
+  handleSaveOnPress: ButtonProps['onPress'];
+  handleSubmitOnPress: ButtonProps['onPress'];
+  handleStepNavigation(nextStep: string, options?: {}): void;
+  profit: number;
+  upperProfit: number;
+  lowerProfit: number;
+  profitPercent: number;
+  upperProfitPercent: number;
+  lowerProfitPercent: number;
+  status: ProfitSummaryState['status'];
+  submitted: ProfitSummaryState['submitted'];
+};
+
+export type ProfitSummaryState = {
+  loading: boolean;
+  status: string;
+  submitted: boolean;
+};
+
+export type ProfitSummaryFields = {
+  arv: number;
+  asIs: number;
+  profit: number;
+  roi: number;
+  remodellingCost: number;
+  totalDebts: number;
+  vacant: boolean;
+};
+
+type ProfitSummaryEditOnlyFields = {
   arv: string;
   asIs: string;
   vacant: number;
+};
+interface ProfitSummaryViewOnlyFields {
+  // arv: string;
+  // asIs: string;
+  // vacant: number;
 };
 
 export interface ProfitSummaryEditViewProps {
@@ -94,10 +109,9 @@ export interface ProfitSummaryEditViewProps {
   handleBackdropOnPress: ModalProps['onBackdropPress'];
   handleButtonConfirmOnPress: ButtonProps['onPress'];
   handleButtonGroupVacantOnPress: ButtonGroupProps['onPress'];
-  handleOnChangeText: (key: string) => TextInputProps['onChangeText'];
+  handleOnChangeText: (key: 'arv' | 'asIs') => TextInputProps['onChangeText'];
   modalVisible: ModalProps['isVisible'];
   profitSummaryEditOnlyFields: ProfitSummaryEditOnlyFields;
-  status: ProfitSummaryState['status'];
 };
 
 const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
@@ -113,37 +127,40 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const totalDebts = navigation.getParam("totalDebts", null);
   const vacant = navigation.getParam("vacant", null);
 
+  const profit = React.useMemo<ProfitSummaryProps['profit']>(() => {
+    return arv - asIs - remodellingCost;
+  }, [arv, asIs, remodellingCost]);
+  const roi = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
+    return profit / remodellingCost * 100;
+  },[profit, remodellingCost]);
+
   const [loading, setLoading] = React.useState<ProfitSummaryState['loading']>(false);
+  const [profitSummaryFields, setProfitSummaryFields] = React.useState<ProfitSummaryFields>({
+    arv, 
+    asIs, 
+    profit,
+    remodellingCost,
+    roi,
+    totalDebts,
+    vacant,
+  });
   const [status, setStatus] = React.useState<ProfitSummaryState['status']>("");
   const [submitted, setSubmitted] = React.useState<ProfitSummaryState['submitted']>(navigation.getParam("submitted", false));
 
-  const upperRemodellingCost = remodellingCost * 1.6;
-  const lowerRemdellingCost = remodellingCost * 0.6
-  const data: ProfitSummaryProps['data'] = [
-    { name: "Est. ARV", value: arv },
-    { name: "As-Is", value: asIs },
-    { name: "Remodeling Budget", value: remodellingCost, lower: lowerRemdellingCost, upper: upperRemodellingCost },
-    { name: "Total Debts", value: totalDebts },
-    { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935' },
-  ];
-  const profit = React.useMemo<ProfitSummaryProps['profit']>(() => {
-    return +(arv - asIs - remodellingCost);
-  }, [arv, asIs, remodellingCost]);
-  const upperProfit = React.useMemo<ProfitSummaryProps['profit']>(() => {
-    return +(arv - asIs - lowerRemdellingCost);
-  }, [arv, asIs, lowerRemdellingCost]);
-  const lowerProfit = React.useMemo<ProfitSummaryProps['profit']>(() => {
-    return +(arv - asIs - upperRemodellingCost);
-  }, [arv, asIs, upperRemodellingCost]);
-  const profitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
-    return profit / remodellingCost * 100;
-  },[profit, remodellingCost]);
-  const upperProfitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
-    return upperProfit / lowerRemdellingCost * 100;
-  },[upperProfit, lowerRemdellingCost]);
-  const lowerProfitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
-    return lowerProfit / upperRemodellingCost * 100;
-  },[lowerProfit, upperRemodellingCost]);
+  const profitSummaryEditOnlyFields = React.useMemo<ProfitSummaryEditOnlyFields>(() => {
+    const _arv = validateFormat(`${profitSummaryFields.arv}`);
+    const _asIs = validateFormat(`${profitSummaryFields.asIs}`);
+    const _vacant =  Number(profitSummaryFields.vacant);
+    return {
+      arv: _arv,
+      asIs: _asIs,
+      vacant: _vacant,
+    }
+  }, [profitSummaryFields]);
+
+  const profitSummaryViewOnlyFields = React.useMemo(() => {
+    return getValuesInProfitSummaryViewOnlyFieldsFormat(profitSummaryFields);
+  }, [profitSummaryFields]);
 
   const handleSaveOnPress: ProfitSummaryProps['handleSaveOnPress'] = async () => {
     setLoading(true);
@@ -197,57 +214,34 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     options && navigation.setParams({ submitted, ...options });
   }, [step, submitted]);
 
-    // For ProfitSummaryEditView
-    const buttonsForVacant = React.useMemo<ProfitSummaryEditViewProps['buttonsForVacant']>(() => {
-      return ['NO', 'YES'];
-    }, []);
-    const modalVisible = React.useMemo<ProfitSummaryEditViewProps['modalVisible']>(() => {
-      return step == 'edit';
-    }, [step]);
-    const profitSummaryEditOnlyFields = React.useMemo<ProfitSummaryEditViewProps['profitSummaryEditOnlyFields']>(() => {
-      // const result = mapValues(omit(propertyInfoFields, ["style"]), value => {
-      //   const validValue = validateFormat(value.toString());
-      //   return validValue;
-      // });
-      // return result;
-
-      const result = { 
-        arv: "1",
-        asIs: "2",
-        vacant: 1,
-      }
-      return result;
-    }, []);
-
-    const changeToViewMode = React.useCallback(() => {
-      navigation.setParams({ step: "summary" });
-    }, []);
-    const handleBackdropOnPress: ProfitSummaryEditViewProps['handleBackdropOnPress'] = React.useCallback(() => {
-      changeToViewMode();
-    }, [changeToViewMode]);
-    const handleButtonConfirmOnPress: ProfitSummaryEditViewProps['handleButtonConfirmOnPress'] = () => {
-      for (const field in profitSummaryEditOnlyFields) {
-        const value = +eraseComma(profitSummaryEditOnlyFields[field]);
-        if (value < 0) return;
-      };
-      changeToViewMode();
-    };
-    const handleButtonGroupVacantOnPress: ProfitSummaryEditViewProps['handleButtonGroupVacantOnPress'] = value => {
-      // setPropertyInfoFields(result);
-    };
-    const handleOnChangeText: ProfitSummaryEditViewProps['handleOnChangeText'] = (key) => (value) => {
-      const validValue = validateFormat(value);
-      const result = { ...profitSummaryEditOnlyFields, [key]: validValue };
-      // setPropertyInfoFields(result);
-    };
-    
-
-  React.useEffect(() => {
-    // console.log("ProfitSummary Mount");
-    return () => {
-      // console.log("ProfitSummary UnMount");
-    }
+  // For ProfitSummaryEditView
+  const buttonsForVacant = React.useMemo<ProfitSummaryEditViewProps['buttonsForVacant']>(() => {
+    return ['NO', 'YES'];
   }, []);
+  const changeToViewMode = React.useCallback(() => {
+    navigation.setParams({ step: "summary" });
+  }, []);
+  const handleBackdropOnPress: ProfitSummaryEditViewProps['handleBackdropOnPress'] = React.useCallback(() => {
+    changeToViewMode();
+  }, [changeToViewMode]);
+  const handleButtonConfirmOnPress: ProfitSummaryEditViewProps['handleButtonConfirmOnPress'] = () => {
+    for (const field in profitSummaryEditOnlyFields) {
+      const value = +eraseComma(profitSummaryEditOnlyFields[field]);
+      if (value < 0) return;
+    };
+    changeToViewMode();
+  };
+  const handleButtonGroupVacantOnPress: ProfitSummaryEditViewProps['handleButtonGroupVacantOnPress'] = value => {
+    const result = { ...profitSummaryFields, vacant: !!value };
+    setProfitSummaryFields(result);
+  };
+  const handleOnChangeText: ProfitSummaryEditViewProps['handleOnChangeText'] = (key) => (value) => {
+    const result = { ...profitSummaryFields, [key]: +eraseComma(value) };
+    setProfitSummaryFields(result);
+  };
+  const modalVisible = React.useMemo<ProfitSummaryEditViewProps['modalVisible']>(() => {
+    return step == 'edit';
+  }, [step]);
 
   if (loading) {
     return (
@@ -255,6 +249,9 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     )
   };
 
+  console.log("profitSummaryFields",profitSummaryFields)
+  console.log("profitSummaryEditOnlyFields",profitSummaryEditOnlyFields)
+  console.log("profitSummaryViewOnlyFields",profitSummaryViewOnlyFields)
   return (
     <>
       <ProfitSummaryEditView 
@@ -266,30 +263,14 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         modalVisible={modalVisible}
         profitSummaryEditOnlyFields={profitSummaryEditOnlyFields}
       />
-      {step === "edit" ?
-        <ProfitAdjustment 
-          arv={arv}
-          asIs={asIs}
-          handleStepNavigation={handleStepNavigation}
-          vacant={vacant}
-        />
-        :
-        <ProfitSummaryView
-          data={data}
-          handleSaveOnPress={handleSaveOnPress}
-          handleSubmitOnPress={handleSubmitOnPress}
-          handleStepNavigation={handleStepNavigation}
-          profit={profit}
-          upperProfit={upperProfit}
-          lowerProfit={lowerProfit}
-          profitPercent={profitPercent}
-          upperProfitPercent={upperProfitPercent}
-          lowerProfitPercent={lowerProfitPercent}
-          status={status}
-          submitted={submitted}
-        />
-      }
-      
+      <ProfitSummaryView
+        data={profitSummaryViewOnlyFields}
+        handleSaveOnPress={handleSaveOnPress}
+        handleSubmitOnPress={handleSubmitOnPress}
+        handleStepNavigation={handleStepNavigation}
+        status={status}
+        submitted={submitted}
+      />
     </>
   )
 };

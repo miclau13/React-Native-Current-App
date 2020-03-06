@@ -13,8 +13,7 @@ interface ProfitSummaryViewProps extends ProfitSummaryProps {};
 
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
   const { data, handleSaveOnPress, 
-    handleSubmitOnPress, handleStepNavigation, isQualified, profit, lowerProfit, upperProfit, 
-    profitPercent, lowerProfitPercent, upperProfitPercent, status, submitted } = props; 
+    handleSubmitOnPress, handleStepNavigation, status, submitted } = props; 
 
   const handleEditOnPress: ButtonProps['onPress'] = () => {
     handleStepNavigation("edit");
@@ -33,50 +32,12 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
         <Card title="Profit Summary">
         <>
           {/* <Speedometer value={profitPercent} /> */}
-          <Text h3 style={styles.h3}>
-          <Text >Est. ROI:{'\n'}</Text>
-          <NumberFormat 
-            decimalScale={0}
-            displayType={'text'} 
-            // suffix={'%'}
-            renderText={value => <Text>{`${value}%`}</Text>}
-            value={lowerProfitPercent}
-          />
-          <Text> to </Text>
-          <NumberFormat 
-            decimalScale={0}
-            displayType={'text'} 
-            // suffix={'%'}
-            renderText={value => <Text>{`${value}%`}</Text>}
-            value={upperProfitPercent}
-          />
-          </Text>
-          <Text h3 style={styles.h3}>
-            <Text >Est. Profit:{'\n'}</Text>
-            <NumberFormat 
-              decimalScale={0}
-              displayType={'text'} 
-              prefix={'$'}
-              renderText={value => <Text>{value}</Text>}
-              thousandSeparator={true} 
-              value={lowerProfit}
-            />
-            <Text> to </Text>
-            <NumberFormat 
-              decimalScale={0}
-              displayType={'text'} 
-              prefix={'$'}
-              renderText={value => <Text>{value}</Text>}
-              thousandSeparator={true} 
-              value={upperProfit}
-            />
-          </Text>
           {data.map((item, i) => (
             <ListItem
               bottomDivider
               key={i}
               title={item.name}
-              rightTitle={isNil(item.value) ? null : !item.lower ? 
+              rightTitle={!isNil(item.value) ? 
                 <NumberFormat 
                   decimalScale={0}
                   displayType={'text'} 
@@ -85,7 +46,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                   thousandSeparator={true} 
                   value={item.value}
                 />
-                :
+                : (!item.lowerLimit || !item.upperLimit) ? null :
                 <Text>
                   <NumberFormat 
                     decimalScale={0}
@@ -93,16 +54,16 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                     prefix={'$'}
                     renderText={value => <Text>{`${value}`}</Text>}
                     thousandSeparator={true} 
-                    value={item.lower}
+                    value={item.lowerLimit}
                   />
-                  <Text> - </Text>
+                  <Text> to </Text>
                   <NumberFormat 
                     decimalScale={0}
                     displayType={'text'} 
                     prefix={'$'}
                     renderText={value => <Text>{`${value}`}</Text>}
                     thousandSeparator={true} 
-                    value={item.upper}
+                    value={item.upperLimit}
                   />
                 </Text>
               }
@@ -134,7 +95,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
               {"Save"}
             </Button>
             <Button
-              disabled={submitted || !isQualified}
+              disabled={submitted}
               mode="contained" 
               onPress={handleSubmitOnPress}
               style={styles.buttonContainer}

@@ -5,14 +5,22 @@ import Modal from 'react-native-modal';
 import { Button, Headline, HelperText } from 'react-native-paper';
 
 import styles from './styles';
-import { ProfitAdjustmentInnerProps } from '../ProfitAdjustment';
+import { ProfitAdjustmentViewProps } from '../ProfitAdjustment';
 
 import NumberInput from '../../../../components/NumberInput';
 
-interface ProfitAdjustmentViewProps extends ProfitAdjustmentInnerProps {};
-
 const ProfitAdjustmentView: React.ComponentType<ProfitAdjustmentViewProps> = (props) => {
-  const { _arv, _asIs, _vacant, buttons, handleOnChangeText, handleOnPress, handleVacantOnPress } = props; 
+  const { 
+    _arv, 
+    _asIs, 
+    _vacant, 
+    buttons, 
+    handleBackdropOnPress,
+    handleOnChangeText, 
+    handleOnPress, 
+    handleVacantOnPress,
+    modalVisible,
+  } = props; 
 
   return (
     <SafeAreaView>
@@ -21,10 +29,10 @@ const ProfitAdjustmentView: React.ComponentType<ProfitAdjustmentViewProps> = (pr
         onBackdropPress={handleBackdropOnPress}
         style={styles.modalContainer}
       >           
-      <ScrollView>
-        <View style={styles.content}>
+      {/* <ScrollView> */}
+        {/* <View style={styles.content}> */}
           <KeyboardAvoidingView
-            style={styles.keyBoardContainer}
+            style={{ ...styles.keyBoardContainer, ...styles.content}}
             behavior={Platform.OS === "ios" ? "padding" : undefined}
           >
             <View style={styles.viewBox1}/>
@@ -77,8 +85,8 @@ const ProfitAdjustmentView: React.ComponentType<ProfitAdjustmentViewProps> = (pr
               Confirm
             </Button>
             </KeyboardAvoidingView>
-          </View>
-        </ScrollView>
+          {/* </View> */}
+        {/* </ScrollView> */}
       </Modal>
     </SafeAreaView>
   );

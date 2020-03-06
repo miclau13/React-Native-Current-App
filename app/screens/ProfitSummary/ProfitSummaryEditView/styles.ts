@@ -5,16 +5,16 @@ const styles = StyleSheet.create({
   buttonSelectedContainer: {
     backgroundColor: primaryButtonColor,
   },
-  content: {
-    backgroundColor: 'white',
-    padding: 22,
-    justifyContent: 'center',
+  container: {
     alignItems: 'center',
+    backgroundColor: 'white',
     borderRadius: 4,
     borderColor: 'rgba(0, 0, 0, 0.1)',
-  },  
-  keyBoardContainer: {
-    width: screenWidth,
+    // flex: 1,
+    padding: 22,
+  },
+  flex1: {
+    flex: 1,
   },
   modalButton: {
     alignSelf: "center",
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     width: "75%",
   },
   modalContainer: {
+    flex: 1,
     justifyContent: 'flex-end',
     margin: 0,
   },

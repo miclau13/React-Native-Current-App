@@ -1,5 +1,5 @@
 import React from 'react';
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, TouchableWithoutFeedback, View } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { Button, Headline, HelperText } from 'react-native-paper';
@@ -27,42 +27,38 @@ const ProfitSummaryEditView: React.ComponentType<ProfitSummaryEditViewProps> = (
   } = profitSummaryEditOnlyFields
 
   return (
-    <SafeAreaView>
-      <Modal
-        isVisible={modalVisible}
-        onBackdropPress={handleBackdropOnPress}
-        style={styles.modalContainer}
-      >           
-      <ScrollView>
-        <View style={styles.content}>
-          <KeyboardAvoidingView
-            style={styles.keyBoardContainer}
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-          >
+    <Modal
+      isVisible={modalVisible}
+      onBackdropPress={handleBackdropOnPress}
+      style={styles.modalContainer}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
             <View style={styles.viewBox1}/>
             <Headline>Estimated After-Repair Value:</Headline>
             <View style={styles.viewBox1}/>
-            <NumberInput
-              autoFocus={true}
-              error={+arv < 1}
-              label="$"
-              onChangeText={handleOnChangeText("ARV")}
-              value={arv}
-            />
-            <HelperText 
-              type="error"
-              visible={+arv < 0}
-            >
-              {"This field must be not be negative"}
-            </HelperText>
+              <NumberInput
+                error={+arv < 1}
+                label="$"
+                onChangeText={handleOnChangeText("arv")}
+                value={arv}
+              />
+              <HelperText 
+                type="error"
+                visible={+arv < 0}
+              >
+                {"This field must be not be negative"}
+              </HelperText>
             <View style={styles.viewBox1}/>
             <Headline>Estimated As-Is Value:</Headline>
             <View style={styles.viewBox1}/>
             <NumberInput
-              autoFocus={true}
               error={+asIs < 1}
               label="$"
-              onChangeText={handleOnChangeText("ARV")}
+              onChangeText={handleOnChangeText("asIs")}
               value={asIs}
             />
             <HelperText 
@@ -88,11 +84,11 @@ const ProfitSummaryEditView: React.ComponentType<ProfitSummaryEditViewProps> = (
             >
               Confirm
             </Button>
-            </KeyboardAvoidingView>
+            <View style={styles.viewBox1}/>
           </View>
-        </ScrollView>
-      </Modal>
-    </SafeAreaView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </Modal>
   );
 }
 export default React.memo(ProfitSummaryEditView);
