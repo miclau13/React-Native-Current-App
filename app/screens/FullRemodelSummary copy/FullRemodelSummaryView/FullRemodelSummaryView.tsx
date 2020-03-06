@@ -1,16 +1,20 @@
 import React from 'react';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView, View } from 'react-native';
 import { Card, ListItem, Text } from 'react-native-elements'
 import { Button } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
 import styles from './styles';
-import { FullRemodelSummaryViewProps } from '../FullRemodelSummary';
+import { FullRemodelSummaryProps } from '../FullRemodelSummary';
+
+interface FullRemodelSummaryViewProps extends FullRemodelSummaryProps {};
 
 const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> = (props) => {
-  const { fields, handleCheckBoxOnPress, handleButtonOnPress, remodellingCost } = props;  
-  let lowerLimit = Math.ceil(remodellingCost * 0.6);
-  let upperLimit = Math.ceil(remodellingCost * 1.6);
+  const { data, handleCheckBoxOnPress, handleOnPress, totalCost } = props;  
+  let lowerLimit = Math.ceil(totalCost * 0.6);
+  let upperLimit = Math.ceil(totalCost * 1.6);
+
+  console.log("FullRemodelSummaryView data", data)
 
   return (
     <SafeAreaView>
@@ -34,20 +38,20 @@ const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> =
                 value={upperLimit}
               />
             </Text>
-            {fields.map((field, i) => (
+            {data.map((item, i) => (
               <ListItem
                 bottomDivider
                 checkBox={{ 
-                  checked: field.selected,
-                  onPress: handleCheckBoxOnPress(field.name)
+                  checked: item.selected,
+                  onPress: handleCheckBoxOnPress(i)
                 }}
                 key={i}
-                title={field.name}
+                title={item.category}
               />
             ))}
             <Button
               mode="contained" 
-              onPress={handleButtonOnPress}
+              onPress={handleOnPress}
               style={styles.buttonContainer}
             >
               {"Proceed"}

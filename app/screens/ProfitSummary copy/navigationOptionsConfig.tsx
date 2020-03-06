@@ -7,9 +7,15 @@ import { primaryButtonColor } from "../../styles/constants";
 
 const navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
   const { navigation } = props;
+  const arv = navigation.getParam("arv");
+  const asIs = navigation.getParam("asIs");
+  const step = navigation.getParam("step");
   const submitted = navigation.getParam("submitted");
+  const vacant = navigation.getParam("vacant");
   const handleHeaderLeftOnPress = () => {
-      navigation.navigate("FullRemodelSummaryScreen") 
+    step == "summary" ? 
+      navigation.navigate("FullRemodelSummaryScreen", { arv, asIs, submitted, vacant }) : 
+      navigation.navigate("ProfitSummaryScreen", { step: "summary" });
   };
   const handleHeaderRightOnPress = () => {
     navigation.navigate("HomeScreen");
@@ -28,15 +34,17 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
       )
     },
     headerRight: (props) => {
-      return (
-        <Button 
-          {...props}
-          color={primaryButtonColor}
-          onPress={handleHeaderRightOnPress}
-          title="Done"
-        />
-      )
-    }
+      if (step == "summary") {
+        return (
+          <Button 
+            {...props}
+            color={primaryButtonColor}
+            onPress={handleHeaderRightOnPress}
+            title="Done"
+          />
+        )
+      }
+    },
   }
 };
 
