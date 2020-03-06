@@ -217,10 +217,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     changeToViewMode();
   }, [changeToViewMode]);
   const handleButtonConfirmOnPress: ProfitSummaryEditViewProps['handleButtonConfirmOnPress'] = () => {
-    for (const field in profitSummaryEditOnlyFields) {
-      const value = +eraseComma(profitSummaryEditOnlyFields[field]);
-      if (value < 0) return;
-    };
     changeToViewMode();
   };
   const handleButtonGroupVacantOnPress: ProfitSummaryEditViewProps['handleButtonGroupVacantOnPress'] = value => {
