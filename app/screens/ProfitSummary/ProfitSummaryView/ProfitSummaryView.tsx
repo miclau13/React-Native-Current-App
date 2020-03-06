@@ -1,30 +1,23 @@
-import { isNil } from 'lodash';
+import { isNil, isNumber } from 'lodash';
 import React from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { Card, Icon, ListItem, Text } from 'react-native-elements'
-import { Banner, Button, ButtonProps } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
 import styles from './styles';
-import { ProfitSummaryProps } from '../ProfitSummary';
+import { ProfitSummaryViewProps } from '../ProfitSummary';
 import Speedometer from '../ProfitSummarySpeedometerChart';
 
-interface ProfitSummaryViewProps extends ProfitSummaryProps {};
-
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
-  const { data, handleSaveOnPress, 
-    handleSubmitOnPress, handleStepNavigation, status, submitted } = props; 
-
-  const handleEditOnPress: ButtonProps['onPress'] = () => {
-    handleStepNavigation("edit");
-  };
-
-  React.useEffect(() => {
-    // console.log("ProfitSummaryView Mount");
-    return () => {
-      // console.log("ProfitSummaryView UnMount")
-    }
-  }, []);
+  const { 
+    fields,
+    handleEditOnPress,
+    handleSaveOnPress, 
+    handleSubmitOnPress, 
+    status, 
+    submitted,
+  } = props; 
 
   return (
     <SafeAreaView>
@@ -32,12 +25,12 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
         <Card title="Profit Summary">
         <>
           {/* <Speedometer value={profitPercent} /> */}
-          {data.map((item, i) => (
+          {fields.map((item, i) => (
             <ListItem
               bottomDivider
               key={i}
               title={item.name}
-              rightTitle={!isNil(item.value) ? 
+              rightTitle={(!isNil(item.value) && isNumber(item.value)) ? 
                 <NumberFormat 
                   decimalScale={0}
                   displayType={'text'} 

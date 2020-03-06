@@ -1,5 +1,4 @@
 import { gql } from 'apollo-boost';
-import { pick } from 'lodash';
 import React from 'react';
 import { ButtonGroupProps } from 'react-native-elements';
 import { ModalProps } from 'react-native-modal';
@@ -55,30 +54,18 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   }
 `;
 
-export type ProfitSummaryProps = {
-  data: {
-    name: string;
-    value?: number;
-    icon?: string;
-    color?: string;
-    lower?: number;
-    upper?: number;
-  }[];
+export type ProfitSummaryViewProps = {
+  fields: ProfitSummaryViewOnlyFields;
+  handleEditOnPress: ButtonProps['onPress'];
   handleSaveOnPress: ButtonProps['onPress'];
   handleSubmitOnPress: ButtonProps['onPress'];
-  handleStepNavigation(nextStep: string, options?: {}): void;
-  profit: number;
-  upperProfit: number;
-  lowerProfit: number;
-  profitPercent: number;
-  upperProfitPercent: number;
-  lowerProfitPercent: number;
   status: ProfitSummaryState['status'];
   submitted: ProfitSummaryState['submitted'];
 };
 
 export type ProfitSummaryState = {
   loading: boolean;
+  profitSummaryFields: ProfitSummaryFields;
   status: string;
   submitted: boolean;
 };
@@ -98,11 +85,15 @@ type ProfitSummaryEditOnlyFields = {
   asIs: string;
   vacant: number;
 };
-interface ProfitSummaryViewOnlyFields {
-  // arv: string;
-  // asIs: string;
-  // vacant: number;
-};
+type ProfitSummaryViewOnlyFields = {
+  color: string | null;
+  icon: string | null;
+  lowerLimit: number | null;
+  name: string;
+  order: string;
+  upperLimit: number | null;
+  value: number | boolean | null;
+}[]
 
 export interface ProfitSummaryEditViewProps {
   buttonsForVacant: ('NO' | 'YES')[];
@@ -127,15 +118,15 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const totalDebts = navigation.getParam("totalDebts", null);
   const vacant = navigation.getParam("vacant", null);
 
-  const profit = React.useMemo<ProfitSummaryProps['profit']>(() => {
+  const profit = React.useMemo(() => {
     return arv - asIs - remodellingCost;
   }, [arv, asIs, remodellingCost]);
-  const roi = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
+  const roi = React.useMemo(() => {
     return profit / remodellingCost * 100;
   },[profit, remodellingCost]);
 
   const [loading, setLoading] = React.useState<ProfitSummaryState['loading']>(false);
-  const [profitSummaryFields, setProfitSummaryFields] = React.useState<ProfitSummaryFields>({
+  const [profitSummaryFields, setProfitSummaryFields] = React.useState<ProfitSummaryState['profitSummaryFields']>({
     arv, 
     asIs, 
     profit,
@@ -147,10 +138,10 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const [status, setStatus] = React.useState<ProfitSummaryState['status']>("");
   const [submitted, setSubmitted] = React.useState<ProfitSummaryState['submitted']>(navigation.getParam("submitted", false));
 
-  const profitSummaryEditOnlyFields = React.useMemo<ProfitSummaryEditOnlyFields>(() => {
+  const profitSummaryEditOnlyFields = React.useMemo<ProfitSummaryEditViewProps['profitSummaryEditOnlyFields']>(() => {
     const _arv = validateFormat(`${profitSummaryFields.arv}`);
     const _asIs = validateFormat(`${profitSummaryFields.asIs}`);
-    const _vacant =  Number(profitSummaryFields.vacant);
+    const _vacant = Number(profitSummaryFields.vacant);
     return {
       arv: _arv,
       asIs: _asIs,
@@ -158,11 +149,18 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     }
   }, [profitSummaryFields]);
 
-  const profitSummaryViewOnlyFields = React.useMemo(() => {
+  const profitSummaryViewOnlyFields = React.useMemo<ProfitSummaryViewProps['fields']>(() => {
     return getValuesInProfitSummaryViewOnlyFieldsFormat(profitSummaryFields);
   }, [profitSummaryFields]);
 
-  const handleSaveOnPress: ProfitSummaryProps['handleSaveOnPress'] = async () => {
+  // For ProfitSummaryView
+  const changeToEditMode = React.useCallback(() => {
+    navigation.setParams({ step: "edit" });
+  }, []);
+  const handleEditOnPress = React.useCallback<ProfitSummaryViewProps['handleEditOnPress']>((nextStep, options = {}) => {
+    changeToEditMode();
+  }, []);
+  const handleSaveOnPress: ProfitSummaryViewProps['handleSaveOnPress'] = async () => {
     setLoading(true);
     const updateRehabItemsPackageInput = {
       rehabItemsPackage,
@@ -184,8 +182,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       setLoading(false);
     }
   };
-
-  const handleSubmitOnPress: ProfitSummaryProps['handleSubmitOnPress'] = async () => {
+  const handleSubmitOnPress: ProfitSummaryViewProps['handleSubmitOnPress'] = async () => {
     setLoading(true);
     const updateRehabItemsPackageInput = {
       rehabItemsPackage: { ...rehabItemsPackage, selected: true, submitted: true },
@@ -208,11 +205,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       setLoading(false);
     }
   };
-
-  const handleStepNavigation = React.useCallback<ProfitSummaryProps['handleStepNavigation']>((nextStep, options = {}) => {
-    navigation.navigate("ProfitSummaryScreen", { submitted, step: nextStep, ...options });
-    options && navigation.setParams({ submitted, ...options });
-  }, [step, submitted]);
 
   // For ProfitSummaryEditView
   const buttonsForVacant = React.useMemo<ProfitSummaryEditViewProps['buttonsForVacant']>(() => {
@@ -249,9 +241,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     )
   };
 
-  console.log("profitSummaryFields",profitSummaryFields)
-  console.log("profitSummaryEditOnlyFields",profitSummaryEditOnlyFields)
-  console.log("profitSummaryViewOnlyFields",profitSummaryViewOnlyFields)
   return (
     <>
       <ProfitSummaryEditView 
@@ -264,10 +253,10 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         profitSummaryEditOnlyFields={profitSummaryEditOnlyFields}
       />
       <ProfitSummaryView
-        data={profitSummaryViewOnlyFields}
+        fields={profitSummaryViewOnlyFields}
         handleSaveOnPress={handleSaveOnPress}
         handleSubmitOnPress={handleSubmitOnPress}
-        handleStepNavigation={handleStepNavigation}
+        handleEditOnPress={handleEditOnPress}
         status={status}
         submitted={submitted}
       />
