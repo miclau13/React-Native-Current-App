@@ -19,9 +19,9 @@ const client = new ApolloClient({
       }
     })
   },
-  // uri: 'https://dev-agent.trudeed.com/graphql'
+  uri: 'https://dev-agent.trudeed.com/graphql'
   // uri: 'http://192.168.103.46:3000/graphql',
-  uri: 'http://192.168.0.106:3000/graphql',
+  // uri: 'http://192.168.0.106:3000/graphql',
 });
 
 const App = () => {
