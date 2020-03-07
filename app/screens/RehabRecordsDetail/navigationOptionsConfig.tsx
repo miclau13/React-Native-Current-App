@@ -15,6 +15,7 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
   const submitted = navigation.getParam("submitted", false);
   const flow = 2;
   const step = "summary";
+  const hasRevisedRehabItems = !!detail.rehabItemsPackage.revisedRehabItems;
 
   const handleHeaderRightReviseOnPress = () => {
     navigation.navigate("PropertyInfoScreen", { 
@@ -40,7 +41,7 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
       );
     },
     headerRight: (props) => {
-      if (loading) {
+      if (loading || !hasRevisedRehabItems) {
         return null;
       };
       return (
