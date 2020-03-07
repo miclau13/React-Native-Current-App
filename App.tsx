@@ -8,20 +8,21 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import AppComponent from './app/App';
 import { LoggedInProvider } from './app/common/LoggedInContext';
 
-  const client = new ApolloClient({
-    request: async (operation) => {
-      const token = await SecureStore.getItemAsync("accessToken", {});
-      const deviceId = await SecureStore.getItemAsync("deviceId", {});
-      operation.setContext({
-        headers: {
-          deviceId,
-          authorization: token ? `Bearer ${token}` : '',
-        }
-      })
-    },
-    uri: 'https://dev-agent.trudeed.com/graphql'
-    // uri: 'http://192.168.103.46:3000/graphql',
-  });
+const client = new ApolloClient({
+  request: async (operation) => {
+    const token = await SecureStore.getItemAsync("accessToken", {});
+    const deviceId = await SecureStore.getItemAsync("deviceId", {});
+    operation.setContext({
+      headers: {
+        deviceId,
+        authorization: token ? `Bearer ${token}` : '',
+      }
+    })
+  },
+  // uri: 'https://dev-agent.trudeed.com/graphql'
+  // uri: 'http://192.168.103.46:3000/graphql',
+  uri: 'http://192.168.0.106:3000/graphql',
+});
 
 const App = () => {
   return (

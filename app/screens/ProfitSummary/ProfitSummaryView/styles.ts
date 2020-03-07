@@ -3,9 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   buttonContainer: {
     alignSelf: "center",
-    // borderRadius: 20,
     marginTop: 16,
-    // width: "75%",
   },
   container: {
     alignItems: 'center',
@@ -15,6 +13,11 @@ const styles = StyleSheet.create({
   },
   costContainer: {
     marginBottom: 8,
+    textAlign: 'center',
+  },
+  h3: {
+    marginBottom: 8, 
+    marginTop: 8, 
     textAlign: 'center',
   }
 });

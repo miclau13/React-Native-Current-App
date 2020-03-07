@@ -57,7 +57,7 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const moveToNextScreen = () => {
     const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
-    navigation.navigate("FullRemodelSummaryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
+    navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
   }
 
   const handleButtonOnPress: ContactPhoneNumberViewProps['handleButtonOnPress'] = async () => {
