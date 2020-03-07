@@ -5,10 +5,9 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import { getRehabItemCatergoriesFields } from './utils';
 import FullRemodelSummaryView  from './FullRemodelSummaryView';
-import { createRehabActionReducer, useCreateRehab, CreateRehabState } from '../CreateRehab';
+import { useCreateRehabState } from '../CreateRehab/useCreateRehabState';
 
 export interface Params {
-  initialState: CreateRehabState['initialState'];
 };
 
 type ScreenProps = {};
@@ -27,18 +26,15 @@ export interface FullRemodelSummaryViewProps {
 
 const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const initialState = navigation.getParam("initialState");
 
-  const [state, dispatch] = useCreateRehab();
+  const [state, dispatch] = useCreateRehabState();
   const { remodellingCost, rehabItemCatergoriesMap } = state;
-  console.log("FullRemodelSummary initialState",initialState)
-  console.log("FullRemodelSummary state",state)
   const fields = React.useMemo(() => getRehabItemCatergoriesFields(rehabItemCatergoriesMap), [rehabItemCatergoriesMap]);
   const handleCheckBoxOnPress: FullRemodelSummaryViewProps['handleCheckBoxOnPress'] = category => () => {
     dispatch({ category, type: 'UPDATE_FULL_REMODEL_SUMMARY_FIELDS' });
   };
   const handleButtonOnPress = React.useCallback<FullRemodelSummaryViewProps['handleButtonOnPress']>(() => {
-    navigation.navigate("ProfitSummaryScreen", { state, dispatch, step: 'summary' });
+    navigation.navigate("ProfitSummaryScreen", { step: 'summary' });
   }, [state]);
 
   return (

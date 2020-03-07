@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { RehabItemCatergoriesMap } from './CreateRehab';
+import { RehabItemCatergoriesMap } from './useCreateRehabState';
 import { 
   MyRehabRequests_myRehabRequests,
 } from '../../generated/MyRehabRequests';

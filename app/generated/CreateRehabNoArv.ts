@@ -10,14 +10,14 @@ import { CreateRehabNoArvInput } from "./globalTypes";
 
 export interface CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems {
   __typename: "RehabItems";
-  category: string;
+  category: string | null;
   cost: number | null;
   name: string;
-  selected: boolean;
+  selected: boolean | null;
   unit: number;
   costPerUnit: number | null;
-  custom: boolean;
-  calculationMethod: string;
+  custom: boolean | null;
+  calculationMethod: string | null;
   order: number | null;
 }
 

@@ -8,18 +8,18 @@
 
 export interface MyRehabRequests_myRehabRequests_rehabItemsPackage_rehabItems {
   __typename: "RehabItems";
-  category: string;
+  category: string | null;
   cost: number | null;
   name: string;
-  selected: boolean;
+  selected: boolean | null;
 }
 
 export interface MyRehabRequests_myRehabRequests_rehabItemsPackage_revisedRehabItems {
   __typename: "RehabItems";
-  category: string;
+  category: string | null;
   cost: number | null;
   name: string;
-  selected: boolean;
+  selected: boolean | null;
 }
 
 export interface MyRehabRequests_myRehabRequests_rehabItemsPackage {

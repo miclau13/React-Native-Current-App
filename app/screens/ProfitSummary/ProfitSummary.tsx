@@ -1,20 +1,21 @@
 import { gql } from 'apollo-boost';
-import React, { Dispatch } from 'react';
+import React from 'react';
 import { ButtonGroupProps } from 'react-native-elements';
 import { ModalProps } from 'react-native-modal';
 import { ButtonProps, TextInputProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
+import { useMutation } from '@apollo/react-hooks';
+
 import { getValuesInProfitSummaryViewOnlyFieldsFormat } from './utils';
-import { useCreateRehab, CreateRehabAction, CreateRehabState } from '../CreateRehab';
+import { useCreateRehabState } from '../CreateRehab/useCreateRehabState';
 import ProfitSummaryView from './ProfitSummaryView';
 import { LoadingComponent } from '../InitialLoading';
 import ProfitSummaryEditView from './ProfitSummaryEditView';
 import { eraseComma, validateFormat } from '../../components/NumberInput/utils';
+import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
 
 export type Params = {
-  state: CreateRehabState['initialState'];
-  dispatch: Dispatch<CreateRehabAction>;
   step: string;
 };
 
@@ -93,12 +94,11 @@ export interface ProfitSummaryEditViewProps {
 };
 
 const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
+  const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
   const { navigation } = props;
-  // const state = navigation.getParam("state");
-  // const dispatch = navigation.getParam("dispatch");
-  const [state, dispatch] = useCreateRehab();
-  const { arv, asIs, remodellingCost, totalDebts, vacant } = state;
-  console.log("ProfitSummary state", state)
+  const [state, dispatch] = useCreateRehabState();
+  const { arv, asIs, rehabId, rehabItems, rehabItemsPackageId,remodellingCost, totalDebts, vacant } = state;
+  // console.log("rehabItems",rehabItems)
   const step = navigation.getParam("step", "summary");
 
   const profit = React.useMemo(() => {
@@ -146,8 +146,57 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     changeToEditMode();
   }, []);
   const handleSaveOnPress: ProfitSummaryViewProps['handleSaveOnPress'] = async () => {
+    const updateRehabItemsPackageInput = {
+      rehabItemsPackage: {
+        rehabItems,
+        id: rehabItemsPackageId,
+      },
+      rehabRequest: {
+        arv,
+        asIs,
+        vacant,
+        id: rehabId,
+      }
+    };
+    try {
+      setLoading(true);
+      const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
+      if (result) {
+        setStatus("Updated Successfully!");
+        setLoading(false);
+      }
+
+    } catch (e) {
+      console.log("ProfitSummary handleSaveOnPress e", e);
+      setLoading(false);
+    }
   };
   const handleSubmitOnPress: ProfitSummaryViewProps['handleSubmitOnPress'] = async () => {
+    setLoading(true);
+    const updateRehabItemsPackageInput = {
+      rehabItemsPackage: { 
+        rehabItems, 
+        selected: true, 
+        submitted: true 
+      },
+      rehabRequest: {
+        arv,
+        asIs,
+        vacant,
+        id: rehabId,
+      }
+    };
+    try {
+      const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
+      if (result) {
+        setStatus("Submitted Successfully!");
+        setSubmitted(true);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.log("ProfitSummary handleSaveOnPress e", e);
+      setLoading(false);
+    }
   };
 
   // For ProfitSummaryEditView
@@ -164,14 +213,10 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     changeToViewMode();
   };
   const handleButtonGroupVacantOnPress: ProfitSummaryEditViewProps['handleButtonGroupVacantOnPress'] = value => {
-    // const result = { ...profitSummaryFields, vacant: !!value };
     dispatch({ key: 'vacant', type: 'UPDATE_PROFIT_SUMMARY_FIELDS', value: !!value });
-    // setProfitSummaryFields(result);
   };
   const handleOnChangeText: ProfitSummaryEditViewProps['handleOnChangeText'] = (key) => (value) => {
-    // const result = { ...profitSummaryFields, [key]: +eraseComma(value) };
     dispatch({ key, type: 'UPDATE_PROFIT_SUMMARY_FIELDS', value: +eraseComma(value) })
-    // setProfitSummaryFields(result);
   };
   const modalVisible = React.useMemo<ProfitSummaryEditViewProps['modalVisible']>(() => {
     return step == 'edit';
