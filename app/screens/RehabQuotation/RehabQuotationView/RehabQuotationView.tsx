@@ -41,7 +41,7 @@ const RehabQuotationView: React.ComponentType<RehabQuotationViewProps> = (props)
                     decimalScale={0}
                     displayType={'text'} 
                     prefix={'$'}
-                    renderText={_value => <Text style={styles.subtitleStyle}>{`Total: ${_value}`}</Text>}
+                    renderText={_value => <Text style={styles.subtitleStyle}>{`Subtotal: ${_value}`}</Text>}
                     thousandSeparator={true}
                     value={subTotal}
                   /> : null
