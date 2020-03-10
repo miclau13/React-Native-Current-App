@@ -12,18 +12,20 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
   const rehabId = navigation.getParam("rehabId");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId");
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
-  // const submitted = navigation.getParam("submitted", false);
-  const flow = 2;
-  const step = "summary";
   const hasRevisedRehabItems = !!detail.rehabItemsPackage.revisedRehabItems;
+  const flow = !hasRevisedRehabItems ? "revise" : null;
 
   const handleHeaderRightReviseOnPress = () => {
-    navigation.push("PropertyInfoScreen", { 
+    navigation.push("CreateRehabScreen", 
+    { 
       flow,
       rehabId,
       rehabItemPackageId,
-      revisedRehabInfo,
-      step,
+      createRehabNoArvInput: revisedRehabInfo,
+    }, 
+    {
+      type: 'Navigation/NAVIGATE',
+      routeName: "CreateRehabScreen",
     })
   };
   const handleHeaderRightCheckOnPress = () => {

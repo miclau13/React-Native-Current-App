@@ -8,6 +8,7 @@ import FullRemodelSummaryView  from './FullRemodelSummaryView';
 import { useCreateRehabState } from '../CreateRehab/useCreateRehabState';
 
 export interface Params {
+  flow?: "revise" | 1,
 };
 
 type ScreenProps = {};

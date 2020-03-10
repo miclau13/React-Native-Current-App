@@ -23,10 +23,8 @@ export interface Params {
   rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
   // From CreateRehab itself after create Rehab
   revisedRehabInfo?: RevisedRehabInfo;
-  // From ProfitSummaryScreen due to Back button
-  arv?: CreateRehabNoArv['createRehabNoArv']['arv'];
-  asIs?: number;
-  vacant?: boolean;
+  // From RehabRecordsDetailScreen due to Revise button
+  flow?: "revise" | 1;
 };
 
 type ScreenProps = {};
@@ -98,6 +96,7 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
 const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  const flow = navigation.getParam("flow", 1);
   const rehabId = navigation.getParam("rehabId", "");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
 
@@ -187,15 +186,18 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
         };
 
         navigation.navigate("FullRemodelSummaryScreen", { 
+          flow,
           rehabId, 
           rehabItemPackageId, 
           revisedRehabInfo,
+          keyCreateRehabScreen: navigation.state.key
         });
       } 
     },
   });
 
   const bootstrapAsync = async () => {
+    navigation.state.key = "KEY_CreateRehabScreen";
     try {
       if (!rehabId) {
         await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
@@ -215,7 +217,6 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
       console.log("createRehab error", e)
     }
   };
-
 
   React.useEffect(() => {
     // console.log("CreateRehab Mount");

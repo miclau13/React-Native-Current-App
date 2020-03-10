@@ -10,6 +10,7 @@ import FullRemodelSummaryScreen, { navigationOptions as FullRemodelSummaryScreen
 import HomeScreen, { navigationOptions as HomeScreenNavigationOptions } from "../../../screens/Home";
 import ProfitSummaryScreen, { navigationOptions as ProfitSummaryScreenNavigationOptions } from "../../../screens/ProfitSummary";
 import PropertyInfoScreen, { navigationOptions as PropertyInfoScreenNavigationOptions } from "../../../screens/PropertyInfo";
+import RehabRecordsDetailScreen, { navigationOptions as RehabRecordsDetailScreenNavigationOptions } from "../../../screens/RehabRecordsDetail";
 import TotalDebtsScreen, { navigationOptions as TotalDebtsScreenNavigationOptions } from "../../../screens/TotalDebts";
 import VacantPropertyScreen, { navigationOptions as VacantPropertyScreenNavigationOptions } from "../../../screens/VacantProperty";
 
@@ -50,6 +51,10 @@ const HomeStack = createStackNavigator(
     PropertyInfoScreen: {
       screen: PropertyInfoScreen,
       navigationOptions: PropertyInfoScreenNavigationOptions,
+    },
+    RehabRecordsDetailScreen: {
+      screen: RehabRecordsDetailScreen,
+      navigationOptions: RehabRecordsDetailScreenNavigationOptions,
     },
     TotalDebtsScreen: {
       screen: TotalDebtsScreen,

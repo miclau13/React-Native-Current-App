@@ -55,7 +55,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const loading = navigation.getParam("loading", true);
   const [expandPropertyInfo, setExpandPropertyInfo] = React.useState<RehabRecordsDetailState['expandPropertyInfo']>(true);
-  
+
   const items = React.useMemo(() => sortBy(reduce(detail, (result, value, key) => {
     const { name, order } = getItemAttributes(key);
     if (name) {
