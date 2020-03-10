@@ -43,7 +43,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
               onPress={deleteMode ? null : handleItemOnPress(i)}
               rightIcon={rehabItemsPackage?.submitted ? 
                 <Chip>
-                  Submitted
+                  {isRevised ? "Quoted" : "Submitted"}
                 </Chip>
                 : null
               }
