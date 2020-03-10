@@ -26,6 +26,7 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
     {
       type: 'Navigation/NAVIGATE',
       routeName: "CreateRehabScreen",
+      key: "KEY_CreateRehabScreen"
     })
   };
   const handleHeaderRightCheckOnPress = () => {

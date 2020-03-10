@@ -139,10 +139,9 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
           propertyDetails: getDefaultPropertyDetails(getDefaultPropertyInfoFields()),
           postalCode: result.postalCode,
         };
-
         navigation.navigate("FullRemodelSummaryScreen", { 
           rehabId, 
-          rehabItemPackageId, 
+          rehabItemPackageId: rehabItemsPackageId, 
           revisedRehabInfo,
         });
       } 
@@ -188,7 +187,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
         navigation.navigate("FullRemodelSummaryScreen", { 
           flow,
           rehabId, 
-          rehabItemPackageId, 
+          rehabItemPackageId: rehabItemsPackageId, 
           revisedRehabInfo,
           keyCreateRehabScreen: navigation.state.key
         });
@@ -197,7 +196,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   });
 
   const bootstrapAsync = async () => {
-    navigation.state.key = "KEY_CreateRehabScreen";
+    // navigation.state.key = "KEY_CreateRehabScreen";
     try {
       if (!rehabId) {
         await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
