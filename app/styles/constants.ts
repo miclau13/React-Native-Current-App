@@ -12,3 +12,5 @@ export const primaryGreen= "#43a048";
 export const primaryRed = "#e53935";
 export const primaryYellow = "#fdd835";
 export const screenWidth = "80%";
+
+export const buttonWidth = deviceScreenWidth * 0.8 * 0.75;

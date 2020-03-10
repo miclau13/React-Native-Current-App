@@ -62,6 +62,11 @@ export interface RehabItemsInput {
   calculationMethod?: string | null;
   cost?: number | null;
   order?: number | null;
+  roomName?: string | null;
+  notes?: string | null;
+  measurement?: number | null;
+  measurementUnit?: string | null;
+  description?: string | null;
 }
 
 export interface RehabItemsPackageInput {

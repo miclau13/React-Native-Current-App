@@ -1,74 +1,26 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
-import { BannerAction, ButtonProps } from 'react-native-paper';
+import { ButtonGroupProps } from 'react-native-elements';
+import { ModalProps } from 'react-native-modal';
+import { ButtonProps, TextInputProps } from 'react-native-paper';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import { useMutation } from '@apollo/react-hooks';
 
+import { getValuesInProfitSummaryViewOnlyFieldsFormat } from './utils';
+import { useCreateRehabState } from '../CreateRehab/useCreateRehabState';
 import ProfitSummaryView from './ProfitSummaryView';
-import { CheckIsQualified } from './utils';
 import { LoadingComponent } from '../InitialLoading';
-import { Params as FullRemodelSummaryParams, FullRemodelSummaryProps, FullRemodelSummaryState } from '../FullRemodelSummary';
-import ProfitAdjustment from './ProfitAdjustment';
+import ProfitSummaryEditView from './ProfitSummaryEditView';
+import { eraseComma, validateFormat } from '../../components/NumberInput/utils';
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
 
 export type Params = {
-  arv: FullRemodelSummaryParams['arv'];
-  asIs: FullRemodelSummaryParams['asIs'];
-  rehabId: FullRemodelSummaryState['rehabId'];
-  rehabItemPackage: {
-    id: FullRemodelSummaryState['rehabId'];
-    rehabItems: FullRemodelSummaryState['rehabItems'];
-  };
-  remodellingCost: FullRemodelSummaryProps['totalCost'];
-  // TODO enum
   step: string;
-  submitted: FullRemodelSummaryParams['submitted'];
-  totalDebts: FullRemodelSummaryParams['totalDebts'];
-  vacant: FullRemodelSummaryParams['vacant'];
+  submitted?: boolean;
 };
 
 type ScreenProps = {};
-
-export type ProfitSummaryProps = {
-  bannerIcon: {
-    name: string;
-    color: string;
-  };
-  bannerMessages: string;
-  data: {
-    name: string;
-    value?: number;
-    icon?: string;
-    color?: string;
-    lower?: number;
-    upper?: number;
-    unit?: string;
-  }[];
-  handleBannerButtonOnClick: BannerAction['onPress'];
-  handleSaveOnPress: ButtonProps['onPress'];
-  handleSubmitOnPress: ButtonProps['onPress'];
-  handleStepNavigation(nextStep: string, options?: {}): void;
-  hasBanner: ProfitSummaryState['hasBanner'];
-  isQualified: ProfitSummaryState['isQualified'];
-  profit: number;
-  upperProfit: number;
-  lowerProfit: number;
-  profitPercent: number;
-  upperProfitPercent: number;
-  lowerProfitPercent: number;
-  submitted: ProfitSummaryState['submitted'];
-  status: ProfitSummaryState['status'];
-};
-
-export type ProfitSummaryState = {
-  bannerMessages: string;
-  isQualified: boolean;
-  hasBanner: boolean;
-  loading: boolean;
-  submitted: boolean;
-  status: string;
-};
 
 const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   mutation UpdateRehabItemsPackage($input: UpdateRehabItemsPackageInput!) {
@@ -91,69 +43,121 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   }
 `;
 
+export type ProfitSummaryViewProps = {
+  fields: ProfitSummaryViewOnlyFields;
+  handleEditOnPress: ButtonProps['onPress'];
+  handleSaveOnPress: ButtonProps['onPress'];
+  handleSubmitOnPress: ButtonProps['onPress'];
+  roi: number;
+  status: ProfitSummaryState['status'];
+  submitted: ProfitSummaryState['submitted'];
+};
+
+export type ProfitSummaryState = {
+  loading: boolean;
+  profitSummaryFields: ProfitSummaryFields;
+  status: string;
+  submitted: boolean;
+};
+
+export type ProfitSummaryFields = {
+  arv: number;
+  asIs: number;
+  profit: number;
+  roi: number;
+  remodellingCost: number;
+  totalDebts: number;
+  vacant: boolean;
+};
+
+type ProfitSummaryEditOnlyFields = {
+  arv: string;
+  asIs: string;
+  vacant: number;
+};
+type ProfitSummaryViewOnlyFields = {
+  color: string | null;
+  icon: string | null;
+  lowerLimit: number | null;
+  name: string;
+  order: string;
+  upperLimit: number | null;
+  unit: string | null;
+  value: number | boolean | null;
+}[]
+
+export interface ProfitSummaryEditViewProps {
+  buttonsForVacant: ('NO' | 'YES')[];
+  handleBackdropOnPress: ModalProps['onBackdropPress'];
+  handleButtonConfirmOnPress: ButtonProps['onPress'];
+  handleButtonGroupVacantOnPress: ButtonGroupProps['onPress'];
+  handleOnChangeText: (key: 'arv' | 'asIs') => TextInputProps['onChangeText'];
+  modalVisible: ModalProps['isVisible'];
+  profitSummaryEditOnlyFields: ProfitSummaryEditOnlyFields;
+};
 
 const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
-
   const { navigation } = props;
-  const arv = navigation.getParam("arv", 0);
-  const asIs = navigation.getParam("asIs", 0);
-  const rehabId = navigation.getParam("rehabId", null);
-  const rehabItemsPackage = navigation.getParam("rehabItemPackage", null);
-  const remodellingCost = navigation.getParam("remodellingCost", 0);
+  const [state, dispatch] = useCreateRehabState();
+  const { arv, asIs, rehabId, rehabItems, rehabItemsPackageId,remodellingCost, totalDebts, vacant } = state;
+  // console.log("rehabItems",rehabItems)
   const step = navigation.getParam("step", "summary");
-  const totalDebts = navigation.getParam("totalDebts", null);
-  const vacant = navigation.getParam("vacant", null);
 
-  const [bannerMessages, setBannerMessages] = React.useState<ProfitSummaryState['bannerMessages']>(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
-  const [isQualified, setIsQualified] = React.useState<ProfitSummaryState['isQualified']>(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
-  const [hasBanner, setHasBanner] = React.useState<ProfitSummaryState['hasBanner']>(!navigation.getParam("submitted", false));
-  const [loading, setLoading] = React.useState<ProfitSummaryState['loading']>(false);
-  const [submitted, setSubmitted] = React.useState<ProfitSummaryState['submitted']>(navigation.getParam("submitted", false));
-  const [status, setStatus] = React.useState<ProfitSummaryState['status']>("");
-
-  const bannerIcon: ProfitSummaryProps['bannerIcon'] = {
-    name: isQualified ? "check" : "close", color: isQualified ? '#43a048' : '#e53935'
-  };
-  const upperRemodellingCost = remodellingCost * 1.3;
-  const lowerRemdellingCost = remodellingCost * 0.7;
-  const profit = React.useMemo<ProfitSummaryProps['profit']>(() => {
-    return +(arv - asIs - remodellingCost);
+  const profit = React.useMemo(() => {
+    return arv - asIs - remodellingCost;
   }, [arv, asIs, remodellingCost]);
-  const upperProfit = React.useMemo<ProfitSummaryProps['profit']>(() => {
-    return +(arv - asIs - lowerRemdellingCost);
-  }, [arv, asIs, lowerRemdellingCost]);
-  const lowerProfit = React.useMemo<ProfitSummaryProps['profit']>(() => {
-    return +(arv - asIs - upperRemodellingCost);
-  }, [arv, asIs, upperRemodellingCost]);
-  const profitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
+  const roi = React.useMemo(() => {
     return profit / remodellingCost * 100;
   },[profit, remodellingCost]);
-  const upperProfitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
-    return upperProfit / lowerRemdellingCost * 100;
-  },[upperProfit, lowerRemdellingCost]);
-  const lowerProfitPercent = React.useMemo<ProfitSummaryProps['profitPercent']>(() => {
-    return lowerProfit / upperRemodellingCost * 100;
-  },[lowerProfit, upperRemodellingCost]);
+  const profitSummaryFields = React.useMemo(() => {
+    return {
+      arv, 
+      asIs, 
+      profit,
+      remodellingCost,
+      roi,
+      totalDebts,
+      vacant,
+    }
+  },[state]);
 
-  const data: ProfitSummaryProps['data'] = [
-    { name: "Est. ROI", value: profitPercent, lower: lowerProfitPercent, upper: upperProfitPercent, unit: '%' },
-    { name: "Est. Profit", value: profit, lower: lowerProfit, upper: upperProfit },
-    { name: "Remodeling Budget", value: remodellingCost, lower: lowerRemdellingCost, upper: upperRemodellingCost },
-    { name: "Est. After-Repair Value", value: arv },
-    { name: "Est. As-Is Value", value: asIs },
-    { name: "Total Debts", value: totalDebts },
-    { name: "Vacant", icon: vacant ? "check" : "close", color: vacant ? '#43a048' : '#e53935' },
-  ];
+  const [loading, setLoading] = React.useState<ProfitSummaryState['loading']>(false);
+  const [status, setStatus] = React.useState<ProfitSummaryState['status']>("");
+  const [submitted, setSubmitted] = React.useState<ProfitSummaryState['submitted']>(false);
 
-  const handleBannerButtonOnClick = React.useCallback<ProfitSummaryProps['handleBannerButtonOnClick']>(() => setHasBanner(false), [hasBanner]);
+  const profitSummaryEditOnlyFields = React.useMemo<ProfitSummaryEditViewProps['profitSummaryEditOnlyFields']>(() => {
+    const _arv = validateFormat(`${profitSummaryFields.arv}`);
+    const _asIs = validateFormat(`${profitSummaryFields.asIs}`);
+    const _vacant = Number(profitSummaryFields.vacant);
+    return {
+      arv: _arv,
+      asIs: _asIs,
+      vacant: _vacant,
+    }
+  }, [profitSummaryFields]);
 
-  const handleSaveOnPress: ProfitSummaryProps['handleSaveOnPress'] = async () => {
+  const profitSummaryViewOnlyFields = React.useMemo<ProfitSummaryViewProps['fields']>(() => {
+    return getValuesInProfitSummaryViewOnlyFieldsFormat(profitSummaryFields);
+  }, [profitSummaryFields]);
+
+  // For ProfitSummaryView
+  const changeToEditMode = React.useCallback(() => {
+    navigation.setParams({ step: "edit" });
+  }, []);
+  const handleEditOnPress = React.useCallback<ProfitSummaryViewProps['handleEditOnPress']>((nextStep, options = {}) => {
+    changeToEditMode();
+  }, []);
+  const handleSaveOnPress: ProfitSummaryViewProps['handleSaveOnPress'] = async () => {
     const updateRehabItemsPackageInput = {
-      rehabItemsPackage,
+      rehabItemsPackage: {
+        rehabItems,
+        id: rehabItemsPackageId,
+      },
       rehabRequest: {
         arv,
         asIs,
+        vacant,
         id: rehabId,
       }
     };
@@ -170,14 +174,19 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       setLoading(false);
     }
   };
-
-  const handleSubmitOnPress: ProfitSummaryProps['handleSubmitOnPress'] = async () => {
+  const handleSubmitOnPress: ProfitSummaryViewProps['handleSubmitOnPress'] = async () => {
     setLoading(true);
     const updateRehabItemsPackageInput = {
-      rehabItemsPackage: { ...rehabItemsPackage, selected: true, submitted: true },
+      rehabItemsPackage: { 
+        rehabItems, 
+        id: rehabItemsPackageId,
+        selected: true, 
+        submitted: true 
+      },
       rehabRequest: {
         arv,
         asIs,
+        vacant,
         id: rehabId,
       }
     };
@@ -188,7 +197,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
         setSubmitted(true);
         navigation.setParams({ submitted: true });
         setLoading(false);
-        setHasBanner(false);
       }
     } catch (e) {
       console.log("ProfitSummary handleSaveOnPress e", e);
@@ -196,26 +204,28 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     }
   };
 
-  const handleStepNavigation = React.useCallback<ProfitSummaryProps['handleStepNavigation']>((nextStep, options = {}) => {
-    navigation.navigate("ProfitSummaryScreen", { submitted, step: nextStep, ...options });
-    options && navigation.setParams({ submitted, ...options });
-  }, [step, submitted]);
-
-  React.useEffect(() => {
-    // console.log("ProfitSummary Mount");
-    return () => {
-      // console.log("ProfitSummary UnMount");
-    }
+  // For ProfitSummaryEditView
+  const buttonsForVacant = React.useMemo<ProfitSummaryEditViewProps['buttonsForVacant']>(() => {
+    return ['NO', 'YES'];
   }, []);
-
-  React.useEffect(() => {
-    // console.log("ProfitSummary useEffect start update banner");
-    setBannerMessages(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).bannerMessages);
-    setIsQualified(CheckIsQualified({ arv, asIs, remodellingCost, totalDebts, vacant }).isQualified);
-    return () => {
-      // console.log("ProfitSummary useEffect delete update banner");
-    }
-  }, [arv, asIs, remodellingCost, totalDebts, vacant]);
+  const changeToViewMode = React.useCallback(() => {
+    navigation.setParams({ step: "summary" });
+  }, []);
+  const handleBackdropOnPress: ProfitSummaryEditViewProps['handleBackdropOnPress'] = React.useCallback(() => {
+    changeToViewMode();
+  }, [changeToViewMode]);
+  const handleButtonConfirmOnPress: ProfitSummaryEditViewProps['handleButtonConfirmOnPress'] = () => {
+    changeToViewMode();
+  };
+  const handleButtonGroupVacantOnPress: ProfitSummaryEditViewProps['handleButtonGroupVacantOnPress'] = value => {
+    dispatch({ key: 'vacant', type: 'UPDATE_PROFIT_SUMMARY_FIELDS', value: !!value });
+  };
+  const handleOnChangeText: ProfitSummaryEditViewProps['handleOnChangeText'] = (key) => (value) => {
+    dispatch({ key, type: 'UPDATE_PROFIT_SUMMARY_FIELDS', value: +eraseComma(value) })
+  };
+  const modalVisible = React.useMemo<ProfitSummaryEditViewProps['modalVisible']>(() => {
+    return step == 'edit';
+  }, [step]);
 
   if (loading) {
     return (
@@ -225,35 +235,24 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
 
   return (
     <>
-      {step === "edit" ?
-        <ProfitAdjustment 
-          arv={arv}
-          asIs={asIs}
-          handleStepNavigation={handleStepNavigation}
-          vacant={vacant}
-        />
-        :
-        <ProfitSummaryView
-          bannerIcon={bannerIcon}
-          bannerMessages={bannerMessages}
-          data={data}
-          handleBannerButtonOnClick={handleBannerButtonOnClick}
-          handleSaveOnPress={handleSaveOnPress}
-          handleSubmitOnPress={handleSubmitOnPress}
-          handleStepNavigation={handleStepNavigation}
-          hasBanner={hasBanner}
-          isQualified={isQualified}
-          profit={profit}
-          upperProfit={upperProfit}
-          lowerProfit={lowerProfit}
-          profitPercent={profitPercent}
-          upperProfitPercent={upperProfitPercent}
-          lowerProfitPercent={lowerProfitPercent}
-          status={status}
-          submitted={submitted}
-        />
-      }
-      
+      <ProfitSummaryEditView 
+        buttonsForVacant={buttonsForVacant}
+        handleBackdropOnPress={handleBackdropOnPress}
+        handleButtonConfirmOnPress={handleButtonConfirmOnPress}
+        handleButtonGroupVacantOnPress={handleButtonGroupVacantOnPress}
+        handleOnChangeText={handleOnChangeText}
+        modalVisible={modalVisible}
+        profitSummaryEditOnlyFields={profitSummaryEditOnlyFields}
+      />
+      <ProfitSummaryView
+        fields={profitSummaryViewOnlyFields}
+        handleSaveOnPress={handleSaveOnPress}
+        handleSubmitOnPress={handleSubmitOnPress}
+        handleEditOnPress={handleEditOnPress}
+        roi={roi}
+        status={status}
+        submitted={submitted}
+      />
     </>
   )
 };

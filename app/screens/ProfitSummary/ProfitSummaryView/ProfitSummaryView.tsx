@@ -1,85 +1,37 @@
-import { isNil } from 'lodash';
+import { isNil, isNumber } from 'lodash';
 import React from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { Card, Icon, ListItem, Text } from 'react-native-elements'
-import { Banner, Button, ButtonProps } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import NumberFormat from 'react-number-format';
 
 import styles from './styles';
-import { ProfitSummaryProps } from '../ProfitSummary';
+import { ProfitSummaryViewProps } from '../ProfitSummary';
 import Speedometer from '../ProfitSummarySpeedometerChart';
 
-interface ProfitSummaryViewProps extends ProfitSummaryProps {};
-
 const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) => {
-  const { bannerIcon, bannerMessages, data, handleBannerButtonOnClick, handleSaveOnPress, 
-    handleSubmitOnPress, handleStepNavigation, hasBanner, isQualified, profit, lowerProfit, upperProfit, 
-    profitPercent, lowerProfitPercent, upperProfitPercent,
-    status, submitted } = props; 
-
-  const handleEditOnPress: ButtonProps['onPress'] = () => {
-    handleStepNavigation("edit");
-  };
-
-  React.useEffect(() => {
-    // console.log("ProfitSummaryView Mount");
-    return () => {
-      // console.log("ProfitSummaryView UnMount")
-    }
-  }, []);
+  const { 
+    fields,
+    handleEditOnPress,
+    handleSaveOnPress, 
+    handleSubmitOnPress, 
+    roi,
+    status, 
+    submitted,
+  } = props; 
 
   return (
     <SafeAreaView>
       <ScrollView>
-        {/* <Banner 
-          actions={[
-            {
-              label: 'Close',
-              onPress: handleBannerButtonOnClick,
-            },
-          ]}
-          //TODO change the data [4] access
-          image={({size}) => <Icon
-            color={bannerIcon.color}
-            name={bannerIcon.name}
-            size={size}
-            type='font-awesome'
-          />}
-          style={{ backgroundColor: '#e9d8f2'}}
-          visible={hasBanner}
-        >
-          <Text>{bannerMessages}</Text>
-        </Banner>   */}
         <Card title="Profit Summary">
         <>
-          <Speedometer value={profitPercent} />
-          
-          {/* <Text h3 style={{ marginBottom: 8, marginTop: 8, textAlign: 'center' }}>
-            <Text >Est. Profit:{'\n'}</Text>
-            <NumberFormat 
-              decimalScale={0}
-              displayType={'text'} 
-              prefix={'$'}
-              renderText={value => <Text>{value}</Text>}
-              thousandSeparator={true} 
-              value={lowerProfit}
-            />
-            <Text> to </Text>
-            <NumberFormat 
-              decimalScale={0}
-              displayType={'text'} 
-              prefix={'$'}
-              renderText={value => <Text>{value}</Text>}
-              thousandSeparator={true} 
-              value={upperProfit}
-            />
-          </Text> */}
-          {data.map((item, i) => (
+          <Speedometer value={roi} />
+          {fields.map((item, i) => (
             <ListItem
               bottomDivider
               key={i}
               title={item.name}
-              rightTitle={isNil(item.value) ? null : !item.lower ? 
+              rightTitle={(!isNil(item.value) && isNumber(item.value)) ? 
                 <NumberFormat 
                   decimalScale={0}
                   displayType={'text'} 
@@ -89,7 +41,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                   thousandSeparator={true} 
                   value={item.value}
                 />
-                :
+                : (!item.lowerLimit || !item.upperLimit) ? null :
                 <Text>
                   <NumberFormat 
                     decimalScale={0}
@@ -98,7 +50,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                     suffix={item.unit == '%' ? '%' : null}
                     renderText={value => <Text>{`${value}`}</Text>}
                     thousandSeparator={true} 
-                    value={item.lower}
+                    value={item.lowerLimit}
                   />
                   <Text> to </Text>
                   <NumberFormat 
@@ -108,7 +60,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                     suffix={item.unit == '%' ? '%' : null}
                     renderText={value => <Text>{`${value}`}</Text>}
                     thousandSeparator={true} 
-                    value={item.upper}
+                    value={item.upperLimit}
                   />
                 </Text>
               }
@@ -140,7 +92,7 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
               {"Save"}
             </Button>
             <Button
-              disabled={submitted || !isQualified}
+              disabled={submitted}
               mode="contained" 
               onPress={handleSubmitOnPress}
               style={styles.buttonContainer}

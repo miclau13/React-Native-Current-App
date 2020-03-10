@@ -1,10 +1,10 @@
 import React from 'react';
-import { NavigationState, NavigationContainerProps } from "react-navigation"; 
-import { HeaderBackButton } from "react-navigation-stack";
+import { NavigationRoute, NavigationScreenConfig, } from "react-navigation"; 
+import { HeaderBackButton, NavigationStackProp, NavigationStackOptions } from "react-navigation-stack";
 
 import { primaryButtonColor } from "../../styles/constants";
 
-const navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
+const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   return { 
     headerLeft: (props) => {
       return (

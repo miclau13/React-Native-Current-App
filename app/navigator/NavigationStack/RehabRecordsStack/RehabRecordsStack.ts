@@ -10,10 +10,10 @@ const RehabRecordsStack = createStackNavigator({
     screen: RehabRecordsScreen,
     navigationOptions: RehabRecordsScreenNavigationOptions,
   },
-  RehabRecordsDetailScreen: {
-    screen: RehabRecordsDetailScreen,
-    navigationOptions: RehabRecordsDetailScreenNavigationOptions,
-  },
+  // RehabRecordsDetailScreen: {
+  //   screen: RehabRecordsDetailScreen,
+  //   navigationOptions: RehabRecordsDetailScreenNavigationOptions,
+  // },
   RehabQuotationScreen: {
     screen: RehabQuotationScreen,
     navigationOptions: RehabQuotationScreenNavigationOptions,

@@ -1,20 +1,16 @@
 import React from 'react';
 import { NavigationRoute, NavigationScreenConfig, } from "react-navigation"; 
-import { HeaderBackButton, NavigationStackProp, NavigationStackOptions } from "react-navigation-stack";
-
-import { primaryButtonColor } from "../../styles/constants";
+import { NavigationStackProp, NavigationStackOptions } from "react-navigation-stack";
 
 const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
-  return {
+  const { navigation } = props;
+  return { 
     headerLeft: (props) => {
       return (
-        <HeaderBackButton 
-          {...props}
-          tintColor={primaryButtonColor}
-        />
+        null
       );
-    },
-  };
+    }
+  }
 };
 
 export default navigationOptions;
