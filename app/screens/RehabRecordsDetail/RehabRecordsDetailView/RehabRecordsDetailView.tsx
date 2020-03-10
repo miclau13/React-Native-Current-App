@@ -10,24 +10,24 @@ interface RehabRecordsViewProps extends RehabRecordsDetailProps {
 };
 
 const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => {
-  const { expandPropertyDetails, handlePropertyDetailsOnPress, items } = props;  
+  const { expandPropertyInfo, handlePropertyInfoOnPress, items } = props;  
 
   return (
     <SafeAreaView>
       <ScrollView>
         {items.map((item, i) => {
-          if (item.category && !expandPropertyDetails) {
+          if (item.category && !expandPropertyInfo) {
             return null;
           };
-          const isPropertyDetails = item.name === "Property Details: ";
+          const isPropertyInfo = item.name === "Property Info: ";
           // const isRange = item.name === "Profit: " || item.name === "Remodeling Budget: ";
           const isRange = item.isRange;
           return (
             <ListItem
-              chevron={isPropertyDetails ? expandPropertyDetails ? <Icon name="keyboard-arrow-up" /> : <Icon name="keyboard-arrow-down" /> : null}
+              chevron={isPropertyInfo ? expandPropertyInfo ? <Icon name="keyboard-arrow-up" /> : <Icon name="keyboard-arrow-down" /> : null}
               key={i}
-              onPress={isPropertyDetails ? handlePropertyDetailsOnPress : null}
-              rightTitle={ isRange ?
+              onPress={isPropertyInfo ? handlePropertyInfoOnPress : null}
+              rightTitle={isRange ?
                   <View style={styles.totalCostText}>
                   <NumberFormat 
                     decimalScale={0}
@@ -50,9 +50,9 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                   <NumberFormat 
                     decimalScale={0}
                     displayType={'text'} 
-                    prefix={item.unit ? null : '$'}
+                    prefix={item.prefix}
                     renderText={value => <Text style={styles.subtitleStyle} >{value}</Text>}
-                    suffix={item.unit}
+                    suffix={item.suffix}
                     thousandSeparator={true}
                     value={item.value}
                   /> : item.value
