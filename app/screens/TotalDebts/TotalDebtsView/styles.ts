@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { screenWidth } from '../../../styles';
+import { buttonWidth } from '../../../styles';
 
 const styles = StyleSheet.create({
   container: {
@@ -7,15 +7,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
   },
-  keyBoardContainer: {
+  flex1: {
     flex: 1,
-    justifyContent: "flex-start",
-    width: screenWidth,
   },
   nextButton: {
     alignSelf: "center",
     borderRadius: 20,
-    width: "75%",
+    width: buttonWidth,
   },
   viewBox1: {
     flex: 1,

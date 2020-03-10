@@ -1,5 +1,5 @@
 const strings = {
-  title: "Profit Adjustment View"
+  title: "Check Email Verified"
 }
 
 export default strings;

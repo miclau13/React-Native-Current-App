@@ -1,5 +1,5 @@
 
-import { isNil, isNumber, omit, reduce, sortBy } from 'lodash';
+import { isNil, isNumber, reduce, sortBy } from 'lodash';
 import React from 'react';
 import { TextStyle } from 'react-native';
 import { ListItemProps } from 'react-native-elements'
@@ -7,7 +7,7 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import RehabRecordsDetailView from './RehabRecordsDetailView';
 import { LoadingComponent } from '../InitialLoading';
-import { getItemAttributes } from './utils';
+import { getItemAttributes, getPropertInfoNameList } from './utils';
 import { calculateRemodelingCost } from '../../common/utils/Calculator';
 import { MyRehabRequests_myRehabRequests } from '../../generated/MyRehabRequests';
 import { RevisedRehabInfo } from '../PropertyInfo';
@@ -28,21 +28,24 @@ interface RehabRecordsDetail extends MyRehabRequests_myRehabRequests{
 };
 
 export type RehabRecordsDetailProps = {
-  expandPropertyDetails: RehabRecordsDetailState['expandPropertyDetails'];
-  handlePropertyDetailsOnPress: ListItemProps['onPress'];
+  expandPropertyInfo: RehabRecordsDetailState['expandPropertyInfo'];
+  handlePropertyInfoOnPress: ListItemProps['onPress'];
   items: {
     name: string;
     order: number;
     value: string | number;
-    // TODO enum for below
-    category?: string;
+    category?: "propertyInfo";
+    isRange?: boolean;
+    lowerLimit?: number;
+    prefix?: string;
+    suffix?: string;
     style?: TextStyle;
-    unit?: string;
+    upperLimit?: number;
   }[];
 };
 
 export type RehabRecordsDetailState = {
-  expandPropertyDetails: boolean;
+  expandPropertyInfo: boolean;
   loading: boolean;
 };
 
@@ -51,46 +54,45 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
   const detail = navigation.getParam("detail", null);
 
   const loading = navigation.getParam("loading", true);
-  const [expandPropertyDetails, setExpandPropertyDetails] = React.useState<RehabRecordsDetailState['expandPropertyDetails']>(true);
+  const [expandPropertyInfo, setExpandPropertyInfo] = React.useState<RehabRecordsDetailState['expandPropertyInfo']>(true);
 
   const items = React.useMemo(() => sortBy(reduce(detail, (result, value, key) => {
     const { name, order } = getItemAttributes(key);
     if (name) {
       if (key === "propertyDetails") {
         result.push({ name, order, value: "" });
-        for (const property in value) {
-          if (value[property].length > 0) {
-            for (let i = 0 ; i < value[property].length; i++) {
-              const { name, order } = getItemAttributes(property, value[property][i].order);
-              result.push({ name, order, category: "propertyDetails", value: value[property][i].size, style: { paddingLeft: 16 }, unit: " sq. ft." });
-            }
-          } else if (isNumber(value[property])) {
-            const { name, order } = getItemAttributes(property, value[property]);
-            result.push({ name, order, category: "propertyDetails", value: value[property], style: { paddingLeft: 16 }, unit: " linear ft." });
-          };
+        for (const element of getPropertInfoNameList()) {
+          const { name, order } = getItemAttributes(element);
+          result.push({ name, order, category: "propertyInfo", value: !value[element] ? 0 : value[element].length, style: { paddingLeft: 16 } });
         };
       } else if (key === "vacant") {
         result.push({ name, order, value: isNil(value) ? "NA" : value ? "Yes" : "No" });
       } else {
-        result.push({ name, order, value: isNil(value) ? "NA" : value });
+        result.push({ name, order, prefix: "$", value: isNil(value) ? "NA" : value });
       }
     };
     if (key === "rehabItemsPackage") {
       const { arv, asIs } = detail;
-      const remodellingCost = calculateRemodelingCost(value?.rehabItems);
+      const isRevised = !!value?.revisedRehabItems;
+      const remodelingCost = isRevised ? calculateRemodelingCost(value?.revisedRehabItems) : calculateRemodelingCost(value?.rehabItems);
+      // const remodelingCost = calculateRemodelingCost(value?.rehabItems);
+      let lowerLimitOfRemodelingCost = Math.ceil(remodelingCost * 0.7);
+      let upperLimitOfRemodelingCost = Math.ceil(remodelingCost * 1.3);
       const { name: nameForRemodelingCost, order: orderForRemodelingCost } = getItemAttributes("remodelingCost");
-      result.push({ name: nameForRemodelingCost, order: orderForRemodelingCost, value: remodellingCost });
-      const profit = arv - asIs - remodellingCost;
+      result.push({ isRange: !isRevised, name: isRevised ? "Fiximize Quotation" : nameForRemodelingCost, order: orderForRemodelingCost, prefix: "$", value: isNil(remodelingCost) ? "NA" : remodelingCost, upperLimit: isNil(upperLimitOfRemodelingCost) ? "NA" : upperLimitOfRemodelingCost, lowerLimit: isNil(lowerLimitOfRemodelingCost) ? "NA" : lowerLimitOfRemodelingCost });
+      const profit = arv - asIs - remodelingCost;
+      let lowerLimitOfProfit = arv - asIs - upperLimitOfRemodelingCost;
+      let upperLimitOfProfit = arv - asIs - lowerLimitOfRemodelingCost;
       let { name: nameForProfit, order: orderForProfit } = getItemAttributes("profit");
-      result.push({ name: nameForProfit, order: orderForProfit, value: profit });
+      result.push({ isRange: !isRevised, name: nameForProfit, order: orderForProfit, prefix: "$", value: isNil(profit) ? "NA" : profit, upperLimit: isNil(upperLimitOfProfit) ? "NA" : upperLimitOfProfit, lowerLimit: isNil(lowerLimitOfProfit) ? "NA" : lowerLimitOfProfit });
     };
 
     return result;
   }, []), ['order']), [detail]);
 
-  const handlePropertyDetailsOnPress = React.useCallback<RehabRecordsDetailProps['handlePropertyDetailsOnPress']>(() => {
-    setExpandPropertyDetails(!expandPropertyDetails);
-  }, [expandPropertyDetails]);
+  const handlePropertyInfoOnPress = React.useCallback<RehabRecordsDetailProps['handlePropertyInfoOnPress']>(() => {
+    setExpandPropertyInfo(!expandPropertyInfo);
+  }, [expandPropertyInfo]);
 
   const bootstrapAsync = async () => {
     // For revise flow
@@ -135,8 +137,8 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   return (
     <RehabRecordsDetailView 
-      expandPropertyDetails={expandPropertyDetails}
-      handlePropertyDetailsOnPress={handlePropertyDetailsOnPress}
+      expandPropertyInfo={expandPropertyInfo}
+      handlePropertyInfoOnPress={handlePropertyInfoOnPress}
       items={items}
     />
   )

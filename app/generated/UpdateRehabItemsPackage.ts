@@ -10,7 +10,7 @@ import { UpdateRehabItemsPackageInput } from "./globalTypes";
 
 export interface UpdateRehabItemsPackage_updateRehabItemsPackage_rehabItemsPackage_rehabItems {
   __typename: "RehabItems";
-  category: string;
+  category: string | null;
   cost: number | null;
   name: string;
 }

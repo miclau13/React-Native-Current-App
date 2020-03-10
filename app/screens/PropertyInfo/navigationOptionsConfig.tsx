@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button } from 'react-native';
-import { NavigationState, NavigationContainerProps } from "react-navigation"; 
-import { HeaderBackButton } from "react-navigation-stack";
+import { NavigationRoute, NavigationScreenConfig, } from "react-navigation"; 
+import { HeaderBackButton, NavigationStackProp, NavigationStackOptions } from "react-navigation-stack";
 
 import { primaryButtonColor } from "../../styles/constants";
 
-const navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
+const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   const { navigation } = props;
   const loading = navigation.getParam("loading", true);
   const rehabId = navigation.getParam("rehabId");
@@ -44,7 +44,7 @@ const navigationOptions = (props: NavigationContainerProps<NavigationState>) => 
           {...props}
           color={primaryButtonColor}
           onPress={handleHeaderRightOnPress}
-          title="Edit"
+          title="Edit Property Info"
         />
       );
     } 

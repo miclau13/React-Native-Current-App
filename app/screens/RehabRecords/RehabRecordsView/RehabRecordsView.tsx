@@ -18,10 +18,13 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
         {rehabRecords.map((rehabRecord, i) => {
           const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
           const isRevised = !!rehabItemsPackage.revisedRehabItems;
-          const remodellingCost = isRevised ? calculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : calculateRemodelingCost(rehabItemsPackage?.rehabItems);
-          const profit = arv - asIs - remodellingCost;
-          const profitPercent = profit / remodellingCost * 100;
+          const remodelingCost = isRevised ? calculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : calculateRemodelingCost(rehabItemsPackage?.rehabItems);
+          const profit = arv - asIs - remodelingCost;
+          const profitPercent = profit / remodelingCost * 100;
           const labelColor = findLabelAttributes(profitPercent).labelColor;
+
+          let lowerLimit = Math.ceil(remodelingCost * 0.7);
+          let upperLimit = Math.ceil(remodelingCost * 1.3);
           return (
             <ListItem
               bottomDivider
@@ -40,7 +43,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
               onPress={deleteMode ? null : handleItemOnPress(i)}
               rightIcon={rehabItemsPackage?.submitted ? 
                 <Chip>
-                  Submitted
+                  {isRevised ? "Quoted" : "Submitted"}
                 </Chip>
                 : null
               }
@@ -65,14 +68,46 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                     value={rehabRecord.asIs}
                   />
                   <View style={styles.viewBox1} />
-                  <NumberFormat 
+                  <View style={styles.totalCostText}>
+                    {isRevised ? 
+                      <NumberFormat 
+                        decimalScale={0}
+                        displayType={'text'} 
+                        prefix={'$'}
+                        renderText={value => <Text style={styles.greyColor}>{`Fiximize Quotation: ${value}`}</Text>}
+                        thousandSeparator={true} 
+                        value={remodelingCost}
+                      /> :
+                      <>
+                        <Text style={styles.greyColor}>{`Remodeling Budget: `}</Text> 
+                        <NumberFormat 
+                          decimalScale={0}
+                          displayType={'text'} 
+                          prefix={'$'}
+                          renderText={value => <Text style={styles.greyColor}>{value}</Text>}
+                          thousandSeparator={true} 
+                          value={lowerLimit}
+                        />
+                        <Text style={styles.greyColor}> to </Text> 
+                        <NumberFormat 
+                          decimalScale={0}
+                          displayType={'text'} 
+                          prefix={'$'}
+                          renderText={value => <Text style={styles.greyColor}>{value}</Text>}
+                          thousandSeparator={true} 
+                          value={upperLimit}
+                        />
+                      </>
+                    }
+                  </View>
+                  {/* <NumberFormat 
                     decimalScale={0}
                     displayType={'text'} 
                     prefix={'$'}
-                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Cost${isRevised ? '(Revised)' : ''}: ${value}`}</Text>}
+                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Budget${isRevised ? '(Revised)' : ''}: ${value}`}</Text>}
                     thousandSeparator={true} 
-                    value={remodellingCost}
-                  />
+                    value={remodelingCost}
+                  /> */}
                 </>
               }
               title={rehabRecord.address}

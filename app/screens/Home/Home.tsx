@@ -22,12 +22,12 @@ export const VIEWER_QUERY = gql`
   query Viewer {
     viewer {
       id
+      address
       givenName
+      email
       familyName
       picture
-      email
       phoneNumber
-      address
     }
   }
 `;

@@ -43,6 +43,7 @@ const ProfitSummarySpeedmeterChart: React.ComponentType<ProfitSummarySpeedmeterC
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: 175
   },
 });
 

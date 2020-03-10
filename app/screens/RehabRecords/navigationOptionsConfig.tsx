@@ -1,10 +1,11 @@
 import React from 'react';
 import { Button } from 'react-native';
-import { NavigationState, NavigationContainerProps } from "react-navigation"; 
+import { NavigationRoute, NavigationScreenConfig, } from "react-navigation"; 
+import { NavigationStackProp, NavigationStackOptions } from "react-navigation-stack";
 
 import { primaryButtonColor } from "../../styles/constants";
 
-const navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
+const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   const { navigation } = props;
   const deleteMode = navigation.getParam("deleteMode", false);
   const lengthOfSelectedRehabRecords = navigation.getParam("lengthOfSelectedRehabRecords", 0);

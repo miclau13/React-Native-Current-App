@@ -7,17 +7,17 @@ export const getItemAttributes = (key, index = -1) => {
       };
     case "arv": 
       return {
-        name: "Est. ARV: ",
+        name: "Estimated After-Repair Value: ",
         order: 1,
       };
     case "asIs":
       return {
-        name: "AS-IS: ",
+        name: "Estimated As-Is Value: ",
         order: 2,
       };
     case "remodelingCost":
       return {
-        name: "Remodeling Cost: ",
+        name: "Remodeling Budget: ",
         order: 3,
       };
     case "profit":
@@ -37,27 +37,27 @@ export const getItemAttributes = (key, index = -1) => {
       };
     case "propertyDetails":
       return {
-        name: "Property Details: ",
+        name: "Property Info: ",
         order: 7,
       };
     case "bedsInfo":
       return {
-        name: `Bed #${index} Size: `,
+        name: `Beds: `,
         order: 10,
       };
     case "fullBathsInfo":
       return {
-        name: `Full Bath #${index} Size: `,
+        name: `Full Baths: `,
         order: 11,
       };
     case "halfBathsInfo":      
       return {
-        name: `Half Bath #${index} Size: `,
+        name: `Half Baths: `,
         order: 13,
       };
     case "threeQuarterBathsInfo":
       return {
-        name: `3/4 Bath #${index} Size: `,
+        name: `3/4 Baths: `,
         order: 12,
       };
     case "kitchenCabinetBaseLength":
@@ -79,3 +79,7 @@ export const getItemAttributes = (key, index = -1) => {
       return {};
   };
 };
+
+export const getPropertInfoNameList = () => [
+  "bedsInfo", "fullBathsInfo", "halfBathsInfo", "threeQuarterBathsInfo"
+]

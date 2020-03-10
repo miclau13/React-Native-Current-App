@@ -46,6 +46,10 @@ const MY_REHAB_REQUESTS = gql`
           cost
           name
           selected
+          roomName
+          notes
+          measurement
+          measurementUnit
         }
         submitted
       }
@@ -124,7 +128,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   // For RehabRecordsView
   const handleItemOnPress: RehabRecordsViewProps['handleItemOnPress'] = index => (event) => {
-    navigation.push("RehabRecordsDetailScreen", { detail: rehabRecords[index], submitted: rehabRecords[index].rehabItemsPackage.submitted });
+    navigation.navigate({ routeName: "RehabRecordsDetailScreen", params: { detail: rehabRecords[index], submitted: rehabRecords[index].rehabItemsPackage.submitted } });
   };
   const handleItemDeleteOnPress: RehabRecordsViewProps['handleItemDeleteOnPress'] = index => (event) => {
     const updatedRehabRecords = rehabRecords.map((record, _index) => {
