@@ -12,13 +12,13 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
   const rehabId = navigation.getParam("rehabId");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId");
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
-  const submitted = navigation.getParam("submitted", false);
+  // const submitted = navigation.getParam("submitted", false);
   const flow = 2;
   const step = "summary";
   const hasRevisedRehabItems = !!detail.rehabItemsPackage.revisedRehabItems;
 
   const handleHeaderRightReviseOnPress = () => {
-    navigation.navigate("PropertyInfoScreen", { 
+    navigation.push("PropertyInfoScreen", { 
       flow,
       rehabId,
       rehabItemPackageId,
@@ -41,15 +41,25 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       );
     },
     headerRight: (props) => {
-      if (loading || !hasRevisedRehabItems) {
+      if (loading) {
         return null;
+      };
+      if (!hasRevisedRehabItems) {
+        return (
+          <Button
+            {...props}
+            color={primaryButtonColor}
+            onPress={handleHeaderRightReviseOnPress}
+            title={"Revise"}
+          />
+        )
       };
       return (
         <Button
           {...props}
           color={primaryButtonColor}
-          onPress={!submitted ? handleHeaderRightReviseOnPress : handleHeaderRightCheckOnPress}
-          title={!submitted ? "Revise" : "Check Quotation"}
+          onPress={handleHeaderRightCheckOnPress}
+          title={"Quotation"}
         />
       );
     }
