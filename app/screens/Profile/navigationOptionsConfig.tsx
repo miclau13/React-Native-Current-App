@@ -1,7 +1,8 @@
 import React from 'react';
-import { NavigationState, NavigationContainerProps } from "react-navigation"; 
+import { NavigationRoute, NavigationScreenConfig, } from "react-navigation"; 
+import { NavigationStackProp, NavigationStackOptions } from "react-navigation-stack";
 
-const navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
+const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   return null;
 };
 
