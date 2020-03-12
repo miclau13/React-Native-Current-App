@@ -84,7 +84,7 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
       setContactPhoneNumberIsValid(true);
       set_emailIsValid(true);
       if (viewerQueryData?.viewer?.emailVerified) {
-        // moveToNextScreen();
+        moveToNextScreen();
       } else {
         setModalVisible(true);
       };
