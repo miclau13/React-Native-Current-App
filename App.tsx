@@ -6,7 +6,6 @@ import React from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
 
 import AppComponent from './app/App';
-import { LoggedInProvider } from './app/common/LoggedInContext';
 
   const client = new ApolloClient({
     request: async (operation) => {
@@ -25,11 +24,9 @@ import { LoggedInProvider } from './app/common/LoggedInContext';
 
 const App = () => {
   return (
-    <LoggedInProvider>
-      <ApolloProvider client={client}>
-        <AppComponent />
-      </ApolloProvider> 
-    </LoggedInProvider>
+    <ApolloProvider client={client}>
+      <AppComponent />
+    </ApolloProvider> 
   );
 };
 

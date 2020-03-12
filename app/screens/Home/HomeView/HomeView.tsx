@@ -1,29 +1,41 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Headline, TextInput } from 'react-native-paper';
+import { SafeAreaView, ScrollView } from 'react-native';
+import { Button, Card, Text } from 'react-native-elements';
 
-import { HomeViewProps } from '../Home';
+// import MaskCoverImage from '../assets/mask_cover.png';
 import styles from './styles';
+import { HomeViewProps } from '../Home';
 
 const HomeView: React.ComponentType<HomeViewProps> = (props) => {
-  const { handleOnFocus } = props;
+  const { categoryList } = props;
   
   return (
-    <View style={styles.container}>
-      <View style={styles.keyBoardContainer}>
-        <View style={styles.viewBox1}/>
-        <Headline>What's the address of your property?</Headline>
-        <View style={styles.viewBox1}/>
-        <TextInput
-          keyboardType="default"
-          label="Address"
-          mode="outlined"
-          onFocus={handleOnFocus}
-          textContentType="fullStreetAddress"
-        />
-        <View style={styles.viewBox3}/>
-      </View>
-    </View>
+    <SafeAreaView>
+      <ScrollView>
+        {categoryList.map((category, index) => {
+          const { buttonProps, description, image, imageProps, title } = category;
+          return (
+            <Card
+              key={index}
+              image={image}
+              // image={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+              imageProps={imageProps}
+              title={title}
+            >
+              <Text style={styles.title}>
+                {description}
+              </Text>
+              <Button
+                { ...buttonProps }
+              />
+            </Card>
+          )
+        })
+
+        }
+        
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 export default React.memo(HomeView);

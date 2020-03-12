@@ -1,66 +1,36 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
-import { CardProps } from 'react-native-paper';
+import { ActivityIndicator } from 'react-native';
+import { ButtonProps, CardProps, Icon, Image } from 'react-native-elements';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useQuery } from '@apollo/react-hooks';
 
+import { getDefaultCategoryList } from './utils';
 import HomeView from './HomeView';
 import { LoadingComponent } from '../InitialLoading';
 
-type Params = {
-  name?: string;
-  profilePictureUri?: string;
-};
-
+type Params = {};
 type ScreenProps = {};
 
+export type CategoryList = {
+  buttonProps: ButtonProps;
+  description: string;
+  image: CardProps['image'];
+  imageProps: CardProps['imageProps'];
+  imageStyle: CardProps['imageStyle'];
+  title: CardProps['title'];
+}[];
+
 export interface HomeViewProps {
-  handleOnFocus: CardProps['onPress'];
+  categoryList: CategoryList;
 };
 
-export const VIEWER_QUERY = gql`
-  query Viewer {
-    viewer {
-      id
-      address
-      givenName
-      email
-      familyName
-      picture
-      phoneNumber
-    }
-  }
-`;
 
 const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const { data, error, loading } = useQuery(VIEWER_QUERY);
-  const handleOnFocus = React.useCallback<CardProps['onPress']>(
-    () => navigation.push("AutocompleteScreen")
-    // () => navigation.push("ContactPhoneNumberScreen")
-    // () => navigation.push("ArvEstimateScreen", { 
-    //   address: "13807 SE Allen Rd, Bellevue, WA, 98006", 
-    //   flow: 0, 
-    // })
-    // () => navigation.push("AsIsEstimateScreen")
-    // () => navigation.push("PropertyInfoScreen", { 
-    //   address: "13807 SE Allen Rd, Bellevue, WA, 98006", 
-    //   flow: 0, 
-    //   arvEstimate: 1,
-    //   asIsEstimate: 1,
-    //   totalDebts: 0,
-    //   step: 'summary',
-    //   postalCode: '13807'
-    // })
-    , [navigation.push]
-  );
 
-  React.useEffect(() => {
-    if (!loading && error) {
-      navigation.navigate("AuthNavigator");
-    }
-  }, [error, data, loading]);
-
+  const [loading] = React.useState(false);
+  const categoryList = getDefaultCategoryList();
   if (loading) {
     return (
       <LoadingComponent />
@@ -68,7 +38,7 @@ const Home: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   };
 
   return (
-    <HomeView handleOnFocus={handleOnFocus} />
+    <HomeView categoryList={categoryList} />
   )
 };
 
