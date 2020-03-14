@@ -37,8 +37,8 @@ const VacantProperty: NavigationStackScreenComponent<Params, ScreenProps> = (pro
 
   const moveToNextScreen = () => {
     const _createRehabNoArvInput = { ...createRehabNoArvInput, vacant: !!vacantPropertyIndex };
-    // navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
-    navigation.navigate("ContactPhoneNumberScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
+    navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
+    // navigation.navigate("ContactPhoneNumberScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
   };
 
   const handleButtonOnPress: VacantPropertyViewProps['handleButtonOnPress'] = () => { 

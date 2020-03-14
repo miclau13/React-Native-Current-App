@@ -7,6 +7,7 @@ import { primaryButtonColor } from "../../styles/constants";
 
 const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   const { navigation } = props;
+  const loading = navigation.getParam("loading", false);
   const submitted = navigation.getParam("submitted");
   const handleHeaderLeftOnPress = () => {
       navigation.navigate("FullRemodelSummaryScreen") 
@@ -16,7 +17,7 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
   };
   return { 
     headerLeft: (props) => {
-      if (submitted) {
+      if (submitted || loading) {
         return null
       }
       return (
@@ -28,6 +29,9 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       )
     },
     headerRight: (props) => {
+      if (loading) {
+        return null;
+      };
       return (
         <Button 
           {...props}

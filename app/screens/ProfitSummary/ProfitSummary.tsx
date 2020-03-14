@@ -17,6 +17,11 @@ import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../..
 
 export type Params = {
   step: string;
+  contactInfo?: {
+    contactPhoneNumber: string;
+    email: string;
+  };
+  loading?: boolean;
   submitted?: boolean;
 };
 
@@ -103,6 +108,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const { arv, asIs, rehabId, rehabItems, rehabItemsPackageId,remodellingCost, totalDebts, vacant } = state;
   // console.log("rehabItems",rehabItems)
   const step = navigation.getParam("step", "summary");
+  const contactInfo = navigation.getParam("contactInfo", null);
 
   const profit = React.useMemo(() => {
     return arv - asIs - remodellingCost;
@@ -175,6 +181,61 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     }
   };
   const handleSubmitOnPress: ProfitSummaryViewProps['handleSubmitOnPress'] = async () => {
+    navigation.push("ContactPhoneNumberScreen");
+    // setLoading(true);
+    // const updateRehabItemsPackageInput = {
+    //   rehabItemsPackage: { 
+    //     rehabItems, 
+    //     id: rehabItemsPackageId,
+    //     selected: true, 
+    //     submitted: true 
+    //   },
+    //   rehabRequest: {
+    //     arv,
+    //     asIs,
+    //     vacant,
+    //     id: rehabId,
+    //   }
+    // };
+    // try {
+    //   const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
+    //   if (result) {
+    //     setStatus("Submitted Successfully!");
+    //     setSubmitted(true);
+    //     navigation.setParams({ submitted: true });
+    //     setLoading(false);
+    //   }
+    // } catch (e) {
+    //   console.log("ProfitSummary handleSaveOnPress e", e);
+    //   setLoading(false);
+    // }
+  };
+
+  // For ProfitSummaryEditView
+  const buttonsForVacant = React.useMemo<ProfitSummaryEditViewProps['buttonsForVacant']>(() => {
+    return ['NO', 'YES'];
+  }, []);
+  const changeToViewMode = React.useCallback(() => {
+    navigation.setParams({ step: "summary" });
+  }, []);
+  const handleBackdropOnPress: ProfitSummaryEditViewProps['handleBackdropOnPress'] = React.useCallback(() => {
+    changeToViewMode();
+  }, [changeToViewMode]);
+  const handleButtonConfirmOnPress: ProfitSummaryEditViewProps['handleButtonConfirmOnPress'] = () => {
+    changeToViewMode();
+  };
+  const handleButtonGroupVacantOnPress: ProfitSummaryEditViewProps['handleButtonGroupVacantOnPress'] = value => {
+    dispatch({ key: 'vacant', type: 'UPDATE_PROFIT_SUMMARY_FIELDS', value: !!value });
+  };
+  const handleOnChangeText: ProfitSummaryEditViewProps['handleOnChangeText'] = (key) => (value) => {
+    dispatch({ key, type: 'UPDATE_PROFIT_SUMMARY_FIELDS', value: +eraseComma(value) })
+  };
+  const modalVisible = React.useMemo<ProfitSummaryEditViewProps['modalVisible']>(() => {
+    return step == 'edit';
+  }, [step]);
+
+  // Return from ContactPhoneNumberScreen after submit
+  const handleSubmit = async () => {
     setLoading(true);
     const updateRehabItemsPackageInput = {
       rehabItemsPackage: { 
@@ -203,29 +264,15 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       setLoading(false);
     }
   };
+  React.useEffect(() => {
+    if (contactInfo) {
+      handleSubmit();
+    }
+  }, [contactInfo]);
 
-  // For ProfitSummaryEditView
-  const buttonsForVacant = React.useMemo<ProfitSummaryEditViewProps['buttonsForVacant']>(() => {
-    return ['NO', 'YES'];
-  }, []);
-  const changeToViewMode = React.useCallback(() => {
-    navigation.setParams({ step: "summary" });
-  }, []);
-  const handleBackdropOnPress: ProfitSummaryEditViewProps['handleBackdropOnPress'] = React.useCallback(() => {
-    changeToViewMode();
-  }, [changeToViewMode]);
-  const handleButtonConfirmOnPress: ProfitSummaryEditViewProps['handleButtonConfirmOnPress'] = () => {
-    changeToViewMode();
-  };
-  const handleButtonGroupVacantOnPress: ProfitSummaryEditViewProps['handleButtonGroupVacantOnPress'] = value => {
-    dispatch({ key: 'vacant', type: 'UPDATE_PROFIT_SUMMARY_FIELDS', value: !!value });
-  };
-  const handleOnChangeText: ProfitSummaryEditViewProps['handleOnChangeText'] = (key) => (value) => {
-    dispatch({ key, type: 'UPDATE_PROFIT_SUMMARY_FIELDS', value: +eraseComma(value) })
-  };
-  const modalVisible = React.useMemo<ProfitSummaryEditViewProps['modalVisible']>(() => {
-    return step == 'edit';
-  }, [step]);
+  React.useEffect(() => {
+    navigation.setParams({ loading });
+  }, [loading]);
 
   if (loading) {
     return (

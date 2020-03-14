@@ -30,9 +30,9 @@ const VIEWER = gql`
 `;
 
 export interface Params {
-  createRehabNoArvInput: CreateRehabNoArvVariables['input'];
-  rehabId?: string;
-  rehabItemPackageId?: string;
+  // createRehabNoArvInput: CreateRehabNoArvVariables['input'];
+  // rehabId?: string;
+  // rehabItemPackageId?: string;
 };
 
 type ScreenProps = {};
@@ -49,21 +49,31 @@ export interface ContactPhoneNumberViewProps {
 
 const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
-  const rehabId = navigation.getParam("rehabId", null);
-  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", null);
+  // const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  // const rehabId = navigation.getParam("rehabId", null);
+  // const rehabItemPackageId = navigation.getParam("rehabItemPackageId", null);
 
-  const { data: viewerQueryData, loading: viewerQueryLoading, refetch: viewerQueryRefetch } = useQuery<Viewer>(VIEWER);
+  const { data: viewerQueryData, loading: viewerQueryLoading, refetch: viewerQueryRefetch } = useQuery<Viewer>(VIEWER, {
+    onCompleted: (data) => {
+      if (viewerQueryData && viewerQueryData?.viewer?.email) {
+        set_email(viewerQueryData?.viewer?.email);
+      };
+    },
+  });
   const [sendVerificationEmail, { loading: sendVerificationEmailMutationLoading }] = useMutation(SEND_VERIFICATION_EMAIL);
-  const [contactPhoneNumber, setContactPhoneNumber] = React.useState((createRehabNoArvInput.contactPhoneNumber) || "+1 ");
+  const [contactPhoneNumber, setContactPhoneNumber] = React.useState("+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
   const [_email, set_email] = React.useState(viewerQueryData?.viewer?.email || "");
   const [_emailIsValid, set_emailIsValid] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
 
   const moveToNextScreen = () => {
-    const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
-    navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
+    // const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
+    // navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
+    navigation.navigate("ProfitSummaryScreen", { step: 'submit', contactInfo: {
+      contactPhoneNumber,
+      email: _email
+    } });
   };
 
   const handleButtonOnPress: ContactPhoneNumberViewProps['handleButtonOnPress'] = async () => {
@@ -73,12 +83,12 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
       set_emailIsValid(false);
     } else {
       set_emailIsValid(true);
-    }
+    };
     if (!valueIsValid) {
       setContactPhoneNumberIsValid(false);
     } else {
       setContactPhoneNumberIsValid(true);
-    }
+    };
     if (valueIsValid && valueEmailIsValid){
       Keyboard.dismiss();
       setContactPhoneNumberIsValid(true);
@@ -112,7 +122,7 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
     setModalVisible(false);
     moveToNextScreen();
   };
-
+  
   if (viewerQueryLoading) {
     return (
       <LoadingComponent />
