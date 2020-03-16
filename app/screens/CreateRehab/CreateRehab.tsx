@@ -56,6 +56,7 @@ const CREATE_REHAB_NO_ARV = gql`
           notes
         }
         submitted
+        taxRate
       }
     }
   }
@@ -83,6 +84,7 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
           notes
         }
         submitted
+        taxRate
       }
       rehabRequest {
         id
@@ -113,6 +115,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
         for (let key in _rehabItemCatergoriesMap) {
           _remodellingCost += _rehabItemCatergoriesMap[key]['cost'];
         };
+        _remodellingCost = _remodellingCost * (1 + result?.rehabItemPackage?.taxRate);
         const rehabId = result.rehabId;
         const rehabItemsPackageId = result.rehabItemPackage.id;
         const _rehabItems = result.rehabItemPackage.rehabItems.map(item => (omit(item, ["__typename"])));
@@ -157,6 +160,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
         for (let key in _rehabItemCatergoriesMap) {
           _remodellingCost += _rehabItemCatergoriesMap[key]['cost'];
         };
+        _remodellingCost = _remodellingCost * (1 + result?.rehabItemsPackage?.taxRate);
         const rehabId = result.rehabRequest.id;
         const rehabItemsPackageId = result.rehabItemsPackage.id;
         const _rehabItems = result.rehabItemsPackage.rehabItems.map(item => (omit(item, ["__typename"])));

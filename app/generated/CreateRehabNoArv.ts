@@ -31,6 +31,7 @@ export interface CreateRehabNoArv_createRehabNoArv_rehabItemPackage {
   id: string;
   rehabItems: CreateRehabNoArv_createRehabNoArv_rehabItemPackage_rehabItems[];
   submitted: boolean;
+  taxRate: number | null;
 }
 
 export interface CreateRehabNoArv_createRehabNoArv {

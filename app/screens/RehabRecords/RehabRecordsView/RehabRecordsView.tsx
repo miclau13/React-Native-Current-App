@@ -18,7 +18,8 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
         {rehabRecords.map((rehabRecord, i) => {
           const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
           const isRevised = !!rehabItemsPackage.revisedRehabItems;
-          const remodelingCost = isRevised ? calculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : calculateRemodelingCost(rehabItemsPackage?.rehabItems);
+          const taxRate = rehabItemsPackage?.taxRate;
+          const remodelingCost = isRevised ? calculateRemodelingCost(rehabItemsPackage?.revisedRehabItems, taxRate) : calculateRemodelingCost(rehabItemsPackage?.rehabItems, taxRate);
           const profit = arv - asIs - remodelingCost;
           const profitPercent = profit / remodelingCost * 100;
           const labelColor = findLabelAttributes(profitPercent).labelColor;

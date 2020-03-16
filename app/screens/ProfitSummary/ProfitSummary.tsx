@@ -17,10 +17,17 @@ import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../..
 
 export type Params = {
   step: string;
+  contactInfo?: ContactInfo;
+  loading?: boolean;
   submitted?: boolean;
 };
 
 type ScreenProps = {};
+
+type ContactInfo = {
+  contactPhoneNumber: string;
+  email: string;
+};
 
 const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   mutation UpdateRehabItemsPackage($input: UpdateRehabItemsPackageInput!) {
@@ -103,6 +110,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const { arv, asIs, rehabId, rehabItems, rehabItemsPackageId,remodellingCost, totalDebts, vacant } = state;
   // console.log("rehabItems",rehabItems)
   const step = navigation.getParam("step", "summary");
+  const contactInfo = navigation.getParam("contactInfo", null);
 
   const profit = React.useMemo(() => {
     return arv - asIs - remodellingCost;
@@ -175,33 +183,34 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
     }
   };
   const handleSubmitOnPress: ProfitSummaryViewProps['handleSubmitOnPress'] = async () => {
-    setLoading(true);
-    const updateRehabItemsPackageInput = {
-      rehabItemsPackage: { 
-        rehabItems, 
-        id: rehabItemsPackageId,
-        selected: true, 
-        submitted: true 
-      },
-      rehabRequest: {
-        arv,
-        asIs,
-        vacant,
-        id: rehabId,
-      }
-    };
-    try {
-      const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
-      if (result) {
-        setStatus("Submitted Successfully!");
-        setSubmitted(true);
-        navigation.setParams({ submitted: true });
-        setLoading(false);
-      }
-    } catch (e) {
-      console.log("ProfitSummary handleSaveOnPress e", e);
-      setLoading(false);
-    }
+    navigation.push("ContactPhoneNumberScreen");
+    // setLoading(true);
+    // const updateRehabItemsPackageInput = {
+    //   rehabItemsPackage: { 
+    //     rehabItems, 
+    //     id: rehabItemsPackageId,
+    //     selected: true, 
+    //     submitted: true 
+    //   },
+    //   rehabRequest: {
+    //     arv,
+    //     asIs,
+    //     vacant,
+    //     id: rehabId,
+    //   }
+    // };
+    // try {
+    //   const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
+    //   if (result) {
+    //     setStatus("Submitted Successfully!");
+    //     setSubmitted(true);
+    //     navigation.setParams({ submitted: true });
+    //     setLoading(false);
+    //   }
+    // } catch (e) {
+    //   console.log("ProfitSummary handleSaveOnPress e", e);
+    //   setLoading(false);
+    // }
   };
 
   // For ProfitSummaryEditView
@@ -226,6 +235,49 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const modalVisible = React.useMemo<ProfitSummaryEditViewProps['modalVisible']>(() => {
     return step == 'edit';
   }, [step]);
+
+  // Return from ContactPhoneNumberScreen after submit
+  const handleSubmit = async (contactInfo: ContactInfo) => {
+    const { contactPhoneNumber, email } = contactInfo;
+    setLoading(true);
+    const updateRehabItemsPackageInput = {
+      rehabItemsPackage: { 
+        rehabItems, 
+        id: rehabItemsPackageId,
+        selected: true, 
+        submitted: true 
+      },
+      rehabRequest: {
+        arv,
+        asIs,
+        contactPhoneNumber,
+        email,
+        vacant,
+        id: rehabId,
+      }
+    };
+    try {
+      const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
+      if (result) {
+        setStatus("Submitted Successfully!");
+        setSubmitted(true);
+        navigation.setParams({ submitted: true });
+        setLoading(false);
+      }
+    } catch (e) {
+      console.log("ProfitSummary handleSaveOnPress e", e);
+      setLoading(false);
+    }
+  };
+  React.useEffect(() => {
+    if (contactInfo) {
+      handleSubmit(contactInfo);
+    }
+  }, [contactInfo]);
+
+  React.useEffect(() => {
+    navigation.setParams({ loading });
+  }, [loading]);
 
   if (loading) {
     return (
