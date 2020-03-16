@@ -19,13 +19,14 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
           const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
           const isRevised = !!rehabItemsPackage.revisedRehabItems;
           const taxRate = rehabItemsPackage?.taxRate;
-          const remodelingCost = isRevised ? calculateRemodelingCost(rehabItemsPackage?.revisedRehabItems, taxRate) : calculateRemodelingCost(rehabItemsPackage?.rehabItems, taxRate);
-          const profit = arv - asIs - remodelingCost;
-          const profitPercent = profit / remodelingCost * 100;
+          const subTotal = isRevised ? calculateRemodelingCost(rehabItemsPackage?.revisedRehabItems) : calculateRemodelingCost(rehabItemsPackage?.rehabItems);
+          const salesTax = subTotal * taxRate;
+          const totalCost = subTotal + salesTax;
+          const profit = arv - asIs - totalCost;
+          const profitPercent = profit / totalCost * 100;
           const labelColor = findLabelAttributes(profitPercent).labelColor;
-
-          let lowerLimit = Math.ceil(remodelingCost * 0.7);
-          let upperLimit = Math.ceil(remodelingCost * 1.3);
+          let lowerLimit = Math.ceil(totalCost * 0.7);
+          let upperLimit = Math.ceil(totalCost * 1.3);
           return (
             <ListItem
               bottomDivider
@@ -77,7 +78,7 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                         prefix={'$'}
                         renderText={value => <Text style={styles.greyColor}>{`Fiximize Quotation: ${value}`}</Text>}
                         thousandSeparator={true} 
-                        value={remodelingCost}
+                        value={totalCost}
                       /> :
                       <>
                         <Text style={styles.greyColor}>{`Remodeling Budget: `}</Text> 

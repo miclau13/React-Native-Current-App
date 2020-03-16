@@ -89,7 +89,7 @@ const RehabQuotation: NavigationStackScreenComponent<Params, ScreenProps> = (pro
     const taxRate = detail?.rehabItemsPackage?.taxRate || 0;
     const subTotal = calculateRemodelingCost(revisedRehabItems);
     const salesTax = subTotal * taxRate;
-    const totalCost = calculateRemodelingCost(revisedRehabItems, taxRate);
+    const totalCost = subTotal + salesTax;
     result.push({ ...getItemAttributes("subTotal"), value: subTotal, order: ++currentOrder, bottomDivider: true });
     result.push({ ...getItemAttributes("salesTax"), value: salesTax, order: ++currentOrder, bottomDivider: true });
     result.push({ ...getItemAttributes("totalCost"), value: totalCost, topDivider: true, bottomDivider: true, order: ++currentOrder, style: { fontWeight: 'bold' } });
