@@ -107,8 +107,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
   const { navigation } = props;
   const [state, dispatch] = useCreateRehabState();
-  const { arv, asIs, rehabId, rehabItems, rehabItemsPackageId,remodellingCost, totalDebts, vacant } = state;
-  // console.log("rehabItems",rehabItems)
+  const { arv, asIs, rehabId, rehabItems, rehabItemsPackageId, remodellingCost, totalDebts, vacant } = state;
   const step = navigation.getParam("step", "summary");
   const contactInfo = navigation.getParam("contactInfo", null);
 
@@ -184,33 +183,6 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   };
   const handleSubmitOnPress: ProfitSummaryViewProps['handleSubmitOnPress'] = async () => {
     navigation.push("ContactPhoneNumberScreen");
-    // setLoading(true);
-    // const updateRehabItemsPackageInput = {
-    //   rehabItemsPackage: { 
-    //     rehabItems, 
-    //     id: rehabItemsPackageId,
-    //     selected: true, 
-    //     submitted: true 
-    //   },
-    //   rehabRequest: {
-    //     arv,
-    //     asIs,
-    //     vacant,
-    //     id: rehabId,
-    //   }
-    // };
-    // try {
-    //   const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
-    //   if (result) {
-    //     setStatus("Submitted Successfully!");
-    //     setSubmitted(true);
-    //     navigation.setParams({ submitted: true });
-    //     setLoading(false);
-    //   }
-    // } catch (e) {
-    //   console.log("ProfitSummary handleSaveOnPress e", e);
-    //   setLoading(false);
-    // }
   };
 
   // For ProfitSummaryEditView

@@ -46,7 +46,7 @@ export const getValuesInProfitSummaryViewOnlyFieldsFormat = (profitSummaryViewFi
   const result = _.map(profitSummaryViewFields, (value, key) => {
     const isVacant = key == "vacant";
     const isRange = key == "profit" || key == "roi" || key == "remodellingCost";
-    const noValue = isRange || isVacant;
+    const noValue = isVacant;
     return {
       color: isVacant ? value ? '#43a048' : '#e53935' : null,
       icon: isVacant ? value ? "check" : "close" : null, 
@@ -55,7 +55,7 @@ export const getValuesInProfitSummaryViewOnlyFieldsFormat = (profitSummaryViewFi
       order: profitSummaryViewOnlyFieldsMap.get(key).order,
       upperLimit: isRange ? getUpperLimit(key) : null,
       unit: profitSummaryViewOnlyFieldsMap.get(key).unit,
-      value: noValue ? null : value,
+      value: noValue ? null : value ?? null,
     }
   });
   return _.sortBy(result, "order");
