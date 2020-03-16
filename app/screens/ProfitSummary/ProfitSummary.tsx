@@ -107,9 +107,10 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
   const { navigation } = props;
   const [state, dispatch] = useCreateRehabState();
-  const { arv, asIs, rehabId, rehabItems, rehabItemsPackageId, remodellingCost, totalDebts, vacant } = state;
+  const { arv, asIs, rehabId, rehabItems, rehabItemsPackageId, remodellingCost: subTotal, taxRate, totalDebts, vacant } = state;
   const step = navigation.getParam("step", "summary");
   const contactInfo = navigation.getParam("contactInfo", null);
+  const remodellingCost = subTotal * (1 + taxRate);
 
   const profit = React.useMemo(() => {
     return arv - asIs - remodellingCost;
@@ -117,7 +118,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   const roi = React.useMemo(() => {
     return profit / remodellingCost * 100;
   },[profit, remodellingCost]);
-  const profitSummaryFields = React.useMemo(() => {
+  const profitSummaryFields = React.useMemo<ProfitSummaryFields>(() => {
     return {
       arv, 
       asIs, 

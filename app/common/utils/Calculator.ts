@@ -13,7 +13,7 @@ export const calculateRemodelingCost = (data: MyRehabRequests_myRehabRequests['r
     acc += _cost;
     return acc;
   }, 0);
-  return cost * (1 + taxRate);
+  return cost;
 };
 
 export const findLabelAttributes = (value) => {

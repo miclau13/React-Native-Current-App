@@ -113,7 +113,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
         const result = data.createRehabNoArv;
         const _rehabItemCatergoriesMap = getRehabItemCatergoriesMap(result.rehabItemPackage.rehabItems);
         const taxRate = result?.rehabItemPackage?.taxRate || 0;
-        const _remodellingCost = calculateRemodelingCost(result.rehabItemPackage.rehabItems, taxRate);
+        const _remodellingCost = calculateRemodelingCost(result.rehabItemPackage.rehabItems);
         const rehabId = result.rehabId;
         const rehabItemsPackageId = result.rehabItemPackage.id;
         const _rehabItems = result.rehabItemPackage.rehabItems.map(item => (omit(item, ["__typename"])));
@@ -156,7 +156,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
         const result = data.updateRehabItemsPackage;
         const _rehabItemCatergoriesMap = getRehabItemCatergoriesMap(result.rehabItemsPackage.rehabItems);
         const taxRate = result?.rehabItemsPackage?.taxRate || 0;
-        const _remodellingCost = calculateRemodelingCost(result.rehabItemsPackage.rehabItems, taxRate);
+        const _remodellingCost = calculateRemodelingCost(result?.rehabItemsPackage?.rehabItems);
         const rehabId = result.rehabRequest.id;
         const rehabItemsPackageId = result.rehabItemsPackage.id;
         const _rehabItems = result.rehabItemsPackage.rehabItems.map(item => (omit(item, ["__typename"])));

@@ -99,8 +99,8 @@ const createRehabActionReducer = (state: CreateRehabState['initialState'], actio
         },
         remodellingCost: 
           state['rehabItemCatergoriesMap'][category]['selected'] ?
-            state['remodellingCost'] - (state['rehabItemCatergoriesMap'][category]['cost'] * (1 + state['taxRate'])) : 
-            state['remodellingCost'] + (state['rehabItemCatergoriesMap'][category]['cost'] * (1 + state['taxRate']))
+            state['remodellingCost'] -  state['rehabItemCatergoriesMap'][category]['cost'] : 
+            state['remodellingCost'] + state['rehabItemCatergoriesMap'][category]['cost']
       };
     case 'UPDATE_PROFIT_SUMMARY_FIELDS':
       return { 

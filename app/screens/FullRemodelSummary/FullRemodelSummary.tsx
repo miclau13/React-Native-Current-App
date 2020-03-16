@@ -29,7 +29,8 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
   const { navigation } = props;
 
   const [state, dispatch] = useCreateRehabState();
-  const { remodellingCost, rehabItemCatergoriesMap } = state;
+  const { remodellingCost, rehabItemCatergoriesMap, taxRate } = state;
+  const totalCost = remodellingCost * (1 + taxRate);
   const fields = React.useMemo(() => getRehabItemCatergoriesFields(rehabItemCatergoriesMap), [rehabItemCatergoriesMap]);
   const handleCheckBoxOnPress: FullRemodelSummaryViewProps['handleCheckBoxOnPress'] = category => () => {
     dispatch({ category, type: 'UPDATE_FULL_REMODEL_SUMMARY_FIELDS' });
@@ -43,7 +44,7 @@ const FullRemodelSummary: NavigationStackScreenComponent<Params, ScreenProps> = 
       fields={fields}
       handleCheckBoxOnPress={handleCheckBoxOnPress}
       handleButtonOnPress={handleButtonOnPress}
-      remodellingCost={remodellingCost}
+      remodellingCost={totalCost}
     />
   )
 };
