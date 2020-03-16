@@ -4,18 +4,30 @@ import {
   MyRehabRequests_myRehabRequests_rehabItemsPackage_revisedRehabItems 
 } from '../../generated/MyRehabRequests';
 
-export const getItemAttributes = (key: string) => {
+export const getItemAttributes = (key: string, order = 0) => {
   switch (key) {
+    case "subTotal": 
+      return {
+        name: "Sub Total: ",
+        order: order,
+        prefix: '$'
+      };
+    case "salesTax": 
+      return {
+        name: "Sales tax: ",
+        order: order,
+        prefix: '$'
+      };
     case "totalCost": 
       return {
         name: "Total Cost: ",
-        order: 0,
+        order: order,
         prefix: '$'
       };
     case "numberOfItems": 
       return {
         name: "Number of Items: ",
-        order: 1,
+        order: order,
       };
     default:
       return {

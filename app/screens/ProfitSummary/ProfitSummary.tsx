@@ -17,15 +17,17 @@ import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../..
 
 export type Params = {
   step: string;
-  contactInfo?: {
-    contactPhoneNumber: string;
-    email: string;
-  };
+  contactInfo?: ContactInfo;
   loading?: boolean;
   submitted?: boolean;
 };
 
 type ScreenProps = {};
+
+type ContactInfo = {
+  contactPhoneNumber: string;
+  email: string;
+};
 
 const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   mutation UpdateRehabItemsPackage($input: UpdateRehabItemsPackageInput!) {
@@ -235,7 +237,8 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   }, [step]);
 
   // Return from ContactPhoneNumberScreen after submit
-  const handleSubmit = async () => {
+  const handleSubmit = async (contactInfo: ContactInfo) => {
+    const { contactPhoneNumber, email } = contactInfo;
     setLoading(true);
     const updateRehabItemsPackageInput = {
       rehabItemsPackage: { 
@@ -247,6 +250,8 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
       rehabRequest: {
         arv,
         asIs,
+        contactPhoneNumber,
+        email,
         vacant,
         id: rehabId,
       }
@@ -266,7 +271,7 @@ const ProfitSummary: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   };
   React.useEffect(() => {
     if (contactInfo) {
-      handleSubmit();
+      handleSubmit(contactInfo);
     }
   }, [contactInfo]);
 

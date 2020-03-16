@@ -22,6 +22,7 @@ export interface CreateRehabNoArvInput {
   totalDebts?: number | null;
   vacant?: boolean | null;
   contactPhoneNumber?: string | null;
+  email?: string | null;
 }
 
 export interface DeleteRehabInput {
@@ -88,6 +89,7 @@ export interface RehabRequestInput {
   totalDebts?: number | null;
   contactPhoneNumber?: string | null;
   postalCode?: string | null;
+  email?: string | null;
   beds?: number | null;
   fullBaths?: number | null;
   halfBaths?: number | null;

@@ -24,11 +24,13 @@ export type RehabQuotationViewProps = {
     name: string;
     order: number;
     value: string | number;
+    bottomDivider?: ListItemProps['bottomDivider'];
     category?: string;
     prefix?: string;
     style?: TextStyle;
     subItemSize?: number;
     subTotal?: number;
+    topDivider?: ListItemProps['topDivider'];
   }[];
 };
 
@@ -47,12 +49,7 @@ const RehabQuotation: NavigationStackScreenComponent<Params, ScreenProps> = (pro
   const [expandDetails, setExpandDetails] = React.useState(getRehabItemCatergoriesMap(revisedRehabItems));
   const _items = React.useMemo(() => {
     let result: RehabQuotationViewProps['items'] = [];
-    const numberOfItems = revisedRehabItems.length;
-    const totalCost = calculateRemodelingCost(revisedRehabItems);
-    result.push({ ...getItemAttributes("numberOfItems"), value: numberOfItems });
-    result.push({ ...getItemAttributes("totalCost"), value: totalCost });
-
-    let  categoriesOrderMap = {}, currentCategory = "", currentOrder = 1, previousOrder = 1, subTotal = 0;
+    let  categoriesOrderMap = {}, currentCategory = "", currentOrder = 0, previousOrder = 0, _subTotal = 0;
     revisedRehabItems.map(item => {
       if (currentCategory !== item.category) {
         currentOrder++;
@@ -60,24 +57,23 @@ const RehabQuotation: NavigationStackScreenComponent<Params, ScreenProps> = (pro
           categoriesOrderMap[currentCategory] = { 
             ...categoriesOrderMap[currentCategory], 
             subItemSize: currentOrder - previousOrder - 1,
-            value: subTotal,
+            value: _subTotal,
           };
         };
-        subTotal = 0;
+        _subTotal = 0;
         currentCategory = item.category;
         previousOrder = currentOrder;
         categoriesOrderMap[currentCategory] = { ...categoriesOrderMap[currentCategory], order: currentOrder };
       };
       currentOrder++;
-      subTotal += item.cost;
+      _subTotal += item.cost;
       result.push({ ...getRehabItemAttributes(item), category: item.category, order: currentOrder, prefix: '$', style: { paddingLeft: 16 } });
     });
     categoriesOrderMap[currentCategory] = { 
       ...categoriesOrderMap[currentCategory], 
       subItemSize: currentOrder - previousOrder,
-      value: subTotal
+      value: _subTotal
     };
-
     for (let key in categoriesOrderMap) {
       result.push({ 
         name: key, 
@@ -87,7 +83,17 @@ const RehabQuotation: NavigationStackScreenComponent<Params, ScreenProps> = (pro
         subItemSize: categoriesOrderMap[key]['subItemSize'],
         subTotal: categoriesOrderMap[key]['value']
       })
-    }
+    };
+
+    // const numberOfItems = revisedRehabItems.length;
+    const taxRate = detail?.rehabItemsPackage?.taxRate || 0;
+    const subTotal = calculateRemodelingCost(revisedRehabItems);
+    const salesTax = subTotal * taxRate;
+    const totalCost = calculateRemodelingCost(revisedRehabItems, taxRate);
+    result.push({ ...getItemAttributes("subTotal"), value: subTotal, order: ++currentOrder, bottomDivider: true });
+    result.push({ ...getItemAttributes("salesTax"), value: salesTax, order: ++currentOrder, bottomDivider: true });
+    result.push({ ...getItemAttributes("totalCost"), value: totalCost, topDivider: true, bottomDivider: true, order: ++currentOrder, style: { fontWeight: 'bold' } });
+    // result.push({ ...getItemAttributes("numberOfItems"), value: numberOfItems, order: ++currentOrder });
     return sortBy(result, ['order']);
   }, []);
 

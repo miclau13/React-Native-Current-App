@@ -32,6 +32,7 @@ export interface MyRehabRequests_myRehabRequests_rehabItemsPackage {
   rehabItems: MyRehabRequests_myRehabRequests_rehabItemsPackage_rehabItems[];
   revisedRehabItems: MyRehabRequests_myRehabRequests_rehabItemsPackage_revisedRehabItems[] | null;
   submitted: boolean;
+  taxRate: number | null;
 }
 
 export interface MyRehabRequests_myRehabRequests {

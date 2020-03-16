@@ -52,6 +52,7 @@ const MY_REHAB_REQUESTS = gql`
           measurementUnit
         }
         submitted
+        taxRate
       }
     }
   }

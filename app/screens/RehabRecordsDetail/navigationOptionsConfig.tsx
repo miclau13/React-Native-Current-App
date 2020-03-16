@@ -12,9 +12,10 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
   const rehabId = navigation.getParam("rehabId");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId");
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
+  const submitted = navigation.getParam("submitted");
   const hasRevisedRehabItems = !!detail.rehabItemsPackage.revisedRehabItems;
-  const flow = !hasRevisedRehabItems ? "revise" : null;
 
+  const flow = !hasRevisedRehabItems ? "revise" : null;
   const handleHeaderRightReviseOnPress = () => {
     navigation.push("CreateRehabScreen", 
     { 
@@ -47,7 +48,7 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       if (loading) {
         return null;
       };
-      if (!hasRevisedRehabItems) {
+      if (!submitted) {
         return (
           <Button
             {...props}
@@ -57,14 +58,17 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
           />
         )
       };
-      return (
-        <Button
-          {...props}
-          color={primaryButtonColor}
-          onPress={handleHeaderRightCheckOnPress}
-          title={"Quotation"}
-        />
-      );
+      if (hasRevisedRehabItems) {
+        return (
+          <Button
+            {...props}
+            color={primaryButtonColor}
+            onPress={handleHeaderRightCheckOnPress}
+            title={"Quotation"}
+          />
+        );
+      }
+      return null;
     }
   };
 };
