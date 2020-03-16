@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { RehabItemCatergoriesMap } from '../CreateRehab/';
+import { RehabItemCatergoriesMap } from '../CreateRehab/useCreateRehabState';
 
 
 const rehabItemCatergoriesFieldsOrderMap = new Map([

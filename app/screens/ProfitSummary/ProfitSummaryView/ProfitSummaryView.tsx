@@ -1,4 +1,4 @@
-import { isNil, isNumber } from 'lodash';
+import { isFinite, isNil, isNumber } from 'lodash';
 import React from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { Card, Icon, ListItem, Text } from 'react-native-elements'
@@ -31,17 +31,8 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
               bottomDivider
               key={i}
               title={item.name}
-              rightTitle={(!isNil(item.value) && isNumber(item.value)) ? 
-                <NumberFormat 
-                  decimalScale={0}
-                  displayType={'text'} 
-                  prefix={item.unit != '%' ? '$' : null}
-                  suffix={item.unit == '%' ? '%' : null}
-                  renderText={value => <Text>{value}</Text>}
-                  thousandSeparator={true} 
-                  value={item.value}
-                />
-                : (!item.lowerLimit || !item.upperLimit) ? null :
+              rightTitle={ !isFinite(item.value) && isNumber(item.value) ? 
+                <Text> Infinity </Text> : (item.lowerLimit && item.upperLimit && (item.upperLimit !== item.lowerLimit)) ? 
                 <Text>
                   <NumberFormat 
                     decimalScale={0}
@@ -62,7 +53,16 @@ const ProfitSummaryView: React.ComponentType<ProfitSummaryViewProps> = (props) =
                     thousandSeparator={true} 
                     value={item.upperLimit}
                   />
-                </Text>
+                </Text> : (!isNil(item.value) && isNumber(item.value)) ?
+                <NumberFormat 
+                  decimalScale={0}
+                  displayType={'text'} 
+                  prefix={item.unit != '%' ? '$' : null}
+                  suffix={item.unit == '%' ? '%' : null}
+                  renderText={value => <Text>{value}</Text>}
+                  thousandSeparator={true} 
+                  value={item.value}
+                /> : null 
               }
               rightIcon={isNil(item.icon) ? null :
                 <Icon
