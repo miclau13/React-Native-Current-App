@@ -8,7 +8,7 @@ import  { strings } from "../../../screens/Home";
 const navigationOptions = (props: NavigationContainerProps<NavigationState>) => {
   const { navigation } = props;
   let tabBarVisible = true;
-  if (navigation.state.index > 0) {
+  if (navigation.state.index >= 0) {
     tabBarVisible = false;
   };
 

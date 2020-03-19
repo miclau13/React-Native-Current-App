@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from 'react-native';
-import { NavigationRoute, NavigationScreenConfig, } from "react-navigation"; 
+import { Button, View } from 'react-native';
+import { NavigationRoute, NavigationScreenConfig } from "react-navigation"; 
 import { HeaderBackButton, NavigationStackProp, NavigationStackOptions } from "react-navigation-stack";
 
 import { primaryButtonColor } from "../../styles/constants";
@@ -35,6 +35,10 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       detail
     })
   };
+  const handleHeaderRightAddPhotoOnPress = () => {
+    navigation.push("CameraScreen", { 
+    })
+  };
   return {
     headerLeft: (props) => {
       return (
@@ -50,12 +54,20 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       };
       if (!submitted) {
         return (
-          <Button
+          <View style={{ flexDirection: 'row' }}>
+            <Button
             {...props}
             color={primaryButtonColor}
-            onPress={handleHeaderRightReviseOnPress}
-            title={"Revise"}
-          />
+            onPress={handleHeaderRightAddPhotoOnPress}
+            title={"Add Photo"}
+            />
+            <Button
+              {...props}
+              color={primaryButtonColor}
+              onPress={handleHeaderRightReviseOnPress}
+              title={"Revise"}
+            />
+          </View>
         )
       };
       if (hasRevisedRehabItems) {
