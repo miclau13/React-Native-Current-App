@@ -9,11 +9,28 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
   const { navigation } = props;
   const step = navigation.getParam("step");
   const selectedPhotos = navigation.getParam("selectedPhotos", []);
+  const lengthOfSelectedPhotos = selectedPhotos.length;
   const isStepGallery = step === "gallery";
+
+  const _headerTitle = isStepGallery ?
+  lengthOfSelectedPhotos ? 
+    `${lengthOfSelectedPhotos} Selected` : 
+    "Select Photo(s)"
+  : null;
+
   const handleBackFromGalleyOnPress = () => {
     navigation.navigate("CameraScreen", { step: 'camera' });
-  }
+  };
+
+  const handleHeaderRightFromCameraOnPress = () => {
+    navigation.navigate("CameraScreen", { step: 'gallery' });
+  };
+  const handleHeaderRightFromGalleyOnPress = () => {
+    // navigation.navigate("CameraScreen", { step: 'camera' });
+  };
+
   return { 
+    headerTitle: _headerTitle,
     headerLeft: (props) => {
       if (isStepGallery) {
         return (
@@ -31,18 +48,17 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
         />
       );
     },
-    // headerRight: (props) => {
-    //   return (
-    //     <Button 
-    //       {...props}
-    //       onPress={() => {
-    //         navigation.navigate("LoginCheckingScreen", { formValues, selectedPhotos })
-    //       }}
-    //     >
-    //       {isStepGallery ? "Done" : "Skip"}
-    //     </Button> 
-    //   ) 
-    // }
+    headerRight: (props) => {
+      return (
+        <Button 
+          {...props}
+          onPress={isStepGallery ? handleHeaderRightFromGalleyOnPress : handleHeaderRightFromCameraOnPress}
+          tintColor={primaryButtonColor}
+          title="Upload"
+        >
+        </Button> 
+      ) 
+    }
   }
 };
 

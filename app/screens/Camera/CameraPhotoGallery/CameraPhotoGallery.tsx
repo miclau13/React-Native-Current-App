@@ -3,6 +3,7 @@ import React from 'react';
 
 import CameraPhotoGalleryView from './CameraPhotoGalleryView';
 import { CameraPhotoGalleryProps } from '../Camera';
+import useCameraRoll from '../../../common/hooks/useCameraRoll';
 
 export const PHOTOS_DIR = FileSystem.documentDirectory + 'photos';
 
@@ -22,11 +23,18 @@ const CameraPhotoGallery: React.ComponentType<CameraPhotoGalleryProps> = (props)
   const { photos, selectedPhotos, setSelectedPhotos } = props;
   const [_photos, set_Photos] = React.useState<Array<string>>(photos);
 
+  const [cameraRollPhotos, getCameraRollPhotos] = useCameraRoll({ first: 10 });
+  
+  const bootstrapasync = async () => {
+    await getCameraRollPhotos();
+  };
   const readPhotos = React.useCallback(async () => {
     const phonePhotos = await FileSystem.readDirectoryAsync(PHOTOS_DIR);
     const photosFullUri = phonePhotos.map(uri => (`${PHOTOS_DIR}/${uri}`));
-    set_Photos([...photos, ...photosFullUri]);
-  }, []);
+    const _cameraRollPhotos = (cameraRollPhotos || []).map(photo => photo.uri);
+    const result = [...photos, ...photosFullUri, ..._cameraRollPhotos];
+    set_Photos(result);
+  }, [cameraRollPhotos]);
 
   const togglePhotoSelection = React.useCallback<CameraPhotoGalleryViewProps['togglePhotoSelection']>((uri, isSelected) => {
     if (isSelected) {
@@ -37,13 +45,20 @@ const CameraPhotoGallery: React.ComponentType<CameraPhotoGalleryProps> = (props)
   }, [selectedPhotos]);
 
   React.useEffect(() => {
-    readPhotos();
+    bootstrapasync();
     return () => {
     }
   }, []);
 
+  React.useEffect(() => {
+    readPhotos();
+    return () => {
+    }
+  }, [cameraRollPhotos]);
+
   return (
     <CameraPhotoGalleryView 
+      getCameraRollPhotos={getCameraRollPhotos}
       photos={_photos}
       togglePhotoSelection={togglePhotoSelection}
     />

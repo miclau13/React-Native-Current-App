@@ -1,23 +1,23 @@
 import React from 'react';
-import { Image, TouchableOpacity } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { Image, TouchableHighlight, View } from 'react-native';
 
-import styles from './styles';
+import { deviceScreenWidth } from '../../../../../styles/constants';
 import { CameraPhotoViewProps } from '../CameraPhoto';
 
 const CameraPhotoView: React.ComponentType<CameraPhotoViewProps> = (props) => {
   const { imageOnPress, selected, uri } = props;
+
   return (
-    <TouchableOpacity
-      style={styles.pictureWrapper}
+    <TouchableHighlight
+      style={{ opacity: selected ? 0.5 : 1 }}
+      underlayColor='transparent'
       onPress={imageOnPress}
     >
       <Image
-        style={selected ? [styles.picture, styles.pictureSelected] : styles.picture}
+        style={{ width: deviceScreenWidth / 4, height: deviceScreenWidth / 4 }}
         source={{ uri }}
       />
-      {selected && <MaterialIcons name="check-circle" size={30} color="#4630EB" />}
-    </TouchableOpacity>
+    </TouchableHighlight>
   )
 };
 

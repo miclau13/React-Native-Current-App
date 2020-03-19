@@ -64,7 +64,7 @@ const HomeStack = createStackNavigator(
       screen: VacantPropertyScreen,
       navigationOptions: VacantPropertyScreenNavigationOptions,
     },
-  }, { initialRouteName: "HomeScreen" }
+  }, { initialRouteName: "CameraScreen" }
 );
 
 HomeStack.navigationOptions = navigationOptions;
