@@ -7,6 +7,8 @@ import { primaryButtonColor } from "../../styles/constants";
 
 const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   const { navigation } = props;
+  const keyCameraScreen = navigation.getParam("keyCameraScreen");
+  const rehabId = navigation.getParam("rehabId");
   const step = navigation.getParam("step");
   const selectedPhotos = navigation.getParam("selectedPhotos", []);
   const lengthOfSelectedPhotos = selectedPhotos.length;
@@ -26,7 +28,7 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
     navigation.navigate("CameraScreen", { step: 'gallery' });
   };
   const handleHeaderRightFromGalleyOnPress = () => {
-    // navigation.navigate("CameraScreen", { step: 'camera' });
+    navigation.navigate("CameraPhotoUploadScreen", { keyCameraScreen, rehabId, selectedPhotos });
   };
 
   return { 
@@ -52,9 +54,10 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       return (
         <Button 
           {...props}
+          disabled={isStepGallery && !!!lengthOfSelectedPhotos}
           onPress={isStepGallery ? handleHeaderRightFromGalleyOnPress : handleHeaderRightFromCameraOnPress}
-          tintColor={primaryButtonColor}
-          title="Upload"
+          color={primaryButtonColor}
+          title={"Upload"}
         >
         </Button> 
       ) 

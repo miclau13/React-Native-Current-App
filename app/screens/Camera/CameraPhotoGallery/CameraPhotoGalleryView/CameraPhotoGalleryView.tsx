@@ -16,21 +16,6 @@ const CameraPhotoGalleryView: React.ComponentType<CameraPhotoGalleryViewProps> =
   const { getCameraRollPhotos, photos, togglePhotoSelection } = props;
 
   return (
-    // <View style={styles.container}>
-    //   <ScrollView>
-    //     <View style={styles.pictures}>
-    //       {photos.map(uri => {
-    //         return (
-    //           <CameraPhoto
-    //             key={uri}
-    //             uri={uri}
-    //             togglePhotoSelection={togglePhotoSelection}
-    //           />
-    //         )
-    //       })}
-    //     </View>
-    //   </ScrollView>
-    // </View>
     <FlatList
       data={photos}
       numColumns={4}

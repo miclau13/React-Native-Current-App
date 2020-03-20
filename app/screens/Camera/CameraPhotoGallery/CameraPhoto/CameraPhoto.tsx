@@ -16,8 +16,8 @@ const CameraPhoto: React.ComponentType<CameraPhotoProps> = (props) => {
 
   const imageOnPress = React.useCallback<CameraPhotoViewProps['imageOnPress']>(() => {
     setSelected(!selected);
-    togglePhotoSelection(uri, !selected)
-  }, [selected]);
+    togglePhotoSelection(uri, !selected);
+  }, [selected, togglePhotoSelection, uri]);
 
   return (
     <CameraPhotoView 

@@ -12,12 +12,16 @@ import { LoadingComponent } from '../InitialLoading';
 
 type Params = {
   step: CameraStep;
+  keyCameraScreen?: string;
+  rehabId?: string;
   selectedPhotos?: string[];
 };
 
 type ScreenProps = {};
 
 type CameraStep = "camera" | "gallery";
+
+export type TogglePhotoSelection = (uri: string, isSelected: boolean) => void;
 
 export interface CameraProps {
   handleStepNavigation: (step: CameraStep) => void;
@@ -42,10 +46,10 @@ export interface CameraPhotoGalleryProps {
   photos: string[];
   selectedPhotos: string[];
   setSelectedPhotos(selectedPhotos: string[]): void;
+  togglePhotoSelection: TogglePhotoSelection;
 };
 
 const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
-
   const { navigation } = props;
   const step = navigation.getParam("step", "camera");
 
@@ -84,6 +88,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     } else { 
       navigation.goBack();
     };
+    navigation.setParams({ keyCameraScreen: navigation.state.key })
   }
 
   const askPermission = async () => {
@@ -102,7 +107,6 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     } catch (e) {
       console.log(e)
     }
-    console.log('Camera createFileDirectory')
   };
 
   // Clear photos taken in the app when unmount
@@ -114,30 +118,9 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     }
   }, []);
 
-
   // For Bottom Bar 
   const handleGalleryIconOnPress = React.useCallback<BottomBarProps['handleGalleryIconOnPress']>(async () => {
     handleStepNavigation("gallery");
-    // const { status: cameraPermission } = await Permissions.askAsync(Permissions.CAMERA);
-    // const { status: cameraRollPermission } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    // console.log("cameraPermission",cameraPermission)
-    // console.log("cameraRollPermission",cameraRollPermission)
-    
-    // return status;
-    // await ImagePicker.requestCameraPermissionsAsync();
-    // let image = await ImagePicker.launchCameraAsync().catch(error => console.log({ error }));
-    // console.log(image);
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   // TODO change quality depening on the file size
-    //   quality: 1,
-    // });
-    // console.log(result);
-    // if (!result.cancelled) {
-    //   setPhonePhotos([...phonePhotos, result.uri]);
-    // };
   }, [handleStepNavigation]);
 
   const handleReverseCameraIconOnPress = React.useCallback<BottomBarProps['handleReverseCameraIconOnPress']>(() => {
@@ -165,9 +148,6 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
         // returned array is sorted in ascending order - default size is the largest one
         pictureSizeId = pictureSizes.length-1;
       };
-      // console.log("onCameraReady pictureSizes[pictureSizeId",pictureSizes[pictureSizeId]);
-      // console.log("onCameraReady pictureSizes",pictureSizes);
-      // console.log("onCameraReady pictureSizeId",pictureSizeId);
       setPictureSize(pictureSizes[pictureSizeId]);
       setPictureSizeId(pictureSizeId);
       setPictureSizes(pictureSizes);
@@ -178,16 +158,17 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     return null;
   }, []);
 
-  // console.log('Camera step',step)
-  // console.log('Camera hasCameraPermission',hasCameraPermission)
-  // console.log('Camera camera',camera)
+  // For CameraPhotoGallery
+  const togglePhotoSelection = React.useCallback<CameraPhotoGalleryProps['togglePhotoSelection']>((uri, isSelected) => {
+    if (isSelected) {
+      setSelectedPhotos([...selectedPhotos, uri]);
+    } else {
+      setSelectedPhotos(selectedPhotos.filter(item => item !== uri));
+    }
+  }, [selectedPhotos]);
 
   React.useEffect(() => {
-    // console.log('Camera useEffect before boostrapAsync hasCameraPermission', hasCameraPermission)
     boostrapAsync();
-    // console.log('Camera useEffect after boostrapAsync hasCameraPermission', hasCameraPermission)
-    // createFileDirectory();
-    // console.log('Camera useEffect after askPermission createFileDirectory', hasCameraPermission)
     return () => {
       // clearPhotos();
     }
@@ -195,18 +176,19 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   React.useEffect(() => {
     navigation.setParams({selectedPhotos})
-  },[selectedPhotos]);
+  }, [selectedPhotos]);
 
   if (!hasCameraPermission) {
     return <LoadingComponent />;
   };
-
+ 
   if (step == "gallery") {
     return (
       <CameraPhotoGallery 
         photos={photos}
         selectedPhotos={selectedPhotos}
         setSelectedPhotos={setSelectedPhotos}
+        togglePhotoSelection={togglePhotoSelection}
       /> 
     )
   };

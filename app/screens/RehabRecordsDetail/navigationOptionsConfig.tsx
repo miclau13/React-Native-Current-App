@@ -8,6 +8,7 @@ import { primaryButtonColor } from "../../styles/constants";
 const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   const { navigation } = props;
   const detail = navigation.getParam("detail", {});
+  const keyCameraScreen = navigation.getParam("keyCameraScreen");
   const loading = navigation.getParam("loading", true);
   const rehabId = navigation.getParam("rehabId");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId");
@@ -36,8 +37,17 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
     })
   };
   const handleHeaderRightAddPhotoOnPress = () => {
-    navigation.push("CameraScreen", { 
-    })
+    navigation.push("CameraScreen", 
+      { 
+        keyCameraScreen,
+        rehabId,
+      },
+      {
+        type: 'Navigation/NAVIGATE',
+        routeName: "CameraScreen",
+        key: "KEY_CameraScreen"
+      }
+    )
   };
   return {
     headerLeft: (props) => {

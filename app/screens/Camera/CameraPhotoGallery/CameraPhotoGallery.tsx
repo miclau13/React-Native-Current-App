@@ -2,12 +2,10 @@ import * as FileSystem from 'expo-file-system';
 import React from 'react';
 
 import CameraPhotoGalleryView from './CameraPhotoGalleryView';
-import { CameraPhotoGalleryProps } from '../Camera';
+import { CameraPhotoGalleryProps, TogglePhotoSelection } from '../Camera';
 import useCameraRoll from '../../../common/hooks/useCameraRoll';
 
 export const PHOTOS_DIR = FileSystem.documentDirectory + 'photos';
-
-export type TogglePhotoSelection = (uri: string, isSelected: boolean) => void;
 
 export interface CameraPhotoGalleryViewProps {
   photos: CameraPhotoGalleryProps['photos'];
@@ -20,7 +18,7 @@ export interface CameraPhotoProps {
 };
 
 const CameraPhotoGallery: React.ComponentType<CameraPhotoGalleryProps> = (props) => {
-  const { photos, selectedPhotos, setSelectedPhotos } = props;
+  const { photos, selectedPhotos, setSelectedPhotos, togglePhotoSelection } = props;
   const [_photos, set_Photos] = React.useState<Array<string>>(photos);
 
   const [cameraRollPhotos, getCameraRollPhotos] = useCameraRoll({ first: 10 });
@@ -35,14 +33,6 @@ const CameraPhotoGallery: React.ComponentType<CameraPhotoGalleryProps> = (props)
     const result = [...photos, ...photosFullUri, ..._cameraRollPhotos];
     set_Photos(result);
   }, [cameraRollPhotos]);
-
-  const togglePhotoSelection = React.useCallback<CameraPhotoGalleryViewProps['togglePhotoSelection']>((uri, isSelected) => {
-    if (isSelected) {
-      setSelectedPhotos([...selectedPhotos, uri]);
-    } else {
-      setSelectedPhotos(selectedPhotos.filter(item => item !== uri));
-    }
-  }, [selectedPhotos]);
 
   React.useEffect(() => {
     bootstrapasync();

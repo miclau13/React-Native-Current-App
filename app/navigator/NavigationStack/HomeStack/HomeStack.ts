@@ -5,6 +5,7 @@ import ArvEstimateScreen, { navigationOptions as ArvEstimateScreenNavigationOpti
 import AsIsEstimateScreen, { navigationOptions as AsIsEstimateScreenNavigationOptions } from "../../../screens/AsIsEstimate";
 import AutocompleteScreen, { navigationOptions as AutocompleteScreenNavigationOptions }  from "../../../screens/Autocomplete";
 import CameraScreen, { navigationOptions as CameraScreenNavigationOptions }  from "../../../screens/Camera";
+import CameraPhotoUploadScreen, { navigationOptions as CameraPhotoUploadScreenNavigationOptions }  from "../../../screens/CameraPhotoUpload";
 import CreateRehabScreen, { navigationOptions as CreateRehabScreenNavigationOptions }  from "../../../screens/CreateRehab";
 import ContactPhoneNumberScreen, { navigationOptions as ContactPhoneNumberScreenNavigationOptions } from "../../../screens/ContactPhoneNumber";
 import FullRemodelSummaryScreen, { navigationOptions as FullRemodelSummaryScreenNavigationOptions } from "../../../screens/FullRemodelSummary";
@@ -34,7 +35,11 @@ const HomeStack = createStackNavigator(
     },
     CameraScreen: {
       screen: CameraScreen,
-      navigationOptions:CameraScreenNavigationOptions,
+      navigationOptions: CameraScreenNavigationOptions,
+    },
+    CameraPhotoUploadScreen: {
+      screen: CameraPhotoUploadScreen,
+      navigationOptions: CameraPhotoUploadScreenNavigationOptions,
     },
     ContactPhoneNumberScreen: {
       screen: ContactPhoneNumberScreen,
@@ -64,7 +69,7 @@ const HomeStack = createStackNavigator(
       screen: VacantPropertyScreen,
       navigationOptions: VacantPropertyScreenNavigationOptions,
     },
-  }, { initialRouteName: "CameraScreen" }
+  }, { initialRouteName: "HomeScreen" }
 );
 
 HomeStack.navigationOptions = navigationOptions;
