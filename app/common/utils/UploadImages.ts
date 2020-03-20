@@ -1,6 +1,6 @@
 // For Upload 
 const uploadImagesAsync = async (uriArray: string[]) => {
-  let apiUrl = 'https://dev-agent.trudeed.com/blobUpload/images';
+  let apiUrl = 'https://agent.trudeed.com/blobUpload/images';
   let formData = new FormData();
   uriArray.forEach(uri => {
     let uriParts = uri.split('.');
