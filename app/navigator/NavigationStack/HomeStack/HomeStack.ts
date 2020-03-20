@@ -4,6 +4,8 @@ import navigationOptions from './navigationOptionsConfig';
 import ArvEstimateScreen, { navigationOptions as ArvEstimateScreenNavigationOptions } from "../../../screens/ArvEstimate";
 import AsIsEstimateScreen, { navigationOptions as AsIsEstimateScreenNavigationOptions } from "../../../screens/AsIsEstimate";
 import AutocompleteScreen, { navigationOptions as AutocompleteScreenNavigationOptions }  from "../../../screens/Autocomplete";
+import CameraScreen, { navigationOptions as CameraScreenNavigationOptions }  from "../../../screens/Camera";
+import CameraPhotoUploadScreen, { navigationOptions as CameraPhotoUploadScreenNavigationOptions }  from "../../../screens/CameraPhotoUpload";
 import CreateRehabScreen, { navigationOptions as CreateRehabScreenNavigationOptions }  from "../../../screens/CreateRehab";
 import ContactPhoneNumberScreen, { navigationOptions as ContactPhoneNumberScreenNavigationOptions } from "../../../screens/ContactPhoneNumber";
 import FullRemodelSummaryScreen, { navigationOptions as FullRemodelSummaryScreenNavigationOptions } from "../../../screens/FullRemodelSummary";
@@ -30,6 +32,14 @@ const HomeStack = createStackNavigator(
     CreateRehabScreen: {
       screen: CreateRehabScreen,
       navigationOptions: CreateRehabScreenNavigationOptions,
+    },
+    CameraScreen: {
+      screen: CameraScreen,
+      navigationOptions: CameraScreenNavigationOptions,
+    },
+    CameraPhotoUploadScreen: {
+      screen: CameraPhotoUploadScreen,
+      navigationOptions: CameraPhotoUploadScreenNavigationOptions,
     },
     ContactPhoneNumberScreen: {
       screen: ContactPhoneNumberScreen,
