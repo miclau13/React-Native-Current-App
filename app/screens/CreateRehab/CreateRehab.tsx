@@ -13,6 +13,7 @@ import {
   getDefaultPropertyDetails, 
   getDefaultPropertyInfoFields, 
 } from '../PropertyInfo/utils';
+import { uploadPhotos } from '../../common/utils/UploadImages';
 import { calculateRemodelingCost } from '../../common/utils/Calculator';
 import { CreateRehabNoArv, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
@@ -22,6 +23,7 @@ export interface Params {
   createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
   rehabId?: CreateRehabNoArv['createRehabNoArv']['rehabId'];
   rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
+  selectedPhotos?: string[];
   // From CreateRehab itself after create Rehab
   revisedRehabInfo?: RevisedRehabInfo;
   // From RehabRecordsDetailScreen due to Revise button
@@ -102,6 +104,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   const flow = navigation.getParam("flow", 1);
   const rehabId = navigation.getParam("rehabId", "");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
+  const selectedPhotos =  navigation.getParam("selectedPhotos");
 
   // State management for Full Remodel Summary and Profit Summary
   const { arv, asIs, totalDebts, vacant} = createRehabNoArvInput;
@@ -197,13 +200,17 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   });
 
   const bootstrapAsync = async () => {
-    // navigation.state.key = "KEY_CreateRehabScreen";
     try {
+      let images = [];
+      if (selectedPhotos.length) {
+        images = await uploadPhotos(selectedPhotos);
+      };
       if (!rehabId) {
-        await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
+        await createRehabNoArv({ variables: { input: { ...createRehabNoArvInput, images } }});
       } else {
         const updateRehabItemsPackageInput = {
           rehabRequest: {
+            images,
             id: rehabId,
             ...createRehabNoArvInput
           },

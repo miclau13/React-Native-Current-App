@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 
 import CameraPhotoUploadView from './CameraPhotoUploadView';
 import { LoadingComponent } from '../InitialLoading';
+import { uploadPhotos } from '../../common/utils/UploadImages';
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
 
 type Params = {
@@ -44,7 +45,6 @@ const CameraPhotoUpload: NavigationStackScreenComponent<Params, ScreenProps> = (
   const { navigation } = props;
   const rehabId = navigation.getParam("rehabId");
   const selectedPhotos = navigation.getParam("selectedPhotos");
-  console.log("rehabId", rehabId)
 
   const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
   const [loading, setLoading] = React.useState(false);
@@ -53,7 +53,7 @@ const CameraPhotoUpload: NavigationStackScreenComponent<Params, ScreenProps> = (
   const boostrapAsync = async () => {
     try {
       setLoading(true);
-      const images = await uploadPhotos();
+      const images = await uploadPhotos(selectedPhotos);
       await updateRehabRequest(images);
       setLoading(false);
     } catch (e) {
@@ -61,50 +61,8 @@ const CameraPhotoUpload: NavigationStackScreenComponent<Params, ScreenProps> = (
       setLoading(false);
     }
   };
-
-  // For Upload 
-  const uploadImagesAsync = async (uriArray: string[]) => {
-    let apiUrl = 'https://dev-agent.trudeed.com/blobUpload/images';
-    let formData = new FormData();
-    uriArray.forEach(uri => {
-      let uriParts = uri.split('.');
-      let fileType = uriParts[uriParts.length - 1];
-      let fileParts = uri.split('/');
-      let fileName = fileParts[fileParts.length - 1];
-      const result = {
-        uri,
-        name: `${fileName}`,
-        type: `image/${fileType}`};
-      // TODO check type
-      formData.append('photos', result);
-    });
-    formData.append('password', 'trudeed@2019');
-  
-    const options = {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    };
-    
-    return fetch(apiUrl, options);
-  }
-  const uploadPhotos = async () => {
-    try {
-      const uploadResponse = await uploadImagesAsync(selectedPhotos);
-      console.log(" uploadPhotos uploadResponse", uploadResponse)
-      const uploadResult = await uploadResponse.json();
-      console.log(" uploadPhotos uploadResult", uploadResult);
-      return uploadResult;
-    } catch(error) {
-      console.log("uploadPhotos error", error)
-    }
-  };
   
   const updateRehabRequest = async (images: string[]) => {
-    console.log("updateRehabRequest images",images)
     const updateRehabItemsPackageInput = {
       rehabRequest: {
         images,
@@ -113,9 +71,8 @@ const CameraPhotoUpload: NavigationStackScreenComponent<Params, ScreenProps> = (
     };
     try {
       const result = await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
-      console.log("result?.data?.updateRehabItemsPackage",result?.data?.updateRehabItemsPackage)
       if (result) {
-        setStatus("Uploaded Photos Successfully!");
+        setStatus("Photos Uploaded Successfully!");
         navigation.setParams({ loading: false })
       };
     } catch (e) {

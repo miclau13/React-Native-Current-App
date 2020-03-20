@@ -1,6 +1,5 @@
 import { Camera as ExpoCamera } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
-import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Platform, TouchableOpacityProps } from 'react-native';
@@ -9,12 +8,16 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import CameraView from './CameraView';
 import CameraPhotoGallery, { PHOTOS_DIR } from './CameraPhotoGallery';
 import { LoadingComponent } from '../InitialLoading';
+import { CreateRehabNoArv, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
 type Params = {
   step: CameraStep;
   keyCameraScreen?: string;
   rehabId?: string;
   selectedPhotos?: string[];
+  // From Vacant Screen for normal input flow
+  createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
+  rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
 };
 
 type ScreenProps = {};
@@ -77,7 +80,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     } catch (e) {
       console.log({e})
     }
-    // handleStepNavigation("gallery");
+    handleStepNavigation("gallery");
   };
 
   const boostrapAsync = async () => {

@@ -11,6 +11,14 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
   const rehabId = navigation.getParam("rehabId");
   const step = navigation.getParam("step");
   const selectedPhotos = navigation.getParam("selectedPhotos", []);
+
+  // From Vacant Screen for normal input flow
+  const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
+  const handleHeaderRightOnPress = () => {
+    navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput, selectedPhotos });
+  };
+
   const lengthOfSelectedPhotos = selectedPhotos.length;
   const isStepGallery = step === "gallery";
 
@@ -51,6 +59,18 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       );
     },
     headerRight: (props) => {
+      if (createRehabNoArvInput) {
+        return (
+          <Button 
+            {...props}
+            disabled={isStepGallery && !!!lengthOfSelectedPhotos}
+            onPress={handleHeaderRightOnPress}
+            color={primaryButtonColor}
+            title={isStepGallery ? "Submit" : "Skip"}
+          >
+          </Button> 
+        )
+      }
       return (
         <Button 
           {...props}
