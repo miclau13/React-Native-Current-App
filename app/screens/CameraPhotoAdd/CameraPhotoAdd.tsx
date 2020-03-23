@@ -49,8 +49,9 @@ const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (pro
 
   const getPermissionAsync = async () => {
     if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
+      const { status: cameraRollStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      const { status: cameraStatus } = await Permissions.askAsync(Permissions.CAMERA);
+      if (cameraStatus !== 'granted' && cameraRollStatus !== 'granted') {
         return false;
       };
       return true
