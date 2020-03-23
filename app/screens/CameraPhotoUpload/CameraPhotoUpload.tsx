@@ -44,7 +44,7 @@ export interface CameraPhotoUploadViewProps {
 const CameraPhotoUpload: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const rehabId = navigation.getParam("rehabId");
-  const selectedPhotos = navigation.getParam("selectedPhotos");
+  const selectedPhotos = navigation.getParam("selectedPhotos", []);
 
   const [updateRehabItemsPackage] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE);
   const [loading, setLoading] = React.useState(false);

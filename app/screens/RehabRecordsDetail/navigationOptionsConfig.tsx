@@ -37,14 +37,14 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
     })
   };
   const handleHeaderRightAddPhotoOnPress = () => {
-    navigation.push("CameraScreen", 
+    navigation.push("CameraPhotoAddScreen", 
       { 
         keyCameraScreen,
         rehabId,
       },
       {
         type: 'Navigation/NAVIGATE',
-        routeName: "CameraScreen",
+        routeName: "CameraPhotoAddScreen",
         key: "KEY_CameraScreen"
       }
     )
@@ -69,7 +69,7 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
             {...props}
             color={primaryButtonColor}
             onPress={handleHeaderRightAddPhotoOnPress}
-            title={"Add Photo"}
+            title={"Upload Photo"}
             />
             <Button
               {...props}

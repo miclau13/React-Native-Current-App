@@ -10,7 +10,8 @@ const uploadImagesAsync = async (uriArray: string[]) => {
     const result = {
       uri,
       name: `${fileName}`,
-      type: `image/${fileType}`};
+      type: `image/${fileType}`
+    };
     // TODO check type
     formData.append('photos', result);
   });

@@ -1,5 +1,4 @@
-
-import { isNil, isNumber, reduce, sortBy } from 'lodash';
+import { isNil, reduce, sortBy } from 'lodash';
 import React from 'react';
 import { TextStyle } from 'react-native';
 import { ListItemProps } from 'react-native-elements'
