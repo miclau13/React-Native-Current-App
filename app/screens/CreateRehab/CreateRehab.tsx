@@ -104,7 +104,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   const flow = navigation.getParam("flow", 1);
   const rehabId = navigation.getParam("rehabId", "");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
-  const selectedPhotos =  navigation.getParam("selectedPhotos");
+  const selectedPhotos = navigation.getParam("selectedPhotos", []);
 
   // State management for Full Remodel Summary and Profit Summary
   const { arv, asIs, totalDebts, vacant} = createRehabNoArvInput;
@@ -203,7 +203,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
     try {
       let images = [];
       if (selectedPhotos.length) {
-        images = await uploadPhotos(selectedPhotos);
+        images = await uploadPhotos(rehabId, selectedPhotos);
       };
       if (!rehabId) {
         await createRehabNoArv({ variables: { input: { ...createRehabNoArvInput, images } }});
