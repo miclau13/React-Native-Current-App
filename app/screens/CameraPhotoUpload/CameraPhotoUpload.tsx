@@ -53,7 +53,7 @@ const CameraPhotoUpload: NavigationStackScreenComponent<Params, ScreenProps> = (
   const boostrapAsync = async () => {
     try {
       setLoading(true);
-      const images = await uploadPhotos(selectedPhotos);
+      const images = await uploadPhotos(rehabId, selectedPhotos);
       await updateRehabRequest(images);
       setLoading(false);
     } catch (e) {
