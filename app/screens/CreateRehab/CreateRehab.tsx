@@ -98,6 +98,16 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
   }
 `;
 
+const UPDATE_REHAB_ITEMS_PACKAGE_AFTER_CREATE = gql`
+  mutation UpdateRehabItemsPackage($input: UpdateRehabItemsPackageInput!) {
+    updateRehabItemsPackage(input: $input) {
+      rehabRequest {
+        id
+      }
+    }
+  }
+`;
+
 const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
@@ -110,6 +120,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   const { arv, asIs, totalDebts, vacant} = createRehabNoArvInput;
   const [, dispatch] = useCreateRehabState();
 
+  const [uploadImagesAfterCreateRehabNoArv] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE_AFTER_CREATE);
   const [createRehabNoArv, { error: createRehabNoArvError }] = useMutation<CreateRehabNoArv, CreateRehabNoArvVariables>(CREATE_REHAB_NO_ARV, {
     onCompleted: (data) => {
       if (!createRehabNoArvError && data && data.createRehabNoArv) {
@@ -202,12 +213,27 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   const bootstrapAsync = async () => {
     try {
       let images = [];
-      if (selectedPhotos.length) {
-        images = await uploadPhotos(rehabId, selectedPhotos);
-      };
       if (!rehabId) {
-        await createRehabNoArv({ variables: { input: { ...createRehabNoArvInput, images } }});
+        try {
+          const _result = await createRehabNoArv({ variables: { input: { ...createRehabNoArvInput, images } }});
+          const _rehabId = _result?.data?.createRehabNoArv?.rehabId;
+          if (selectedPhotos.length) {
+            images = await uploadPhotos(_rehabId, selectedPhotos);
+            const updateRehabItemsPackageInput = {
+              rehabRequest: {
+                images,
+                id: _rehabId,
+              }
+            };
+            await uploadImagesAfterCreateRehabNoArv({ variables: { input: updateRehabItemsPackageInput } });
+          };
+        } catch (e) {
+          console.log("createRehabNoArv error", e)
+        }
       } else {
+        if (selectedPhotos.length) {
+          images = await uploadPhotos(rehabId, selectedPhotos);
+        };
         const updateRehabItemsPackageInput = {
           rehabRequest: {
             images,
@@ -219,9 +245,9 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
           }
         };
         await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
-      };
+      }
     } catch (e) {
-      console.log("createRehab error", e)
+      console.log("bootstrapAsync createRehab error", e)
     }
   };
 

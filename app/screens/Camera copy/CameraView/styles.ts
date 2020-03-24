@@ -2,38 +2,18 @@ import { StyleSheet } from 'react-native';
 import isIPhoneX from 'react-native-is-iphonex';
 
 const styles = StyleSheet.create({
-  animationContainer: {
-    alignItems: 'flex-end',
-    backgroundColor: 'transparent',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
   bottomBar: {
-    alignItems: 'flex-end',
-    backgroundColor: 'transparent',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingBottom: isIPhoneX ? 25 : 20,
-  },
-  BottomBarContainer: {
-    flex: 1, 
-    flexDirection: 'column', 
-    justifyContent: 'space-between',
-  },
-  camera: {
-    justifyContent: 'space-between',
-    flex: 1,
-    flexDirection: 'row',
-  },
-  cameraBottomBar: {
     alignSelf: 'flex-end',
     backgroundColor: 'transparent',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     paddingBottom: isIPhoneX ? 25 : 20,
+  },
+  camera: {
+    justifyContent: 'space-between',
+    flex: 1,
+    flexDirection: 'row',
   },
   container: {
     flex: 1,

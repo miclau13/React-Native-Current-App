@@ -3,6 +3,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import navigationOptions from './navigationOptionsConfig';
 import CameraScreen, { navigationOptions as CameraScreenNavigationOptions }  from "../../../screens/Camera";
 import CameraPhotoAddScreen, { navigationOptions as CameraPhotoAddScreenNavigationOptions }  from "../../../screens/CameraPhotoAdd";
+import CameraPhotoGalleryScreen, { navigationOptions as CameraPhotoGalleryScreenNavigationOptions }  from "../../../screens/CameraPhotoGallery";
 import CameraPhotoUploadScreen, { navigationOptions as CameraPhotoUploadScreenNavigationOptions }  from "../../../screens/CameraPhotoUpload";
 import CreateRehabScreen, { navigationOptions as CreateRehabScreenNavigationOptions }  from "../../../screens/CreateRehab";
 import FullRemodelSummaryScreen, { navigationOptions as FullRemodelSummaryScreenNavigationOptions } from "../../../screens/FullRemodelSummary";
@@ -19,6 +20,10 @@ const RehabRecordsStack = createStackNavigator({
   CameraPhotoAddScreen: {
     screen: CameraPhotoAddScreen,
     navigationOptions: CameraPhotoAddScreenNavigationOptions,
+  },
+  CameraPhotoGalleryScreen: {
+    screen: CameraPhotoGalleryScreen,
+    navigationOptions:CameraPhotoGalleryScreenNavigationOptions,
   },
   CameraPhotoUploadScreen: {
     screen: CameraPhotoUploadScreen,

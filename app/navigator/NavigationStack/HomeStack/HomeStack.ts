@@ -6,6 +6,7 @@ import AsIsEstimateScreen, { navigationOptions as AsIsEstimateScreenNavigationOp
 import AutocompleteScreen, { navigationOptions as AutocompleteScreenNavigationOptions }  from "../../../screens/Autocomplete";
 import CameraScreen, { navigationOptions as CameraScreenNavigationOptions }  from "../../../screens/Camera";
 import CameraPhotoAddScreen, { navigationOptions as CameraPhotoAddScreenNavigationOptions }  from "../../../screens/CameraPhotoAdd";
+import CameraPhotoGalleryScreen, { navigationOptions as CameraPhotoGalleryScreenNavigationOptions }  from "../../../screens/CameraPhotoGallery";
 import CameraPhotoUploadScreen, { navigationOptions as CameraPhotoUploadScreenNavigationOptions }  from "../../../screens/CameraPhotoUpload";
 import CreateRehabScreen, { navigationOptions as CreateRehabScreenNavigationOptions }  from "../../../screens/CreateRehab";
 import ContactPhoneNumberScreen, { navigationOptions as ContactPhoneNumberScreenNavigationOptions } from "../../../screens/ContactPhoneNumber";
@@ -41,6 +42,10 @@ const HomeStack = createStackNavigator(
     CameraPhotoAddScreen: {
       screen: CameraPhotoAddScreen,
       navigationOptions: CameraPhotoAddScreenNavigationOptions,
+    },
+    CameraPhotoGalleryScreen: {
+      screen: CameraPhotoGalleryScreen,
+      navigationOptions:CameraPhotoGalleryScreenNavigationOptions,
     },
     CameraPhotoUploadScreen: {
       screen: CameraPhotoUploadScreen,

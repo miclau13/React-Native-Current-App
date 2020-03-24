@@ -1,31 +1,34 @@
-import { useCallback, useState } from 'react';
-import { CameraRoll, CameraRollAssetType, CameraRollGroupType } from 'react-native'; 
+import * as MediaLibrary from 'expo-media-library';
+import { useState, useCallback } from 'react';
 
-export default function useCameraRoll({
-  first = 40,
-  assetType = 'Photos',
-  groupTypes =  'All',
-}) {
-  const [photos, setPhotos] = useState([]);
+type UseCameraRollHook = (options: MediaLibrary.AssetsOptions) => 
+  [UseCameraRollState['photos'], UseCameraRollState['getPhotos']];
+
+export type UseCameraRollState = {
+  photos: MediaLibrary.Asset[];
+  getPhotos: () => Promise<void>;
+};
+
+const useCameraRoll: UseCameraRollHook = ({ first = 40 }) => {
+  const [photos, setPhotos] = useState<UseCameraRollState['photos']>([]);
   const [after, setAfter] = useState(null);
   const [hasNextPage, setHasNextPage] = useState(true);
 
-  const getPhotos = useCallback(async () => {
+  const getPhotos = useCallback<UseCameraRollState['getPhotos']>(async () => {
     if (!hasNextPage) return;
-    const { edges, page_info: pageInfo } = await CameraRoll.getPhotos({
+    const { assets, endCursor, hasNextPage: _hasNextPage } = await MediaLibrary.getAssetsAsync({
       first,
-      assetType,
-      groupTypes,
       ...(after && { after }),
     });
-    if (after === pageInfo.end_cursor) return;
+    if (after === endCursor) return;
 
-    const images = edges.map(i => i.node).map(i => i.image);
-
+    const images = assets;
     setPhotos([...photos, ...images]);
-    setAfter(pageInfo.end_cursor);
-    setHasNextPage(pageInfo.has_next_page);
+    setAfter(endCursor);
+    setHasNextPage(_hasNextPage);
   }, [after, hasNextPage, photos]);
 
   return [photos, getPhotos];
-}
+};
+
+export default useCameraRoll;
