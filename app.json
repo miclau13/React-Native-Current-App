@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "4.29",
+    "version": "4.30",
     "orientation": "portrait",
     "icon": "./assets/favicon3.png",
     "splash": {
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.trudeed.fiximize",
-      "versionCode": 19
+      "versionCode": 20
     }
   }
 }

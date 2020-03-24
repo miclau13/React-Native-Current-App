@@ -27,11 +27,10 @@ const CameraPhotoGallery: React.ComponentType<CameraPhotoGalleryProps> = (props)
     await getCameraRollPhotos();
   };
   const readPhotos = React.useCallback(async () => {
-    // const phonePhotos = await FileSystem.readDirectoryAsync(PHOTOS_DIR);
-    // const photosFullUri = phonePhotos.map(uri => (`${PHOTOS_DIR}/${uri}`));
+    const phonePhotos = await FileSystem.readDirectoryAsync(PHOTOS_DIR);
+    const photosFullUri = phonePhotos.map(uri => (`${PHOTOS_DIR}/${uri}`));
     const _cameraRollPhotos = (cameraRollPhotos || []).map(photo => photo.uri);
-    // const result = [...photos, ...photosFullUri, ..._cameraRollPhotos];
-    const result = [...photos, ..._cameraRollPhotos];
+    const result = [...photos, ...photosFullUri, ..._cameraRollPhotos];
     set_Photos(result);
   }, [cameraRollPhotos]);
 

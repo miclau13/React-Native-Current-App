@@ -1,29 +1,24 @@
 import Constants from 'expo-constants';
-import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
-import { ActionSheetIOS, ImageURISource } from 'react-native';
-import { TileProps } from 'react-native-elements'; 
+import { ImageURISource } from 'react-native';
+import { IconProps, TileProps } from 'react-native-elements'; 
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import CameraPhotoAddView from './CameraPhotoAddView';
 import { LoadingComponent } from '../InitialLoading';
+import { CreateRehabNoArv, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
 type Params = {
   rehabId: string;
   keyCameraScreen?: string;
   loading?: boolean;
-  selectedPhotos?: CameraPhotoAddViewProps['selectedPhotos'];
+  // From Vacant Screen for normal input flow
+  createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
+  rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
 };
 
 type ScreenProps = {};
-
-type ImageInfo = {
-  uri: string;
-  width: number;
-  height: number;
-  type?: 'image' | 'video';
-};
 
 export type SelectedPhotos = {
   index: number;
@@ -32,95 +27,51 @@ export type SelectedPhotos = {
 
 export type CameraPhotoAddTileViewProps = TileProps;
 export interface CameraPhotoAddViewProps {
-  selectedPhotos: Array<SelectedPhotos>;
-  onImagePress(index: number): TileProps['onPress'];
+  onCameraIconPress: IconProps['onPress'];
+  onPhotoLibraryIconPress: IconProps['onPress'];
 };
 
 const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
+  const rehabId = navigation.getParam("rehabId");
+  // From Vacant Screen for normal input flow
+  const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
 
-  const [loading, setLoading] = React.useState(false);
-  const [selectedPhotos, setSelectedPhotos] = React.useState(Array.from(Array(20)).map((item, index) => {
-    return {
-      index,
-      imageSrc: null,
-    }
-  }));
+  const [loading] = React.useState(false);
 
-  const getPermissionAsync = async () => {
+  // For CameraPhotoAddView
+  const getCameraPermissionAsync = async () => {
     if (Constants.platform.ios) {
-      const { status: cameraRollStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      const { status: cameraStatus } = await Permissions.askAsync(Permissions.CAMERA);
-      if (cameraStatus !== 'granted' && cameraRollStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      if (status !== 'granted') {
         return false;
       };
-      return true
+      return true;
     }
   };
-
-  const updateSelectedPhotos = (index: number, result?: ImageInfo) => {
-    const updatedSelectedPhotos = selectedPhotos.map((imageTile, _index) => {
-      if (index == _index) {
-        return {
-          ...imageTile,
-          imageSrc: result ? { uri: result.uri } : null
-        }
-      }
-      return imageTile;
-    })
-    setSelectedPhotos(updatedSelectedPhotos);
-    navigation.setParams({ selectedPhotos: updatedSelectedPhotos.filter(photo => photo.imageSrc).map(photo => photo.imageSrc['uri'])})
-  };
-
-  const launchCamera = async (index: number) => {
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1
-    });
-
-    if (result.cancelled) return;
-    updateSelectedPhotos(index, result);
-  };
-
-  const pickImage = async (index: number) => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1
-    });
-
-    if (result.cancelled) return;
-    updateSelectedPhotos(index, result);
-  };
-
-  const onImagePress = (index: number) => async () => {
-    if (selectedPhotos[index]['imageSrc']) {
-      updateSelectedPhotos(index);
-      return;
+  const getPhotoLibraryPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        return false;
+      };
+      return true;
     }
-    if (!await getPermissionAsync()) return;
-    const options = [
-      'Open camera',
-      'Select from the gallery',
-      'Cancel'
-    ];
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex: 2
-      },
-      async (buttonIndex: number) => {
-        if (buttonIndex === 0) {
-          await launchCamera(index);
-        } else if (buttonIndex === 1) {
-          await pickImage(index);
-        }
-      }
-    );
   };
+  const onCameraIconPress = React.useCallback<CameraPhotoAddViewProps['onCameraIconPress']>(async () => {
+    const hasCameraPermission = await getCameraPermissionAsync();
+    const hasCameraRollPermission = await getPhotoLibraryPermissionAsync();
+    if (hasCameraPermission && hasCameraRollPermission) {
+      navigation.navigate("CameraScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput })
+    };
+  }, []);
+  const onPhotoLibraryIconPress = React.useCallback<CameraPhotoAddViewProps['onCameraIconPress']>(async () => {
+    const hasPermission = await getPhotoLibraryPermissionAsync();
+    if (hasPermission) {
+      navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput })
+    } 
+  }, []);
 
   React.useEffect(() => {
     navigation.setParams({ keyCameraScreen: navigation.state.key });
@@ -137,8 +88,8 @@ const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (pro
 
   return (
     <CameraPhotoAddView 
-      selectedPhotos={selectedPhotos}
-      onImagePress={onImagePress}
+      onCameraIconPress={onCameraIconPress}
+      onPhotoLibraryIconPress={onPhotoLibraryIconPress}
     />
   )
 };

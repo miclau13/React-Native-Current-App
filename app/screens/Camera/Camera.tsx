@@ -1,20 +1,17 @@
 import { Camera as ExpoCamera } from 'expo-camera';
-import * as FileSystem from 'expo-file-system';
-import * as Permissions from 'expo-permissions';
+import * as MediaLibrary from 'expo-media-library';
 import React from 'react';
-import { Platform, TouchableOpacityProps } from 'react-native';
+import { Animated, Easing, Platform, TouchableOpacityProps } from 'react-native';
+import { ButtonProps } from 'react-native-elements';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 import CameraView from './CameraView';
-import CameraPhotoGallery, { PHOTOS_DIR } from './CameraPhotoGallery';
-import { LoadingComponent } from '../InitialLoading';
 import { CreateRehabNoArv, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 
 type Params = {
-  step: CameraStep;
+  capturedPhotoUri?: string;
   keyCameraScreen?: string;
   rehabId?: string;
-  selectedPhotos?: string[];
   // From Vacant Screen for normal input flow
   createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
   rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
@@ -22,22 +19,20 @@ type Params = {
 
 type ScreenProps = {};
 
-type CameraStep = "camera" | "gallery";
-
-export type TogglePhotoSelection = (uri: string, isSelected: boolean) => void;
-
-export interface CameraProps {
-  handleStepNavigation: (step: CameraStep) => void;
-  handleReverseCameraIconOnPress: TouchableOpacityProps['onPress'];
+export interface BottomBarProps {
+  progress: Animated.Value;
+  isCheckAnimationVisible: boolean;
+  handleSaveButtonOnPress: ButtonProps['onPress'];
 };
 
-export interface BottomBarProps {
+export interface CameraBottomBarProps {
   handleGalleryIconOnPress: TouchableOpacityProps['onPress'];
   handleReverseCameraIconOnPress: TouchableOpacityProps['onPress'];
   handleTakePictureIconOnPress: TouchableOpacityProps['onPress'];
 };
 
-export interface CameraViewProps extends BottomBarProps {
+export interface CameraViewProps extends BottomBarProps, CameraBottomBarProps {
+  capturedPhotoUri: string;
   onCameraReady: ExpoCamera['_onCameraReady'];
   onMountError: (event: { message: string }) => void;
   pictureSize: string;
@@ -45,88 +40,50 @@ export interface CameraViewProps extends BottomBarProps {
   type: React.ReactText;
 };
 
-export interface CameraPhotoGalleryProps {
-  photos: string[];
-  selectedPhotos: string[];
-  setSelectedPhotos(selectedPhotos: string[]): void;
-  togglePhotoSelection: TogglePhotoSelection;
-};
-
 const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const step = navigation.getParam("step", "camera");
+  const rehabId = navigation.getParam("rehabId");
+
+  // From Vacant Screen for normal input flow
+  const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
 
   const [camera, setCamera] = React.useState<ExpoCamera>(null);
-  const [hasCameraPermission, setHasCameraPermission] = React.useState(false);
-  const [photos, setPhotos] = React.useState<string[]>([]);
+  const [isCheckAnimationVisible, setIsCheckAnimationVisible] = React.useState(true)
+  const [progress] = React.useState(new Animated.Value(0));
+
+  const [capturedPhotoUri, setCapturedPhotoUri] = React.useState("");
   const [pictureSize, setPictureSize] = React.useState("");
-  const [pictureSizes, setPictureSizes] = React.useState<string[]>([]);
-  const [pictureSizeId, setPictureSizeId] = React.useState(0);
-  const [ratio, setRatio] = React.useState('16:9');
-  const [selectedPhotos, setSelectedPhotos] = React.useState<string[]>([]);
+  const [ratio] = React.useState('16:9');
   const [type, setType] = React.useState<React.ReactText>(ExpoCamera.Constants.Type.back);
 
   // For General
-  const handleStepNavigation = React.useCallback<CameraProps['handleStepNavigation']>((step) => {
-    navigation.navigate("CameraScreen", { step });
-  }, [step]);
-
-  const onPictureSaved = async photo => {
-    try {
-      await FileSystem.moveAsync({
-        from: photo.uri,
-        to: `${FileSystem.documentDirectory}photos/${Date.now()}.jpg`,
-      });
-    } catch (e) {
-      console.log({e})
-    }
-    handleStepNavigation("gallery");
-  };
+  const moveToGallery = React.useCallback(() => {
+    navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput });
+  }, [navigation.navigate]);
 
   const boostrapAsync = async () => {
-    const status = await askPermission();
-    if (status === 'granted') {
-      await createFileDirectory();
-      setHasCameraPermission(true);
-    } else { 
-      navigation.goBack();
-    };
-    navigation.setParams({ keyCameraScreen: navigation.state.key })
-  }
-
-  const askPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    return status;
+    navigation.setParams({ keyCameraScreen: navigation.state.key });
   };
-  // Create file directory when mount
-  const createFileDirectory = async () => {
-    try {
-      await FileSystem.makeDirectoryAsync(
-        `${FileSystem.documentDirectory}photos`,
-        {
-          intermediates: true,
-        }
-      )
-    } catch (e) {
-      console.log(e)
-    }
-  };
-
-  // Clear photos taken in the app when unmount
-  const clearPhotos = React.useCallback(async () => {
-    const photos = await FileSystem.readDirectoryAsync(PHOTOS_DIR);
-    console.log("Camera clearPhotos ", photos)
-    if (photos.length > 0) {
-      await FileSystem.deleteAsync(PHOTOS_DIR);
-    }
-  }, []);
 
   // For Bottom Bar 
-  const handleGalleryIconOnPress = React.useCallback<BottomBarProps['handleGalleryIconOnPress']>(async () => {
-    handleStepNavigation("gallery");
-  }, [handleStepNavigation]);
+  const handleSaveButtonOnPress = React.useCallback<BottomBarProps['handleSaveButtonOnPress']>(async () => {
+    await MediaLibrary.createAssetAsync(capturedPhotoUri);
+    Animated.timing(progress, {
+      toValue: 1,
+      duration: 2000,
+      easing: Easing.linear,
+    }).start(() => {
+      setIsCheckAnimationVisible(false);
+    })
+  }, [capturedPhotoUri, isCheckAnimationVisible, progress]);
 
-  const handleReverseCameraIconOnPress = React.useCallback<BottomBarProps['handleReverseCameraIconOnPress']>(() => {
+  // For Camera Bottom Bar 
+  const handleGalleryIconOnPress = React.useCallback<CameraBottomBarProps['handleGalleryIconOnPress']>(async () => {
+    moveToGallery();
+  }, [moveToGallery]);
+
+  const handleReverseCameraIconOnPress = React.useCallback<CameraBottomBarProps['handleReverseCameraIconOnPress']>(() => {
     if (type === ExpoCamera.Constants.Type.back) {
       setType(ExpoCamera.Constants.Type.front);
     } else {
@@ -134,13 +91,19 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     }
   }, [type]);
 
-  const handleTakePictureIconOnPress = React.useCallback<BottomBarProps['handleTakePictureIconOnPress']>(async () => {
+  const handleTakePictureIconOnPress = React.useCallback<CameraBottomBarProps['handleTakePictureIconOnPress']>(async () => {
     if (camera) {
       await camera.takePictureAsync({ onPictureSaved, quality: 0.5 });
-    }
+    };
   }, [camera]);
 
-  // For Camera View
+  // For CameraView
+  const onPictureSaved = async photo => {
+    camera.pausePreview();
+    setCapturedPhotoUri(photo.uri);
+    navigation.setParams({ capturedPhotoUri: photo.uri})
+  };
+
   const onCameraReady = React.useCallback<CameraViewProps['onCameraReady']>(async () => {
     if (camera) {
       const pictureSizes = await camera.getAvailablePictureSizesAsync(ratio);
@@ -152,8 +115,6 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
         pictureSizeId = pictureSizes.length-1;
       };
       setPictureSize(pictureSizes[pictureSizeId]);
-      setPictureSizeId(pictureSizeId);
-      setPictureSizes(pictureSizes);
     }
   },[camera]);
   const onMountError = React.useCallback<CameraViewProps['onMountError']>(e => {
@@ -161,48 +122,31 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
     return null;
   }, []);
 
-  // For CameraPhotoGallery
-  const togglePhotoSelection = React.useCallback<CameraPhotoGalleryProps['togglePhotoSelection']>((uri, isSelected) => {
-    if (isSelected) {
-      setSelectedPhotos([...selectedPhotos, uri]);
-    } else {
-      setSelectedPhotos(selectedPhotos.filter(item => item !== uri));
-    }
-  }, [selectedPhotos]);
-
   React.useEffect(() => {
     boostrapAsync();
     return () => {
-      // clearPhotos();
     }
   }, []);
 
   React.useEffect(() => {
-    navigation.setParams({selectedPhotos})
-  }, [selectedPhotos]);
-
-  if (!hasCameraPermission) {
-    return <LoadingComponent />;
-  };
- 
-  if (step == "gallery") {
-    return (
-      <CameraPhotoGallery 
-        photos={photos}
-        selectedPhotos={selectedPhotos}
-        setSelectedPhotos={setSelectedPhotos}
-        togglePhotoSelection={togglePhotoSelection}
-      /> 
-    )
-  };
+    if (!isCheckAnimationVisible && !!progress){
+      setIsCheckAnimationVisible(true);
+      progress.setValue(0);
+    }
+  }, [isCheckAnimationVisible, progress]);
 
   return (
     <CameraView 
+      capturedPhotoUri={capturedPhotoUri}
       onCameraReady={onCameraReady}
       onMountError={onMountError}
       pictureSize={pictureSize}
       setCamera={setCamera}
       type={type}
+
+      handleSaveButtonOnPress={handleSaveButtonOnPress}
+      isCheckAnimationVisible={isCheckAnimationVisible}
+      progress={progress}
 
       handleGalleryIconOnPress={handleGalleryIconOnPress}
       handleReverseCameraIconOnPress={handleReverseCameraIconOnPress}

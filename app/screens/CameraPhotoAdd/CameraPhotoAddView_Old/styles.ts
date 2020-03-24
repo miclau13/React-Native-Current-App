@@ -6,11 +6,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     flexWrap: 'wrap',
   },
-  iconsContainer: {
-    flex: 1, 
-    flexDirection: 'row', 
-    justifyContent: 'center' ,
-  }
+  tileContainerStyle: {
+    margin: 0, 
+    padding: 8,
+    shadowOpacity: 0,
+  },
+  tileContentContainerStyle: {
+    height: 0,
+  },
 });
 
 export default styles;

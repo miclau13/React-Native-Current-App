@@ -1,5 +1,5 @@
 // For Upload 
-const uploadImagesAsync = async (uriArray: string[]) => {
+const uploadImagesAsync = async (rehabId: string, uriArray: string[]) => {
   let apiUrl = 'https://agent.trudeed.com/blobUpload/images';
   let formData = new FormData();
   uriArray.forEach(uri => {
@@ -16,6 +16,7 @@ const uploadImagesAsync = async (uriArray: string[]) => {
     formData.append('photos', result);
   });
   formData.append('password', 'trudeed@2019');
+  formData.append('rehabId', rehabId);
 
   const options = {
     method: 'POST',
@@ -29,9 +30,9 @@ const uploadImagesAsync = async (uriArray: string[]) => {
   return fetch(apiUrl, options);
 };
 
-export const uploadPhotos = async (selectedPhotos: string[]) => {
+export const uploadPhotos = async (rehabId: string, selectedPhotos: string[]) => {
   try {
-    const uploadResponse = await uploadImagesAsync(selectedPhotos);
+    const uploadResponse = await uploadImagesAsync(rehabId, selectedPhotos);
     const uploadResult = await uploadResponse.json();
     return uploadResult;
   } catch(error) {

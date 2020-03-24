@@ -9,16 +9,27 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
   const { navigation } = props;
   const keyCameraScreen = navigation.getParam("keyCameraScreen");
   const rehabId = navigation.getParam("rehabId");
+  const selectedPhotos = navigation.getParam("selectedPhotos", []);
 
   // From Vacant Screen for normal input flow
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
+  const lengthOfSelectedPhotos = selectedPhotos.length;
 
   const handleHeaderRightOnPress = () => {
-    navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput });
+    navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput, selectedPhotos });
+  };
+
+  const _headerTitle = lengthOfSelectedPhotos ? 
+    `${lengthOfSelectedPhotos} Selected` : 
+    "Select Photo(s)"
+
+  const handleHeaderRightToUploadOnPress = () => {
+    navigation.navigate("CameraPhotoUploadScreen", { keyCameraScreen, rehabId, selectedPhotos });
   };
 
   return { 
+    headerTitle: _headerTitle,
     headerLeft: (props) => {
       return (
         <HeaderBackButton 
@@ -32,14 +43,24 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
         return (
           <Button 
             {...props}
+            disabled={!!!lengthOfSelectedPhotos}
             onPress={handleHeaderRightOnPress}
             color={primaryButtonColor}
-            title={"Skip"}
+            title={"Submit"}
           >
           </Button> 
         )
       }
-      return null
+      return (
+        <Button 
+          {...props}
+          disabled={!!!lengthOfSelectedPhotos}
+          onPress={handleHeaderRightToUploadOnPress}
+          color={primaryButtonColor}
+          title={"Upload"}
+        >
+        </Button> 
+      ) 
     }
   }
 };
