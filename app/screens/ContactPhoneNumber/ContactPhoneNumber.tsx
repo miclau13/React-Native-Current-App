@@ -7,10 +7,11 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import ContactPhoneNumberView from './ContactPhoneNumberView';
-import { checkIfFormatValid, validateFormat } from './utils';
+import { checkIfFormatValid, checkIfEmailFormatValid, validateFormat } from './utils';
 import { LoadingComponent } from '../InitialLoading';
 import CheckEmailVerified, { CheckEmailVerifiedProps } from '../../components/CheckEmailVerified';
 import { CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
+import { Viewer } from '../../generated/Viewer';
 
 const SEND_VERIFICATION_EMAIL = gql`
   mutation SendVerificationEmail {
@@ -22,15 +23,16 @@ const VIEWER = gql`
   query Viewer {
     viewer {
       id
+      email
       emailVerified
     }
   }
 `;
 
 export interface Params {
-  createRehabNoArvInput: CreateRehabNoArvVariables['input'];
-  rehabId?: string;
-  rehabItemPackageId?: string;
+  // createRehabNoArvInput: CreateRehabNoArvVariables['input'];
+  // rehabId?: string;
+  // rehabItemPackageId?: string;
 };
 
 type ScreenProps = {};
@@ -40,33 +42,57 @@ export interface ContactPhoneNumberViewProps {
   contactPhoneNumberIsValid: boolean;
   handleButtonOnPress: ButtonProps['onPress'];
   handleOnChangeText: TextInputProps['onChangeText'];
+  handleOnChangeEmailText: TextInputProps['onChangeText'];
+  _email: string;
+  _emailIsValid: boolean;
 };
 
 const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
-  const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
-  const rehabId = navigation.getParam("rehabId", null);
-  const rehabItemPackageId = navigation.getParam("rehabItemPackageId", null);
+  // const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  // const rehabId = navigation.getParam("rehabId", null);
+  // const rehabItemPackageId = navigation.getParam("rehabItemPackageId", null);
 
-  const { data: viewerQueryData, loading: viewerQueryLoading, refetch: viewerQueryRefetch } = useQuery(VIEWER);
+  const { data: viewerQueryData, loading: viewerQueryLoading, refetch: viewerQueryRefetch } = useQuery<Viewer>(VIEWER, {
+    onCompleted: (data) => {
+      if (viewerQueryData && viewerQueryData?.viewer?.email) {
+        set_email(viewerQueryData?.viewer?.email);
+      };
+    },
+  });
   const [sendVerificationEmail, { loading: sendVerificationEmailMutationLoading }] = useMutation(SEND_VERIFICATION_EMAIL);
-
-  const [contactPhoneNumber, setContactPhoneNumber] = React.useState((createRehabNoArvInput.contactPhoneNumber) || "+1 ");
+  const [contactPhoneNumber, setContactPhoneNumber] = React.useState("+1 ");
   const [contactPhoneNumberIsValid, setContactPhoneNumberIsValid] = React.useState(true);
+  const [_email, set_email] = React.useState(viewerQueryData?.viewer?.email || "");
+  const [_emailIsValid, set_emailIsValid] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
 
   const moveToNextScreen = () => {
-    const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
-    navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
-  }
+    // const _createRehabNoArvInput = { ...createRehabNoArvInput, contactPhoneNumber };
+    // navigation.navigate("CreateRehabScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput: _createRehabNoArvInput });
+    navigation.navigate("ProfitSummaryScreen", { step: 'submit', contactInfo: {
+      contactPhoneNumber,
+      email: _email
+    } });
+  };
 
   const handleButtonOnPress: ContactPhoneNumberViewProps['handleButtonOnPress'] = async () => {
     const valueIsValid = checkIfFormatValid(contactPhoneNumber);
+    const valueEmailIsValid = checkIfEmailFormatValid(_email);
+    if (!valueEmailIsValid) {
+      set_emailIsValid(false);
+    } else {
+      set_emailIsValid(true);
+    };
     if (!valueIsValid) {
       setContactPhoneNumberIsValid(false);
     } else {
+      setContactPhoneNumberIsValid(true);
+    };
+    if (valueIsValid && valueEmailIsValid){
       Keyboard.dismiss();
       setContactPhoneNumberIsValid(true);
+      set_emailIsValid(true);
       if (viewerQueryData?.viewer?.emailVerified) {
         moveToNextScreen();
       } else {
@@ -77,6 +103,10 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
   const handleOnChangeText: ContactPhoneNumberViewProps['handleOnChangeText'] = (value) => {
     const validValue = validateFormat(value);
     setContactPhoneNumber(validValue);
+  };
+  const handleOnChangeEmailText: ContactPhoneNumberViewProps['handleOnChangeEmailText'] = (value) => {
+    // const validValue = validateFormat(value);
+    set_email(value);
   };
 
   // For CheckEmailVerified
@@ -92,7 +122,7 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
     setModalVisible(false);
     moveToNextScreen();
   };
-
+  
   if (viewerQueryLoading) {
     return (
       <LoadingComponent />
@@ -113,6 +143,9 @@ const ContactPhoneNumber: NavigationStackScreenComponent<Params, ScreenProps> = 
         contactPhoneNumber={contactPhoneNumber}
         contactPhoneNumberIsValid={contactPhoneNumberIsValid}
         handleOnChangeText={handleOnChangeText}
+        handleOnChangeEmailText={handleOnChangeEmailText}
+        _email={_email}
+        _emailIsValid={_emailIsValid}
       />
     </>
   );

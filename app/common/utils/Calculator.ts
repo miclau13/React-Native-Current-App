@@ -7,7 +7,7 @@ const LABELS = [
   { name: "Good", labelColor: primaryGreen, activeBarColor: primaryGreen },
 ];
 
-export const calculateRemodelingCost = (data: MyRehabRequests_myRehabRequests['rehabItemsPackage']['rehabItems']) => {
+export const calculateRemodelingCost = (data: MyRehabRequests_myRehabRequests['rehabItemsPackage']['rehabItems'], taxRate = 0) => {
   const cost = (data || []).reduce((acc, item) => {
     const _cost = item.selected ? item.cost : 0;
     acc += _cost;

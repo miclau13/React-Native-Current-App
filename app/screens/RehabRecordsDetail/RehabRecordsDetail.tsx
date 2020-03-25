@@ -1,5 +1,4 @@
-
-import { isNil, isNumber, reduce, sortBy } from 'lodash';
+import { isNil, reduce, sortBy } from 'lodash';
 import React from 'react';
 import { TextStyle } from 'react-native';
 import { ListItemProps } from 'react-native-elements'
@@ -18,6 +17,7 @@ type Params = {
   rehabId?: string;
   rehabItemPackageId?: string;
   revisedRehabInfo?: RevisedRehabInfo;
+  submitted?: MyRehabRequests_myRehabRequests['rehabItemsPackage']['submitted'];
 };
 
 type ScreenProps = {};
@@ -74,8 +74,10 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     if (key === "rehabItemsPackage") {
       const { arv, asIs } = detail;
       const isRevised = !!value?.revisedRehabItems;
-      const remodelingCost = isRevised ? calculateRemodelingCost(value?.revisedRehabItems) : calculateRemodelingCost(value?.rehabItems);
-      // const remodelingCost = calculateRemodelingCost(value?.rehabItems);
+      const taxRate = value?.taxRate;
+      const subTotal = isRevised ? calculateRemodelingCost(value?.revisedRehabItems) : calculateRemodelingCost(value?.rehabItems);
+      const salesTax = subTotal * taxRate;
+      const remodelingCost = subTotal + salesTax;
       let lowerLimitOfRemodelingCost = Math.ceil(remodelingCost * 0.7);
       let upperLimitOfRemodelingCost = Math.ceil(remodelingCost * 1.3);
       const { name: nameForRemodelingCost, order: orderForRemodelingCost } = getItemAttributes("remodelingCost");
@@ -96,7 +98,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
 
   const bootstrapAsync = async () => {
     // For revise flow
-    const { address, arv, asIs, beds, contactPhoneNumber="+1 ", fullBaths, halfBaths, id, propertyDetails, postalCode, sqft, style, threeQuarterBaths, totalDebts, vacant, rehabItemsPackage: { id: rehabItemPackageId } } = detail;
+    const { address, arv, asIs, beds, contactPhoneNumber="+1 ", fullBaths, halfBaths, id, propertyDetails, postalCode, sqft, style, threeQuarterBaths, totalDebts, vacant, rehabItemsPackage: { id: rehabItemPackageId, submitted } } = detail;
     const revisedRehabInfo = {
       address,
       arv,
@@ -116,6 +118,7 @@ const RehabRecordsDetail: NavigationStackScreenComponent<Params, ScreenProps> = 
     navigation.setParams({ 
       rehabItemPackageId,
       revisedRehabInfo,
+      submitted,
       loading: false,
       rehabId: id,
     });

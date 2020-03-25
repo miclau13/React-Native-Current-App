@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from 'react-native';
-import { NavigationRoute, NavigationScreenConfig, } from "react-navigation"; 
+import { Button, View } from 'react-native';
+import { NavigationRoute, NavigationScreenConfig } from "react-navigation"; 
 import { HeaderBackButton, NavigationStackProp, NavigationStackOptions } from "react-navigation-stack";
 
 import { primaryButtonColor } from "../../styles/constants";
@@ -8,13 +8,15 @@ import { primaryButtonColor } from "../../styles/constants";
 const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   const { navigation } = props;
   const detail = navigation.getParam("detail", {});
+  const keyCameraScreen = navigation.getParam("keyCameraScreen");
   const loading = navigation.getParam("loading", true);
   const rehabId = navigation.getParam("rehabId");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId");
   const revisedRehabInfo = navigation.getParam("revisedRehabInfo", {});
+  const submitted = navigation.getParam("submitted");
   const hasRevisedRehabItems = !!detail.rehabItemsPackage.revisedRehabItems;
-  const flow = !hasRevisedRehabItems ? "revise" : null;
 
+  const flow = !hasRevisedRehabItems ? "revise" : null;
   const handleHeaderRightReviseOnPress = () => {
     navigation.push("CreateRehabScreen", 
     { 
@@ -34,6 +36,19 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       detail
     })
   };
+  const handleHeaderRightAddPhotoOnPress = () => {
+    navigation.push("CameraPhotoAddScreen", 
+      { 
+        keyCameraScreen,
+        rehabId,
+      },
+      {
+        type: 'Navigation/NAVIGATE',
+        routeName: "CameraPhotoAddScreen",
+        key: "KEY_CameraScreen"
+      }
+    )
+  };
   return {
     headerLeft: (props) => {
       return (
@@ -47,24 +62,35 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
       if (loading) {
         return null;
       };
-      if (!hasRevisedRehabItems) {
+      if (!submitted) {
+        return (
+          <View style={{ flexDirection: 'row' }}>
+            <Button
+            {...props}
+            color={primaryButtonColor}
+            onPress={handleHeaderRightAddPhotoOnPress}
+            title={"Upload Photo"}
+            />
+            <Button
+              {...props}
+              color={primaryButtonColor}
+              onPress={handleHeaderRightReviseOnPress}
+              title={"Revise"}
+            />
+          </View>
+        )
+      };
+      if (hasRevisedRehabItems) {
         return (
           <Button
             {...props}
             color={primaryButtonColor}
-            onPress={handleHeaderRightReviseOnPress}
-            title={"Revise"}
+            onPress={handleHeaderRightCheckOnPress}
+            title={"Quotation"}
           />
-        )
-      };
-      return (
-        <Button
-          {...props}
-          color={primaryButtonColor}
-          onPress={handleHeaderRightCheckOnPress}
-          title={"Quotation"}
-        />
-      );
+        );
+      }
+      return null;
     }
   };
 };

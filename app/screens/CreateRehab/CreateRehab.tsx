@@ -13,6 +13,8 @@ import {
   getDefaultPropertyDetails, 
   getDefaultPropertyInfoFields, 
 } from '../PropertyInfo/utils';
+import { uploadPhotos } from '../../common/utils/UploadImages';
+import { calculateRemodelingCost } from '../../common/utils/Calculator';
 import { CreateRehabNoArv, CreateRehabNoArvVariables } from '../../generated/CreateRehabNoArv';
 import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../../generated/UpdateRehabItemsPackage';
 
@@ -21,6 +23,7 @@ export interface Params {
   createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
   rehabId?: CreateRehabNoArv['createRehabNoArv']['rehabId'];
   rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
+  selectedPhotos?: string[];
   // From CreateRehab itself after create Rehab
   revisedRehabInfo?: RevisedRehabInfo;
   // From RehabRecordsDetailScreen due to Revise button
@@ -56,6 +59,7 @@ const CREATE_REHAB_NO_ARV = gql`
           notes
         }
         submitted
+        taxRate
       }
     }
   }
@@ -83,11 +87,22 @@ const UPDATE_REHAB_ITEMS_PACKAGE = gql`
           notes
         }
         submitted
+        taxRate
       }
       rehabRequest {
         id
         arv
         postalCode
+      }
+    }
+  }
+`;
+
+const UPDATE_REHAB_ITEMS_PACKAGE_AFTER_CREATE = gql`
+  mutation UpdateRehabItemsPackage($input: UpdateRehabItemsPackageInput!) {
+    updateRehabItemsPackage(input: $input) {
+      rehabRequest {
+        id
       }
     }
   }
@@ -99,20 +114,20 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   const flow = navigation.getParam("flow", 1);
   const rehabId = navigation.getParam("rehabId", "");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
+  const selectedPhotos = navigation.getParam("selectedPhotos", []);
 
   // State management for Full Remodel Summary and Profit Summary
   const { arv, asIs, totalDebts, vacant} = createRehabNoArvInput;
   const [, dispatch] = useCreateRehabState();
 
+  const [uploadImagesAfterCreateRehabNoArv] = useMutation<UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables>(UPDATE_REHAB_ITEMS_PACKAGE_AFTER_CREATE);
   const [createRehabNoArv, { error: createRehabNoArvError }] = useMutation<CreateRehabNoArv, CreateRehabNoArvVariables>(CREATE_REHAB_NO_ARV, {
     onCompleted: (data) => {
       if (!createRehabNoArvError && data && data.createRehabNoArv) {
         const result = data.createRehabNoArv;
         const _rehabItemCatergoriesMap = getRehabItemCatergoriesMap(result.rehabItemPackage.rehabItems);
-        let _remodellingCost = 0;
-        for (let key in _rehabItemCatergoriesMap) {
-          _remodellingCost += _rehabItemCatergoriesMap[key]['cost'];
-        };
+        const taxRate = result?.rehabItemPackage?.taxRate || 0;
+        const _remodellingCost = calculateRemodelingCost(result.rehabItemPackage.rehabItems);
         const rehabId = result.rehabId;
         const rehabItemsPackageId = result.rehabItemPackage.id;
         const _rehabItems = result.rehabItemPackage.rehabItems.map(item => (omit(item, ["__typename"])));
@@ -121,6 +136,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
           asIs, 
           rehabId,
           rehabItemsPackageId,
+          taxRate,
           totalDebts,
           vacant,    
           remodellingCost: _remodellingCost, 
@@ -153,10 +169,8 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
       if (!updateRehabItemsPackageError && data && data.updateRehabItemsPackage) {
         const result = data.updateRehabItemsPackage;
         const _rehabItemCatergoriesMap = getRehabItemCatergoriesMap(result.rehabItemsPackage.rehabItems);
-        let _remodellingCost = 0;
-        for (let key in _rehabItemCatergoriesMap) {
-          _remodellingCost += _rehabItemCatergoriesMap[key]['cost'];
-        };
+        const taxRate = result?.rehabItemsPackage?.taxRate || 0;
+        const _remodellingCost = calculateRemodelingCost(result?.rehabItemsPackage?.rehabItems);
         const rehabId = result.rehabRequest.id;
         const rehabItemsPackageId = result.rehabItemsPackage.id;
         const _rehabItems = result.rehabItemsPackage.rehabItems.map(item => (omit(item, ["__typename"])));
@@ -165,6 +179,7 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
           asIs, 
           rehabId,
           rehabItemsPackageId,
+          taxRate,
           totalDebts,
           vacant,    
           remodellingCost: _remodellingCost,
@@ -196,13 +211,32 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
   });
 
   const bootstrapAsync = async () => {
-    // navigation.state.key = "KEY_CreateRehabScreen";
     try {
+      let images = [];
       if (!rehabId) {
-        await createRehabNoArv({ variables: { input: createRehabNoArvInput }});
+        try {
+          const _result = await createRehabNoArv({ variables: { input: { ...createRehabNoArvInput, images } }});
+          const _rehabId = _result?.data?.createRehabNoArv?.rehabId;
+          if (selectedPhotos.length) {
+            images = await uploadPhotos(_rehabId, selectedPhotos);
+            const updateRehabItemsPackageInput = {
+              rehabRequest: {
+                images,
+                id: _rehabId,
+              }
+            };
+            await uploadImagesAfterCreateRehabNoArv({ variables: { input: updateRehabItemsPackageInput } });
+          };
+        } catch (e) {
+          console.log("createRehabNoArv error", e)
+        }
       } else {
+        if (selectedPhotos.length) {
+          images = await uploadPhotos(rehabId, selectedPhotos);
+        };
         const updateRehabItemsPackageInput = {
           rehabRequest: {
+            images,
             id: rehabId,
             ...createRehabNoArvInput
           },
@@ -211,9 +245,9 @@ const CreateRehab: NavigationStackScreenComponent<Params, ScreenProps> = (props)
           }
         };
         await updateRehabItemsPackage({ variables: { input: updateRehabItemsPackageInput } });
-      };
+      }
     } catch (e) {
-      console.log("createRehab error", e)
+      console.log("bootstrapAsync createRehab error", e)
     }
   };
 

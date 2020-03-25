@@ -14,12 +14,13 @@ const RehabQuotationView: React.ComponentType<RehabQuotationViewProps> = (props)
     <SafeAreaView>
       <ScrollView>
         {items.map((item, i) => {
-          const { name, value, category, prefix, subItemSize, subTotal, style } = item;
+          const { name, value, bottomDivider, category, prefix, subItemSize, subTotal, style, topDivider } = item;
           const isExpanded = subItemSize ? expandDetails[name] : expandDetails[category];
 
           if (category && !subItemSize && !isExpanded) return null;
           return (
             <ListItem
+              bottomDivider={bottomDivider}
               badge={subItemSize ? { value: subItemSize } : null}
               chevron={subItemSize ? isExpanded ? <Icon name="keyboard-arrow-up" /> : <Icon name="keyboard-arrow-down" /> : null}
               key={i}
@@ -48,6 +49,7 @@ const RehabQuotationView: React.ComponentType<RehabQuotationViewProps> = (props)
               }
               title={name}
               titleStyle={style}
+              topDivider={topDivider}
             />
           )
         })}

@@ -9,8 +9,8 @@ import { FullRemodelSummaryViewProps } from '../FullRemodelSummary';
 
 const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> = (props) => {
   const { fields, handleCheckBoxOnPress, handleButtonOnPress, remodellingCost } = props;  
-  let lowerLimit = Math.ceil(remodellingCost * 0.7);
-  let upperLimit = Math.ceil(remodellingCost * 1.3);
+  let lowerLimit = remodellingCost * 0.7;
+  let upperLimit = remodellingCost * 1.3;
 
   return (
     <SafeAreaView>
@@ -19,6 +19,7 @@ const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> =
           <>
             <Text h3 style={styles.totalCostText}>
               <NumberFormat 
+                decimalScale={0}
                 displayType={'text'} 
                 prefix={'$'}
                 renderText={value => <Text>{value}</Text>}
@@ -27,6 +28,7 @@ const FullRemodelSummaryView: React.ComponentType<FullRemodelSummaryViewProps> =
               />
               <Text> to </Text> 
               <NumberFormat 
+                decimalScale={0}
                 displayType={'text'} 
                 prefix={'$'}
                 renderText={value => <Text>{value}</Text>}
