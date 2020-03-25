@@ -28,7 +28,7 @@
       "bundleIdentifier": "com.demo.React-Native-Current-App"
     },
     "android": {
-      "package": "com.trudeed.fiximize",
+      "package": "com.demo.React-Native-Current-App",
       "versionCode": 20
     }
   }

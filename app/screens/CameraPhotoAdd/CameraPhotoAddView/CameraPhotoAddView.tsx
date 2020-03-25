@@ -5,7 +5,7 @@ import { Icon, Tile } from 'react-native-elements';
 import styles from './styles';
 import { CameraPhotoAddViewProps } from '../CameraPhotoAdd';
 import { primaryButtonColor } from '../../../styles';
-import FiximizeImage from '../../../../assets/FiximizeLogo.png';
+import DemoImage from '../../../../assets/DemoImage.png';
 
 const CameraPhotoAddView: React.ComponentType<CameraPhotoAddViewProps> = (props) => {
   const { onCameraIconPress, onPhotoLibraryIconPress } = props;
@@ -16,7 +16,7 @@ const CameraPhotoAddView: React.ComponentType<CameraPhotoAddViewProps> = (props)
             activeOpacity={1}
             containerStyle={{ padding: 24 }}
             // contentContainerStyle={{ height: 200 }}
-            imageSrc={FiximizeImage}
+            imageSrc={DemoImage}
             imageProps={{
               resizeMode: 'contain',
               PlaceholderContent: <ActivityIndicator />
