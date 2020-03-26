@@ -13,8 +13,8 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
   const { deleteMode, handleItemOnPress, handleItemDeleteOnPress, rehabRecords } = props;  
   
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.container}>
         {rehabRecords.map((rehabRecord, i) => {
           const { arv, asIs, checked, rehabItemsPackage } = rehabRecord;
           const isRevised = !!rehabItemsPackage.revisedRehabItems;
@@ -102,14 +102,6 @@ const RehabRecordsView: React.ComponentType<RehabRecordsViewProps> = (props) => 
                       </>
                     }
                   </View>
-                  {/* <NumberFormat 
-                    decimalScale={0}
-                    displayType={'text'} 
-                    prefix={'$'}
-                    renderText={value => <Text style={styles.subtitleStyle}>{`Remodeling Budget${isRevised ? '(Revised)' : ''}: ${value}`}</Text>}
-                    thousandSeparator={true} 
-                    value={remodelingCost}
-                  /> */}
                 </>
               }
               title={rehabRecord.address}
