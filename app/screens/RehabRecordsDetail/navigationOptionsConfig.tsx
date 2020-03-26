@@ -80,7 +80,17 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
           </View>
         )
       };
-      if (hasRevisedRehabItems) {
+      if (submitted && !hasRevisedRehabItems) {
+        return (
+          <Button
+          {...props}
+          color={primaryButtonColor}
+          onPress={handleHeaderRightAddPhotoOnPress}
+          title={"Upload Photo"}
+          />
+        );
+      };
+      if (submitted && hasRevisedRehabItems) {
         return (
           <Button
             {...props}

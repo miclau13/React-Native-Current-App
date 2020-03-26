@@ -1,3 +1,11 @@
+import * as ImageManipulator from 'expo-image-manipulator';
+
+// For compression
+const getCompressedImages = async (assets: Array<string>) => Promise.all(assets.map(async (uri) => {
+  const manipResult = await ImageManipulator.manipulateAsync(uri, [], { compress: 0 });
+  return manipResult.uri;
+})); 
+
 // For Upload 
 const uploadImagesAsync = async (rehabId: string, uriArray: string[]) => {
   let apiUrl = 'https://agent.trudeed.com/blobUpload/images';
@@ -32,7 +40,8 @@ const uploadImagesAsync = async (rehabId: string, uriArray: string[]) => {
 
 export const uploadPhotos = async (rehabId: string, selectedPhotos: string[]) => {
   try {
-    const uploadResponse = await uploadImagesAsync(rehabId, selectedPhotos);
+    const compressedSelectedPhotos = await getCompressedImages(selectedPhotos);
+    const uploadResponse = await uploadImagesAsync(rehabId, compressedSelectedPhotos);
     const uploadResult = await uploadResponse.json();
     return uploadResult;
   } catch(error) {
