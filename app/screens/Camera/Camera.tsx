@@ -93,7 +93,7 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   const handleTakePictureIconOnPress = React.useCallback<CameraBottomBarProps['handleTakePictureIconOnPress']>(async () => {
     if (camera) {
-      await camera.takePictureAsync({ onPictureSaved, quality: 0.5 });
+      await camera.takePictureAsync({ onPictureSaved, quality: 0.1 });
     };
   }, [camera]);
 
