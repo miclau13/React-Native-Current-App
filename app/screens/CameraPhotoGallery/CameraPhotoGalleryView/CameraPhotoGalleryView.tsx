@@ -22,13 +22,13 @@ const CameraPhotoGalleryView: React.ComponentType<CameraPhotoGalleryViewProps> =
       renderItem={({ item, index }) => {
         return(
           <CameraPhoto
-            uri={item}
+            photo={item}
             key={index}
             togglePhotoSelection={togglePhotoSelection}
           />
         )
       }}
-      keyExtractor={(uri, index) => `${uri}-${index}`}
+      keyExtractor={(photo, index) => `${photo.id}-${index}`}
       onEndReached={() => {getCameraRollPhotos()}}
       onEndReachedThreshold={0.5}
       ListEmptyComponent={<Text>Empty...</Text>}
