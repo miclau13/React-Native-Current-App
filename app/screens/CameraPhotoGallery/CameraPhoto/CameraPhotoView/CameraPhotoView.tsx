@@ -5,7 +5,7 @@ import { deviceScreenWidth } from '../../../../styles/constants';
 import { CameraPhotoViewProps } from '../CameraPhoto';
 
 const CameraPhotoView: React.ComponentType<CameraPhotoViewProps> = (props) => {
-  const { imageOnPress, selected, uri } = props;
+  const { imageOnPress, selected, photo } = props;
 
   return (
     <TouchableHighlight
@@ -15,7 +15,7 @@ const CameraPhotoView: React.ComponentType<CameraPhotoViewProps> = (props) => {
     >
       <Image
         style={{ width: deviceScreenWidth / 4, height: deviceScreenWidth / 4 }}
-        source={{ uri }}
+        source={{ uri: photo.uri }}
       />
     </TouchableHighlight>
   )

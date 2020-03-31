@@ -1,8 +1,13 @@
 import * as ImageManipulator from 'expo-image-manipulator';
+import { Asset } from 'expo-media-library';
 
 // For compression
-const getCompressedImages = async (assets: Array<string>) => Promise.all(assets.map(async (uri) => {
-  const manipResult = await ImageManipulator.manipulateAsync(uri, [], { compress: 0 });
+const getCompressedImages = async (assets: Array<Asset>) => Promise.all(assets.map(async (asset) => {
+  const ratio = 2 / 5;
+  const width = asset.width * ratio;
+  const height = asset.height * ratio;
+  const manipResult = await ImageManipulator.manipulateAsync(asset.uri, [{ resize: { width, height } }], { compress: 0.1 });
+  // const manipResult = await ImageManipulator.manipulateAsync(asset.uri, [], { compress: 0 });
   return manipResult.uri;
 })); 
 
@@ -39,7 +44,7 @@ const uploadImagesAsync = async (rehabId: string, uriArray: string[]) => {
   return fetch(apiUrl, options);
 };
 
-export const uploadPhotos = async (rehabId: string, selectedPhotos: string[]) => {
+export const uploadPhotos = async (rehabId: string, selectedPhotos: Asset[]) => {
   try {
     const compressedSelectedPhotos = await getCompressedImages(selectedPhotos);
     const uploadResponse = await uploadImagesAsync(rehabId, compressedSelectedPhotos);

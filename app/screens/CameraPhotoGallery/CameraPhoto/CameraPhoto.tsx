@@ -7,23 +7,23 @@ import { CameraPhotoProps } from '../CameraPhotoGallery';
 export interface CameraPhotoViewProps {
   imageOnPress: TouchableOpacityProps['onPress'];
   selected: boolean;
-  uri: CameraPhotoProps['uri'];
+  photo: CameraPhotoProps['photo'];
 };
 
 const CameraPhoto: React.ComponentType<CameraPhotoProps> = (props) => {
-  const { togglePhotoSelection, uri } = props;
+  const { togglePhotoSelection, photo } = props;
   const [selected, setSelected] = React.useState(false);
 
   const imageOnPress = React.useCallback<CameraPhotoViewProps['imageOnPress']>(() => {
     setSelected(!selected);
-    togglePhotoSelection(uri, !selected);
-  }, [selected, togglePhotoSelection, uri]);
+    togglePhotoSelection(photo, !selected);
+  }, [selected, togglePhotoSelection, photo]);
 
   return (
     <CameraPhotoView 
       imageOnPress={imageOnPress}
       selected={selected}
-      uri={uri}
+      photo={photo}
     />
   )
 };
