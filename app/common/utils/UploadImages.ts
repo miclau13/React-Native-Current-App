@@ -3,10 +3,10 @@ import { Asset } from 'expo-media-library';
 
 // For compression
 const getCompressedImages = async (assets: Array<Asset>) => Promise.all(assets.map(async (asset) => {
-  const ratio = 2 / 5;
+  const ratio = 0.2;
   const width = asset.width * ratio;
   const height = asset.height * ratio;
-  const manipResult = await ImageManipulator.manipulateAsync(asset.uri, [{ resize: { width, height } }], { compress: 0.1 });
+  const manipResult = await ImageManipulator.manipulateAsync(asset.uri, [{ resize: { width, height } }], { compress: 0 });
   // const manipResult = await ImageManipulator.manipulateAsync(asset.uri, [], { compress: 0 });
   return manipResult.uri;
 })); 
