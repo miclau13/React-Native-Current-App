@@ -13,7 +13,7 @@
     "orientation": "portrait",
     "icon": "./assets/favicon3.png",
     "splash": {
-      "image": "./assets/fiximize.png",
+      "image": "./assets/FiximizeLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
