@@ -28,7 +28,9 @@ export type SelectedPhotos = {
 export type CameraPhotoAddTileViewProps = TileProps;
 export interface CameraPhotoAddViewProps {
   onCameraIconPress: IconProps['onPress'];
+  onHistoryIconPress: IconProps['onPress'];
   onPhotoLibraryIconPress: IconProps['onPress'];
+  rehabId: string;
 };
 
 const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
@@ -66,7 +68,10 @@ const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (pro
       navigation.navigate("CameraScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput })
     };
   }, []);
-  const onPhotoLibraryIconPress = React.useCallback<CameraPhotoAddViewProps['onCameraIconPress']>(async () => {
+  const onHistoryIconPress = React.useCallback<CameraPhotoAddViewProps['onHistoryIconPress']>(async () => {
+    navigation.navigate("CameraPhotoReviewScreen", { rehabId })
+  }, []);
+  const onPhotoLibraryIconPress = React.useCallback<CameraPhotoAddViewProps['onPhotoLibraryIconPress']>(async () => {
     const hasPermission = await getPhotoLibraryPermissionAsync();
     if (hasPermission) {
       navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput })
@@ -89,7 +94,9 @@ const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (pro
   return (
     <CameraPhotoAddView 
       onCameraIconPress={onCameraIconPress}
+      onHistoryIconPress={onHistoryIconPress}
       onPhotoLibraryIconPress={onPhotoLibraryIconPress}
+      rehabId={rehabId}
     />
   )
 };

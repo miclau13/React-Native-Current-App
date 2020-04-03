@@ -8,7 +8,12 @@ import { primaryButtonColor } from '../../../styles';
 import FiximizeImage from '../../../../assets/FiximizeLogo.png';
 
 const CameraPhotoAddView: React.ComponentType<CameraPhotoAddViewProps> = (props) => {
-  const { onCameraIconPress, onPhotoLibraryIconPress } = props;
+  const { 
+    onCameraIconPress, 
+    onHistoryIconPress,
+    onPhotoLibraryIconPress,
+    rehabId,
+  } = props;
     return (
       <SafeAreaView>
         <ScrollView>
@@ -44,6 +49,20 @@ const CameraPhotoAddView: React.ComponentType<CameraPhotoAddViewProps> = (props)
               onPress={onPhotoLibraryIconPress}
               size={36}  
             />
+            {rehabId ? 
+              <>
+                <View style={{ marginHorizontal: 16 }}></View>
+                <Icon 
+                  raised
+                  reverse
+                  color={primaryButtonColor}
+                  name="history" 
+                  onPress={onHistoryIconPress}
+                  size={36}  
+                />
+              </>
+              : null
+            }
           </View>
         </ScrollView>
       </SafeAreaView>
