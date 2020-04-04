@@ -1,5 +1,5 @@
 const strings = {
-  title: "Camera Photo Gallery"
+  title: "Image Carousel",
 }
 
 export default strings;
