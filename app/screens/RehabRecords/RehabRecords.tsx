@@ -1,5 +1,6 @@
 import { gql } from 'apollo-boost';
 import React from 'react';
+import { FlatList } from 'react-native';
 import { IconProps, ListItemProps } from 'react-native-elements';
 import { ModalProps } from 'react-native-modal';
 import { ButtonProps } from 'react-native-paper';
@@ -88,9 +89,10 @@ export type RehabRecordsDeleteViewProps = {
 
 export type RehabRecordsViewProps = {
   deleteMode: boolean;
-  rehabRecords: RehabRecords[];
+  index: number;
   handleItemOnPress(index: number): ListItemProps['onPress'];
   handleItemDeleteOnPress(index: number): IconProps['onPress'];
+  rehabRecord: RehabRecords;
 };
 
 const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
@@ -102,6 +104,7 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   const [deleteRehab, { loading: deleteRehabLoading }] = useMutation<DeleteRehab, DeleteRehabVariables>(DELETE_REHAB);
   
   const myRehabRequests = data?.myRehabRequests || [];
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [rehabRecords, setRehabRecords] = React.useState<RehabRecords[]>([]);
   const selectedRehabRecordsIds = rehabRecords.filter(record => record.checked).map(record => record.id);
 
@@ -123,8 +126,10 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
   };
   const handleDeleteOnPress: RehabRecordsDeleteViewProps['handleDeleteOnPress'] = async () => {
     navigation.setParams({ deleteMode: false, openConfirmModal: false });
+    setIsRefreshing(true);
     await deleteRehabs();
     await myRehabRequestsRefetch();
+    setIsRefreshing(false);
   };
 
   // For RehabRecordsView
@@ -139,6 +144,27 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
     navigation.setParams({ lengthOfSelectedRehabRecords });
     setRehabRecords(updatedRehabRecords);
   };
+  const onRefresh = async () => {
+    setIsRefreshing(true); // true isRefreshing flag for enable pull to refresh indicator
+    try {
+      await myRehabRequestsRefetch();
+    } catch (error) {
+      console.log("refetch error", error)
+    };
+    setIsRefreshing(false);
+  };
+  const keyExtractor = (item, index) => index.toString();
+  const renderItem = ({ item, index }) => {
+    return (
+      <RehabRecordsView 
+        deleteMode={deleteMode}
+        handleItemOnPress={handleItemOnPress}
+        handleItemDeleteOnPress={handleItemDeleteOnPress}
+        index={index}
+        rehabRecord={item}
+      />
+    );
+  }
 
   React.useEffect(() => {
     navigation.setParams({ loading: loading || deleteRehabLoading });
@@ -153,11 +179,11 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
     return () => {}
   }, [data, deleteMode]);
 
-
-
   React.useEffect(() => {
-    const didFoucsSubscription =navigation.addListener('didFocus', async payload => {
+    const didFoucsSubscription = navigation.addListener('didFocus', async payload => {
+      setIsRefreshing(true);
       await myRehabRequestsRefetch();
+      setIsRefreshing(false);
     });
     return () => {
       didFoucsSubscription.remove();
@@ -172,11 +198,12 @@ const RehabRecords: NavigationStackScreenComponent<Params, ScreenProps> = (props
 
   return (
     <>
-      <RehabRecordsView 
-        deleteMode={deleteMode}
-        handleItemOnPress={handleItemOnPress}
-        handleItemDeleteOnPress={handleItemDeleteOnPress}
-        rehabRecords={rehabRecords}
+      <FlatList
+        data={rehabRecords}
+        refreshing={isRefreshing}
+        keyExtractor={keyExtractor}
+        onRefresh={onRefresh}
+        renderItem={renderItem}
       />
       <RehabRecordsDeleteView
         handleBackdropOnPress={handleBackdropOnPress}

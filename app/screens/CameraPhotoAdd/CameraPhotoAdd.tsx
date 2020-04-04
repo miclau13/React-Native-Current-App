@@ -28,7 +28,9 @@ export type SelectedPhotos = {
 export type CameraPhotoAddTileViewProps = TileProps;
 export interface CameraPhotoAddViewProps {
   onCameraIconPress: IconProps['onPress'];
+  onHistoryIconPress: IconProps['onPress'];
   onPhotoLibraryIconPress: IconProps['onPress'];
+  rehabId: string;
 };
 
 const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
@@ -36,6 +38,7 @@ const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (pro
   const rehabId = navigation.getParam("rehabId");
   // From Vacant Screen for normal input flow
   const createRehabNoArvInput = navigation.getParam("createRehabNoArvInput", null);
+  const keyCameraScreen = navigation.getParam("keyCameraScreen");
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
 
   const [loading] = React.useState(false);
@@ -63,15 +66,18 @@ const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (pro
     const hasCameraPermission = await getCameraPermissionAsync();
     const hasCameraRollPermission = await getPhotoLibraryPermissionAsync();
     if (hasCameraPermission && hasCameraRollPermission) {
-      navigation.navigate("CameraScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput })
+      navigation.navigate("CameraScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput, keyCameraScreen })
     };
-  }, []);
-  const onPhotoLibraryIconPress = React.useCallback<CameraPhotoAddViewProps['onCameraIconPress']>(async () => {
+  }, [navigation]);
+  const onHistoryIconPress = React.useCallback<CameraPhotoAddViewProps['onHistoryIconPress']>(async () => {
+    navigation.navigate("CameraPhotoReviewScreen", { rehabId })
+  }, [navigation]);
+  const onPhotoLibraryIconPress = React.useCallback<CameraPhotoAddViewProps['onPhotoLibraryIconPress']>(async () => {
     const hasPermission = await getPhotoLibraryPermissionAsync();
     if (hasPermission) {
-      navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput })
+      navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput, keyCameraScreen })
     } 
-  }, []);
+  }, [navigation]);
 
   React.useEffect(() => {
     navigation.setParams({ keyCameraScreen: navigation.state.key });
@@ -89,7 +95,9 @@ const CameraPhotoAdd: NavigationStackScreenComponent<Params, ScreenProps> = (pro
   return (
     <CameraPhotoAddView 
       onCameraIconPress={onCameraIconPress}
+      onHistoryIconPress={onHistoryIconPress}
       onPhotoLibraryIconPress={onPhotoLibraryIconPress}
+      rehabId={rehabId}
     />
   )
 };

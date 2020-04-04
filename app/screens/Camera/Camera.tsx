@@ -42,6 +42,7 @@ export interface CameraViewProps extends BottomBarProps, CameraBottomBarProps {
 
 const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
+  const keyCameraScreen = navigation.getParam("keyCameraScreen");
   const rehabId = navigation.getParam("rehabId");
 
   // From Vacant Screen for normal input flow
@@ -59,12 +60,8 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
 
   // For General
   const moveToGallery = React.useCallback(() => {
-    navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput });
-  }, [navigation.navigate]);
-
-  const boostrapAsync = async () => {
-    navigation.setParams({ keyCameraScreen: navigation.state.key });
-  };
+    navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput, keyCameraScreen });
+  }, [navigation]);
 
   // For Bottom Bar 
   const handleSaveButtonOnPress = React.useCallback<BottomBarProps['handleSaveButtonOnPress']>(async () => {
@@ -120,12 +117,6 @@ const Camera: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const onMountError = React.useCallback<CameraViewProps['onMountError']>(e => {
     console.error(e.message);
     return null;
-  }, []);
-
-  React.useEffect(() => {
-    boostrapAsync();
-    return () => {
-    }
   }, []);
 
   React.useEffect(() => {

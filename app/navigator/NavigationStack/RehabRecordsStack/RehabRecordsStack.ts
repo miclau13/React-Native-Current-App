@@ -4,6 +4,7 @@ import navigationOptions from './navigationOptionsConfig';
 import CameraScreen, { navigationOptions as CameraScreenNavigationOptions }  from "../../../screens/Camera";
 import CameraPhotoAddScreen, { navigationOptions as CameraPhotoAddScreenNavigationOptions }  from "../../../screens/CameraPhotoAdd";
 import CameraPhotoGalleryScreen, { navigationOptions as CameraPhotoGalleryScreenNavigationOptions }  from "../../../screens/CameraPhotoGallery";
+import CameraPhotoReviewScreen, { navigationOptions as CameraPhotoReviewScreenNavigationOptions }  from "../../../screens/CameraPhotoReview";
 import CameraPhotoUploadScreen, { navigationOptions as CameraPhotoUploadScreenNavigationOptions }  from "../../../screens/CameraPhotoUpload";
 import CreateRehabScreen, { navigationOptions as CreateRehabScreenNavigationOptions }  from "../../../screens/CreateRehab";
 import FullRemodelSummaryScreen, { navigationOptions as FullRemodelSummaryScreenNavigationOptions } from "../../../screens/FullRemodelSummary";
@@ -24,6 +25,10 @@ const RehabRecordsStack = createStackNavigator({
   CameraPhotoGalleryScreen: {
     screen: CameraPhotoGalleryScreen,
     navigationOptions:CameraPhotoGalleryScreenNavigationOptions,
+  },
+  CameraPhotoReviewScreen: {
+    screen: CameraPhotoReviewScreen,
+    navigationOptions:CameraPhotoReviewScreenNavigationOptions,
   },
   CameraPhotoUploadScreen: {
     screen: CameraPhotoUploadScreen,
