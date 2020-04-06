@@ -7,6 +7,7 @@ import AutocompleteScreen, { navigationOptions as AutocompleteScreenNavigationOp
 import CameraScreen, { navigationOptions as CameraScreenNavigationOptions }  from "../../../screens/Camera";
 import CameraPhotoAddScreen, { navigationOptions as CameraPhotoAddScreenNavigationOptions }  from "../../../screens/CameraPhotoAdd";
 import CameraPhotoGalleryScreen, { navigationOptions as CameraPhotoGalleryScreenNavigationOptions }  from "../../../screens/CameraPhotoGallery";
+import CameraPhotoReviewScreen, { navigationOptions as CameraPhotoReviewScreenNavigationOptions }  from "../../../screens/CameraPhotoReview";
 import CameraPhotoUploadScreen, { navigationOptions as CameraPhotoUploadScreenNavigationOptions }  from "../../../screens/CameraPhotoUpload";
 import CreateRehabScreen, { navigationOptions as CreateRehabScreenNavigationOptions }  from "../../../screens/CreateRehab";
 import ContactPhoneNumberScreen, { navigationOptions as ContactPhoneNumberScreenNavigationOptions } from "../../../screens/ContactPhoneNumber";
@@ -46,6 +47,10 @@ const HomeStack = createStackNavigator(
     CameraPhotoGalleryScreen: {
       screen: CameraPhotoGalleryScreen,
       navigationOptions:CameraPhotoGalleryScreenNavigationOptions,
+    },
+    CameraPhotoReviewScreen: {
+      screen: CameraPhotoReviewScreen,
+      navigationOptions:CameraPhotoReviewScreenNavigationOptions,
     },
     CameraPhotoUploadScreen: {
       screen: CameraPhotoUploadScreen,

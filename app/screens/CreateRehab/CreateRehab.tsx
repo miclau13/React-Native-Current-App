@@ -1,4 +1,5 @@
 import { gql } from 'apollo-boost';
+import { Asset } from 'expo-media-library';
 import { omit } from 'lodash';
 import React from 'react';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
@@ -23,7 +24,7 @@ export interface Params {
   createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
   rehabId?: CreateRehabNoArv['createRehabNoArv']['rehabId'];
   rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
-  selectedPhotos?: string[];
+  selectedPhotos?: Asset[];
   // From CreateRehab itself after create Rehab
   revisedRehabInfo?: RevisedRehabInfo;
   // From RehabRecordsDetailScreen due to Revise button

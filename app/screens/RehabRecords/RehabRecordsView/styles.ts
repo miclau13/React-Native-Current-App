@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  chipSubmitted: {
-    // backgroundColor: 'green',
+  container: {
+    flex: 1,
   },
   greyColor: {
     color: 'grey',

@@ -1,4 +1,5 @@
 import { gql } from 'apollo-boost';
+import { Asset } from 'expo-media-library';
 import React from 'react';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { useMutation } from '@apollo/react-hooks';
@@ -10,7 +11,7 @@ import { UpdateRehabItemsPackage, UpdateRehabItemsPackageVariables } from '../..
 
 type Params = {
   rehabId: string;
-  selectedPhotos: string[];
+  selectedPhotos: Asset[];
   loading?: boolean;
 };
 

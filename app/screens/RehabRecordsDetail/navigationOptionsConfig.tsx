@@ -69,7 +69,7 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
             {...props}
             color={primaryButtonColor}
             onPress={handleHeaderRightAddPhotoOnPress}
-            title={"Upload Photo"}
+            title={"Photos"}
             />
             <Button
               {...props}
@@ -80,7 +80,17 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
           </View>
         )
       };
-      if (hasRevisedRehabItems) {
+      if (submitted && !hasRevisedRehabItems) {
+        return (
+          <Button
+          {...props}
+          color={primaryButtonColor}
+          onPress={handleHeaderRightAddPhotoOnPress}
+          title={"Photos"}
+          />
+        );
+      };
+      if (submitted && hasRevisedRehabItems) {
         return (
           <Button
             {...props}

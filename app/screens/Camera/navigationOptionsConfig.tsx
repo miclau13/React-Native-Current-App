@@ -16,7 +16,7 @@ const navigationOptions: NavigationScreenConfig<NavigationStackOptions, Navigati
   const rehabItemPackageId = navigation.getParam("rehabItemPackageId", "");
 
   const handleHeaderRightOnPress = () => {
-    navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput });
+    navigation.navigate("CameraPhotoGalleryScreen", { rehabId, rehabItemPackageId, createRehabNoArvInput, keyCameraScreen });
   };
 
   return { 

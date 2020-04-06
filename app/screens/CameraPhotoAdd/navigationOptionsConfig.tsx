@@ -7,7 +7,6 @@ import { primaryButtonColor } from "../../styles/constants";
 
 const navigationOptions: NavigationScreenConfig<NavigationStackOptions, NavigationStackProp<NavigationRoute, any>> = (props) => {
   const { navigation } = props;
-  const keyCameraScreen = navigation.getParam("keyCameraScreen");
   const rehabId = navigation.getParam("rehabId");
 
   // From Vacant Screen for normal input flow

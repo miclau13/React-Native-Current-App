@@ -1,3 +1,4 @@
+import { Asset } from 'expo-media-library';
 import React from 'react';
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
@@ -8,7 +9,7 @@ import { CreateRehabNoArv, CreateRehabNoArvVariables } from '../../generated/Cre
 type Params = {
   keyCameraScreen?: string;
   rehabId?: string;
-  selectedPhotos?: string[];
+  selectedPhotos?: Asset[];
   // From Vacant Screen for normal input flow
   createRehabNoArvInput?: CreateRehabNoArvVariables['input'];
   rehabItemPackageId?: CreateRehabNoArv['createRehabNoArv']['rehabItemPackage']['id'];
@@ -16,32 +17,30 @@ type Params = {
 
 type ScreenProps = {};
 
-export type TogglePhotoSelection = (uri: string, isSelected: boolean) => void;
+export type TogglePhotoSelection = (photo: Asset, isSelected: boolean) => void;
 
 export interface CameraPhotoGalleryViewProps {
   getCameraRollPhotos: UseCameraRollState['getPhotos'];
-  photos: string[];
+  photos: Asset[];
   togglePhotoSelection: TogglePhotoSelection;
 };
 
 export interface CameraPhotoProps {
   togglePhotoSelection: TogglePhotoSelection;
-  uri: string;
+  photo: Asset;
 };
 
 const CameraGallery: NavigationStackScreenComponent<Params, ScreenProps> = (props) => {
   const { navigation } = props;
   const selectedPhotos = navigation.getParam("selectedPhotos", []);
   const [cameraRollPhotos, getCameraRollPhotos] = useCameraRoll({ first: 10 });
-  const _photos = React.useMemo(() => (cameraRollPhotos || []).map(photo => photo.uri)
-  , [cameraRollPhotos]);
 
   // For CameraPhotoGalleryView
-  const togglePhotoSelection = React.useCallback<CameraPhotoGalleryViewProps['togglePhotoSelection']>((uri, isSelected) => {
+  const togglePhotoSelection = React.useCallback<CameraPhotoGalleryViewProps['togglePhotoSelection']>((photo, isSelected) => {
     if (isSelected) {
-      navigation.setParams({ selectedPhotos: [...selectedPhotos, uri] });
+      navigation.setParams({ selectedPhotos: [...selectedPhotos, photo] });
     } else {
-      navigation.setParams({ selectedPhotos: selectedPhotos.filter(item => item !== uri) });
+      navigation.setParams({ selectedPhotos: selectedPhotos.filter(selectedPhoto => selectedPhoto.uri !== photo.uri) });
     }
   }, [selectedPhotos]);
   
@@ -58,7 +57,7 @@ const CameraGallery: NavigationStackScreenComponent<Params, ScreenProps> = (prop
   return (
     <CameraPhotoGalleryView 
       getCameraRollPhotos={getCameraRollPhotos}
-      photos={_photos}
+      photos={cameraRollPhotos}
       togglePhotoSelection={togglePhotoSelection}
     />
   )

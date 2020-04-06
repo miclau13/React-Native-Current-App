@@ -1,3 +1,16 @@
+import * as ImageManipulator from 'expo-image-manipulator';
+import { Asset } from 'expo-media-library';
+
+// For compression
+const getCompressedImages = async (assets: Array<Asset>) => Promise.all(assets.map(async (asset) => {
+  const ratio = 0.2;
+  const width = asset.width * ratio;
+  const height = asset.height * ratio;
+  const manipResult = await ImageManipulator.manipulateAsync(asset.uri, [{ resize: { width, height } }], { compress: 0 });
+  // const manipResult = await ImageManipulator.manipulateAsync(asset.uri, [], { compress: 0 });
+  return manipResult.uri;
+})); 
+
 // For Upload 
 const uploadImagesAsync = async (rehabId: string, uriArray: string[]) => {
   let apiUrl = 'https://agent.trudeed.com/blobUpload/images';
@@ -30,9 +43,10 @@ const uploadImagesAsync = async (rehabId: string, uriArray: string[]) => {
   return fetch(apiUrl, options);
 };
 
-export const uploadPhotos = async (rehabId: string, selectedPhotos: string[]) => {
+export const uploadPhotos = async (rehabId: string, selectedPhotos: Asset[]) => {
   try {
-    const uploadResponse = await uploadImagesAsync(rehabId, selectedPhotos);
+    const compressedSelectedPhotos = await getCompressedImages(selectedPhotos);
+    const uploadResponse = await uploadImagesAsync(rehabId, compressedSelectedPhotos);
     const uploadResult = await uploadResponse.json();
     return uploadResult;
   } catch(error) {
