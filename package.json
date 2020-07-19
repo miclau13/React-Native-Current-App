@@ -33,7 +33,7 @@
     "graphql-tag": "^2.10.1",
     "jest-expo": "^36.0.1",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "lottie-react-native": "~2.6.1",
     "node": "^13.6.0",
     "prop-types": "^15.7.2",
